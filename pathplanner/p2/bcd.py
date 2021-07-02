@@ -1,11 +1,14 @@
 from networkx.utils.decorators import preserve_random_state
+from numpy.core.fromnumeric import sort
 from numpy.random.mtrand import vonmises
 from p2 import polygon
+from polyskel import polyskel
 import networkx as nx
 import numpy as np
 import copy
 from matplotlib import pyplot as plt
 import enum
+import euclid3
 
 class Event(enum.Enum):
     CLOSE=1
@@ -15,7 +18,31 @@ class Event(enum.Enum):
     INFLECTION=5
     INTERSECT=6
 
-def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points'):
+def rad2degree(rad): return rad*180/np.pi
+def degree2rad(deg): return deg*np.pi/180
+
+
+def iscw(points: np.ndarray) -> bool:
+    '''Determine orientation of a set of points
+
+    Parameters
+    ----------
+    points : np.ndarray
+        An ordered set of points
+
+    Returns
+    -------
+    bool
+        True if clockwise, False if not clockwise
+    '''
+    c = 0
+    for i, _ in enumerate(points[:-1,:]):
+        p1, p2 = points[i+1,:], points[i,:]
+        c += (p2[0] - p1[0]) * (p2[1] + p1[1])
+    if c > 0: return True
+    else: return False
+
+def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
     # sorted node list becomes our list of events
     H = rotate_graph(G, theta, posattr=posattr)
     # sort left to right and store sorted node list in L.
@@ -32,15 +59,115 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points'):
             crits.append(v)
     for c in crits:
         cells = append_cell(H, c, cells)
-    build_reebgraph(H, cells)
+    # rotate the graph back into original orientation
+    J = rotate_graph(H, -theta, posattr=posattr)
+    # build the reebgraph of J
+    R = build_reebgraph(J, cells)
+    return J, R, H
+
+def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
+    p = np.zeros((2,), dtype=np.float64)
+    for c in cell:
+        p += H.nodes[c]['points']
+    p /= len(cell)
+    return p
 
 def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
-    edges = []
+    '''wowwww dude refactor this'''
+    rgedges, rgcells = [], {}
     for i, a in enumerate(cells):
         for j, b in enumerate(cells):
-            union = a & b
+            union = tuple(a & b)
             if len(union) == 2:
-                edges.append(tuple(union))
+                w = None
+                try: w=H[union[0]][union[1]]['weight']
+                except: pass
+                try: w=H[union[1]][union[0]]['weight']
+                except: pass
+                if w == 3 or w == 4:
+                    rgedges.append((i, j, {'shared' : union}))
+                    rgcells[i] = a
+                    rgcells[j] = b
+
+    R = nx.Graph()
+    R.add_edges_from(rgedges)
+    for n in R.nodes:
+        R.nodes[n]['cell'] = rgcells[n]
+        
+    for n in R.nodes:
+        c = R.nodes[n]['cell']
+        C = H.subgraph(c)
+        nodes = nx.dfs_preorder_nodes(C)
+        poly = np.empty((len(c), 2))
+        for i, m in enumerate(nodes):
+            poly[i,:] = H.nodes[m]['points']
+        # TODO: all of this is bad because polyskel. It doesn't seem
+        # too hard to rewrite polyskel to store connectivity from the
+        # get-go.
+        def skl_sortkey(skl): return skl[1]
+        skels = polyskel.skeletonize(poly, holes=[])
+        # good lord
+        newskels = []
+        for u, v, w in skels:
+            u = np.array(list(u))
+            neww = []
+            for x in w:
+                neww.append(np.array(list(x)))
+            newskels.append((u, v, neww))
+        skels = newskels
+        epsilon = np.array([1e-5, 1e-5])
+        elist = []
+        # WHY??
+        for i, (pt1, _, _) in enumerate(skels):
+            for j, (_, _, neighbors2) in enumerate(skels):
+                if i != j or j != i:
+                    # WHY????
+                    for n2 in neighbors2:
+                        if np.all(np.abs(pt1 - n2) <= epsilon):
+                            # IM DEAD
+                            elist.append((i, j))
+        if not elist:
+            middle = rg_centroid(R, H, c)
+            T = nx.Graph()
+            T.add_node(1, points=middle)
+        else:
+            middle = list(max(skels, key=skl_sortkey)[0])
+            T = nx.Graph(elist)
+            for n_ in T.nodes:
+                T.nodes[n_]['points'] = skels[n_][0]
+        # categorize end nodes
+        for m in T.nodes:
+            if T.degree(m) == 1: T.nodes[m]['end'] = True
+            else: T.nodes[m]['end'] = False
+
+
+        R.nodes[n]['centroid'] = np.array(middle)
+        # graph of skeleton. we will traverse this when 
+        # passing directly through a cell without scanning
+        R.nodes[n]['tgraph'] = T
+
+        # TODO
+
+        # P is an empty undirected graph
+        # for c node/cell/skeleton in eulerian tour of RG:
+            # compose the skeleton with P
+            # on P: mark the edges that were just added with an "internal" weight
+            # at every edge between nodes in the eulerian tour
+            # find the midpoint of the edge
+            # find the closest point on our skeleton to the midpoint
+            # find the closest point on their skeleton to the midpoint
+            # add an edge on P to that point
+            # then the next node will be the cell we just connected
+            # or we will eventually get there
+        # clip degree-1 "internal" edges/nodes from P
+            # NOTE this may not be necessary, because of how skeletons are formed;
+            # their ends may be the closest points by default.
+
+
+
+
+    return R
+
 
 
 
@@ -113,8 +240,9 @@ def append_cell(H: nx.DiGraph, v: int, cells: list) -> list:
 
 def splitmerge_points(H: nx.DiGraph, v: int):
     a, b = get_intersects(H, v)
-    if a:
-        ai = len(H.nodes()) + 1
+    if a is not None:
+        ai = max(H.nodes()) + 1
+        assert ai not in set(H.nodes)
         H.add_node(ai, points=a['pt'])
         # add new edge to H
         H.add_edge(ai, v, weight=3) # close
@@ -123,8 +251,9 @@ def splitmerge_points(H: nx.DiGraph, v: int):
         H.add_edge(a['e1'], ai, weight=a['weight'])
         H.add_edge(ai, a['e2'], weight=a['weight'])
         H.remove_edge(a['e1'], a['e2'])
-    if b:
-        bi = len(H.nodes()) + 1
+    if b is not None:
+        bi = max(H.nodes()) + 1
+        assert bi not in set(H.nodes)
         H.add_node(bi, points=b['pt'])
         # add new edge to H
         H.add_edge(v, bi, weight=3) # open
@@ -187,7 +316,7 @@ def get_intersects(H: nx.DiGraph, v: int) -> tuple:
     return above, below
 
 def intersect_vertical_line(p1: np.ndarray, p2: np.ndarray, pv: np.ndarray) -> np.ndarray:
-    m = (pv[0] - p1[0]) / (p2[0] - p1[0])
+    m = abs(pv[0] - p1[0]) / abs(p2[0] - p1[0])
     # y = mx + b
     py = m * (p2[1] - p1[1]) + p1[1]
     return np.array([pv[0], py])
@@ -259,20 +388,24 @@ def lower_upper(H: nx.DiGraph, v: int):
     tuple of (int, int, bool)
         lower vertex, upper vertex, above
     '''
-
-    # filter only for neighboring nodes which were not constructed by a split
-    # event i.e. have weight 3...
+    # filter only for neighboring nodes which were not constructed by a split,
+    # ie node-->neighbor or neighbor-->node edge weight is 1 or 2.
     vA, vB = None, None
     for p in H.predecessors(v):
         w = H[p][v]['weight']
+        vA = p
         if w == 1 or w == 2: 
             vA = p
     for s in H.successors(v):
         w = H[v][s]['weight']
+        vB = s
         if w == 1 or w == 2:
             vB = s
-    if vA is None or vB is None:
-        raise(ValueError('No valid predecessors or successors to node {}'.format(v)))
+    # cannot have trailing nodes
+    assert(vA is not None)
+    assert(vB is not None)
+    # if vA is None or vB is None:
+    #    raise(ValueError('No valid predecessors or successors to node {}'.format(v)))
     # compute cross product. if qcross is true (i.e. positive cross product), then 
     # the vertex vA is "above" the vertex vB. ["above" here means "above" in a 
     # topological sense; it's not necessarily above in the cartesian sense.]
@@ -316,7 +449,7 @@ def rotate_graph(G: nx.DiGraph, theta: float, posattr: str = 'points') -> nx.DiG
     nx.DiGraph
         the new rotated graph
     '''
-    H = copy.copy(G)
+    H = copy.deepcopy(G)
     rotmatr = make_rot_matrix(theta)
     for node in G.nodes:
         original = G.nodes[node]['points']

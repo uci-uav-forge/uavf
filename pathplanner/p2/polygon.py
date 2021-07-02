@@ -1,11 +1,12 @@
 from datetime import datetime
 from os import PRIO_USER
+from matplotlib import transforms
 from scipy import spatial
 import numpy as np
 import networkx as nx
 from matplotlib import pyplot as plt
-from matplotlib.transforms import offset_copy
 from matplotlib import cm
+import warnings
 
 def cluster_points(no_clusters: int = 3, cluster_n: int = 10, cluster_size:int = 1, cluster_dist:int = 1) -> np.ndarray:
     ''' generate clusters of points '''
@@ -204,27 +205,35 @@ def addcw(H: nx.DiGraph, e1: int, e2: int) -> float:
     p1, p2 = H.nodes[e1]['points'], H.nodes[e2]['points']
     return (p2[0] - p1[0]) * (p2[1] + p1[1])
 
-def draw_G(G: nx.DiGraph, ax: plt.Axes, posattr: str ='points') -> plt.Axes:
+def draw_G(
+    G: nx.DiGraph, 
+    ax: plt.Axes, 
+    posattr: str ='points', 
+    arrows: bool =False, 
+    nodecolor: str = 'k', 
+    ecolor: str = None, 
+    node_text: bool = True,
+    style: str = '-'
+    ) -> plt.Axes:
     '''Draw a DiGraph `G` with points stored in `posattr` onto `ax`'''
-    pos = nx.get_node_attributes(G, 'points')
-    colors = [G[u][v]['weight'] for u, v in G.edges()]
-
+    pos = nx.get_node_attributes(G, posattr)
+    if not ecolor:
+        try:
+            ecolor = [G[u][v]['weight'] for u, v in G.edges()]
+        except:
+            ecolor = [5 for _ in G.edges()]
     nx.draw_networkx_edges(G, pos, ax=ax,
         node_size=4,
-        edge_color=colors,
+        arrows=arrows,
+        edge_color=ecolor,
+        style=style,
         edge_cmap=plt.get_cmap('tab10'))
     nx.draw_networkx_nodes(
         G, pos, ax=ax,
         node_shape='.',
-        node_color='k',
+        node_color=nodecolor,
         node_size=30,)
+    if node_text:
+        for n in G.nodes: ax.text(pos[n][0], pos[n][1], s=str(n))
     ax.autoscale(tight=False)
     return ax
-
-if __name__ == '__main__':
-    points = np.random.poisson(lam=100, size=(180, 2))
-    points = np.random.normal(size=(180, 2))
-    G = polygon(points, 8)
-    fig, ax = plt.subplots()
-    draw_G(G, ax)
-    plt.show()
