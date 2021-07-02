@@ -5,6 +5,7 @@ import numpy as np
 import networkx as nx
 from matplotlib import pyplot as plt
 from matplotlib.transforms import offset_copy
+from matplotlib import cm
 
 def cluster_points(no_clusters: int = 3, cluster_n: int = 10, cluster_size:int = 1, cluster_dist:int = 1) -> np.ndarray:
     ''' generate clusters of points '''
@@ -170,13 +171,16 @@ def polygon(points: np.ndarray, holes: int = 0, removals: int = 30) -> nx.DiGrap
             # set both nodes and edges
             for (e1, e2), c in zip(M.edges, cyc):
                 outer = True
+                M[e1][e2]['weight'] = 1
                 cw += addcw(H, e1, e2)
         else:
             for (e1, e2), c in zip(M.edges, cyc):
+                M[e1][e2]['weight'] = 2
                 outer = False
                 cw += addcw(H, e1, e2)
-        cw = cw >= 0
-        M = H.subgraph(cyc).copy()
+        cw = cw >= 0        
+        # categorize nodes
+        # append
         if cw and outer:
             outputgraphs.append(M)
         elif not cw and outer:
@@ -185,9 +189,10 @@ def polygon(points: np.ndarray, holes: int = 0, removals: int = 30) -> nx.DiGrap
             outputgraphs.append(M)
         elif cw and not outer:
             outputgraphs.append(nx.reverse(M, copy=True))
-    return nx.compose_all(outputgraphs)
+    out_graph = nx.compose_all(outputgraphs)
+    return out_graph
     
-def addcw(H: nx.Digraph, e1: int, e2: int) -> float:
+def addcw(H: nx.DiGraph, e1: int, e2: int) -> float:
     '''determine which way the edge is pointing
              Q2  │  Q1
             ─────┼─────
@@ -202,8 +207,12 @@ def addcw(H: nx.Digraph, e1: int, e2: int) -> float:
 def draw_G(G: nx.DiGraph, ax: plt.Axes, posattr: str ='points') -> plt.Axes:
     '''Draw a DiGraph `G` with points stored in `posattr` onto `ax`'''
     pos = nx.get_node_attributes(G, 'points')
+    colors = [G[u][v]['weight'] for u, v in G.edges()]
+
     nx.draw_networkx_edges(G, pos, ax=ax,
-        node_size=4)
+        node_size=4,
+        edge_color=colors,
+        edge_cmap=plt.get_cmap('tab10'))
     nx.draw_networkx_nodes(
         G, pos, ax=ax,
         node_shape='.',
