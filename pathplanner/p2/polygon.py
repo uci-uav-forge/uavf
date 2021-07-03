@@ -211,7 +211,8 @@ def draw_G(
     posattr: str ='points', 
     arrows: bool =False, 
     nodecolor: str = 'k', 
-    ecolor: str = None, 
+    ecolor: str = None,
+    ecolorattr: str = 'weight',
     node_text: bool = True,
     style: str = '-'
     ) -> plt.Axes:
@@ -219,7 +220,7 @@ def draw_G(
     pos = nx.get_node_attributes(G, posattr)
     if not ecolor:
         try:
-            ecolor = [G[u][v]['weight'] for u, v in G.edges()]
+            ecolor = [G[u][v][ecolorattr] for u, v in G.edges()]
         except:
             ecolor = [5 for _ in G.edges()]
     nx.draw_networkx_edges(G, pos, ax=ax,

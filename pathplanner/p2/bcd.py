@@ -49,7 +49,7 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
     def left_to_right(n): return H.nodes[n][posattr][0]
     L = sorted(list(H.nodes), key=left_to_right)
     # sweep left-to-right
-    crits, cells = [], []
+    crits, cells = [], {}
     for v in L:
         etype = check_lu(H, v)
         if etype == Event.SPLIT or etype == Event.MERGE:
@@ -63,7 +63,8 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
     J = rotate_graph(H, -theta, posattr=posattr)
     # build the reebgraph of J
     R = build_reebgraph(J, cells)
-    return J, R, H
+    S = make_skelgraph(H, R)
+    return J, R, H, S
 
 def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
     p = np.zeros((2,), dtype=np.float64)
@@ -75,9 +76,9 @@ def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
 def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
     '''wowwww dude refactor this'''
     rgedges, rgcells = [], {}
-    for i, a in enumerate(cells):
-        for j, b in enumerate(cells):
-            union = tuple(a & b)
+    for i, a in enumerate(cells.values()):
+        for j, b in enumerate(cells.values()):
+            union = tuple(set(a) & set(b))
             if len(union) == 2:
                 w = None
                 try: w=H[union[0]][union[1]]['weight']
@@ -96,14 +97,15 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
         
     for n in R.nodes:
         c = R.nodes[n]['cell']
-        C = H.subgraph(c)
-        nodes = nx.dfs_preorder_nodes(C)
-        poly = np.empty((len(c), 2))
-        for i, m in enumerate(nodes):
-            poly[i,:] = H.nodes[m]['points']
+        poly = []
+        for e1, _ in nx.find_cycle(nx.Graph(H.subgraph(c))):
+            poly.append(H.nodes[e1]['points'])
+        poly = np.array(poly)
+        if iscw(poly): poly = np.flip(poly, axis=0)
         # TODO: all of this is bad because polyskel. It doesn't seem
         # too hard to rewrite polyskel to store connectivity from the
         # get-go.
+        print(iscw(poly))
         def skl_sortkey(skl): return skl[1]
         skels = polyskel.skeletonize(poly, holes=[])
         # good lord
@@ -146,30 +148,81 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
         # passing directly through a cell without scanning
         R.nodes[n]['tgraph'] = T
 
-        # TODO
-
-        # P is an empty undirected graph
-        # for c node/cell/skeleton in eulerian tour of RG:
-            # compose the skeleton with P
-            # on P: mark the edges that were just added with an "internal" weight
-            # at every edge between nodes in the eulerian tour
-            # find the midpoint of the edge
-            # find the closest point on our skeleton to the midpoint
-            # find the closest point on their skeleton to the midpoint
-            # add an edge on P to that point
-            # then the next node will be the cell we just connected
-            # or we will eventually get there
-        # clip degree-1 "internal" edges/nodes from P
-            # NOTE this may not be necessary, because of how skeletons are formed;
-            # their ends may be the closest points by default.
-
-
-
-
+    # TODO
+    # P is an empty undirected graph
+    # for c node/cell/skeleton in eulerian tour of RG:
+        # compose the skeleton with P
+        # on P: mark the edges that were just added with an "internal" weight
+        # at every edge between nodes in the eulerian tour
+        # find the midpoint of the edge
+        # find the closest point on our skeleton to the midpoint
+        # find the closest point on their skeleton to the midpoint
+        # add an edge on P to that point
+        # then the next node will be the cell we just connected
+        # or we will eventually get there
+    # clip degree-1 "internal" edges/nodes from P
+        # NOTE this may not be necessary, because of how skeletons are formed;
+        # their ends may be the closest points by default.
     return R
 
+def get_midpoint_shared(H: nx.DiGraph, R: nx.Graph, e1: int, e2: int) -> np.ndarray:
+    n1, n2 = R[e1][e2]['shared']
+    p1, p2 = H.nodes[n1]['points'], H.nodes[n2]['points']
+    v = (p2-p1)/2
+    return p1 + v
+
+def dotself(x): return np.dot(x, x)
 
 
+def remap_nodes_unique(new_node: int, T: nx.Graph):
+    mapping = {}
+    for n in T.nodes:
+        mapping[n] = -new_node
+        new_node += 1
+    nx.relabel_nodes(T, mapping, copy=False)
+    return new_node
+
+def make_skelgraph(H: nx.DiGraph, R: nx.Graph):
+    S = nx.Graph()
+    # TODO: sooo, this is only necessary because we didn't index by 
+    # point directly, but instead by index. WHOOPS! We'd have to
+    # rewrite probably the entire reeb graph fuction if we wanted to
+    # do without this proxy node list...
+    new_node = 0
+    eulerian = nx.eulerian_circuit(nx.eulerize(R))
+    for n in R.nodes:
+        new_node = remap_nodes_unique(new_node, R.nodes[n]['tgraph'])
+        nx.set_edge_attributes(R.nodes[n]['tgraph'], True, 'original')
+
+    for e1, e2 in eulerian:
+        T_this: nx.Graph = R.nodes[e1]['tgraph']
+        T_other: nx.Graph = R.nodes[e2]['tgraph']
+        for n in T_this.nodes:
+            T_this.nodes[n]['skel_parent'] = R.nodes[e1]['cell']
+        for n in T_other.nodes:
+            T_other.nodes[n]['skel_parent'] = R.nodes[e1]['cell']
+        # get midpoint and add the node to both graphs
+        midp = get_midpoint_shared(H, R, e1, e2)
+        # find closest in both skelgraphs to this new node
+        close_this = min([n for n in T_this.nodes], key=lambda n: dotself(T_this.nodes[n]['points'] - midp))
+        close_other = min([n for n in T_other.nodes], key=lambda n: dotself(T_other.nodes[n]['points'] - midp))
+        # add midpoint to both graphs after finding closest
+        midp_node = -new_node
+        T_this.add_node(midp_node, points=midp, skel_parent=None)
+        T_other.add_node(midp_node, points=midp, skel_parent=None)
+        new_node += 1
+        # add edge to both subgraphs
+        # T_this.add_edge(close_this, midp_node, original=False)
+        # T_other.add_edge(midp_node, close_other, original=False)
+        S = nx.compose_all( (S, T_this, T_other) )
+
+        # S.add_edges_from(list(T_this.edges()) + list(T_other.edges()) + [(add1, add2)])
+        # S.add_nodes_from(list(T_this.nodes(data=True)) + list(T_other.nodes(data=True)))
+    
+    # deg1s = [n for n in S.nodes if S.degree(n) == 1]
+    # S.remove_nodes_from(deg1s)
+
+    return S
 
 def rcross(H: nx.DiGraph, u:int, v:int, w:int) -> float:
     '''compute the vector cross product of edges `u`,`v` and `v`,`w` on `H`.
@@ -197,7 +250,7 @@ def rcross(H: nx.DiGraph, u:int, v:int, w:int) -> float:
     b /= np.linalg.norm(b)
     return a[0] * b[1] - a[1] * b[0]
 
-def append_cell(H: nx.DiGraph, v: int, cells: list) -> list:
+def append_cell(H: nx.DiGraph, v: int, cells:dict) -> list:
     '''[summary]
 
     Parameters
@@ -234,8 +287,9 @@ def append_cell(H: nx.DiGraph, v: int, cells: list) -> list:
             path.append(best)
             if best == path_start:
                 path_end = True
-        if set(path) not in cells:
-            cells.append(set(path))
+        to_add = frozenset(path)
+        if to_add not in cells.keys():
+            cells[to_add] = path
     return cells
 
 def splitmerge_points(H: nx.DiGraph, v: int):
