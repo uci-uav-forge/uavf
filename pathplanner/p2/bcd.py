@@ -1,3 +1,5 @@
+from typing import Generator
+from networkx.classes.function import degree
 from networkx.utils.decorators import preserve_random_state
 from numpy.core.fromnumeric import sort
 from numpy.random.mtrand import vonmises
@@ -63,7 +65,7 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
     J = rotate_graph(H, -theta, posattr=posattr)
     # build the reebgraph of J
     R = build_reebgraph(J, cells)
-    S = make_skelgraph(H, R)
+    S = make_skelgraph(J, R)
     return J, R, H, S
 
 def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
@@ -137,11 +139,6 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
             T = nx.Graph(elist)
             for n_ in T.nodes:
                 T.nodes[n_]['points'] = skels[n_][0]
-        # categorize end nodes
-        for m in T.nodes:
-            if T.degree(m) == 1: T.nodes[m]['end'] = True
-            else: T.nodes[m]['end'] = False
-
 
         R.nodes[n]['centroid'] = np.array(middle)
         # graph of skeleton. we will traverse this when 
@@ -165,6 +162,14 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
         # their ends may be the closest points by default.
     return R
 
+def get_points_array(H:nx.Graph, nlist:list = None, posattr:str='points'):
+    if nlist == None:
+        nlist = list(H.nodes())
+    points = np.empty((len(nlist), 2))
+    for i, n in enumerate(nlist):
+        points[i] = H.nodes[n]['points']
+    return points
+    
 def get_midpoint_shared(H: nx.DiGraph, R: nx.Graph, e1: int, e2: int) -> np.ndarray:
     n1, n2 = R[e1][e2]['shared']
     p1, p2 = H.nodes[n1]['points'], H.nodes[n2]['points']
@@ -193,36 +198,61 @@ def make_skelgraph(H: nx.DiGraph, R: nx.Graph):
     for n in R.nodes:
         new_node = remap_nodes_unique(new_node, R.nodes[n]['tgraph'])
         nx.set_edge_attributes(R.nodes[n]['tgraph'], True, 'original')
+        nx.set_node_attributes(R.nodes[n]['tgraph'], True, 'original')
 
     for e1, e2 in eulerian:
         T_this: nx.Graph = R.nodes[e1]['tgraph']
         T_other: nx.Graph = R.nodes[e2]['tgraph']
         for n in T_this.nodes:
-            T_this.nodes[n]['skel_parent'] = R.nodes[e1]['cell']
+            T_this.nodes[n]['cell'] = R.nodes[e1]['cell']
+            T_this.nodes[n]['middle'] = False
+            if T_this.degree(n) > 1:
+                T_this.nodes[n]['end'] = False
+            else:
+                T_this.nodes[n]['end'] = True
         for n in T_other.nodes:
-            T_other.nodes[n]['skel_parent'] = R.nodes[e1]['cell']
+            T_other.nodes[n]['cell'] = R.nodes[e2]['cell']
+            T_other.nodes[n]['middle'] = False
+            if T_other.degree(n) > 1:
+                T_other.nodes[n]['end'] = False
+            else:
+                T_other.nodes[n]['end'] = True
         # get midpoint and add the node to both graphs
         midp = get_midpoint_shared(H, R, e1, e2)
         # find closest in both skelgraphs to this new node
-        close_this = min([n for n in T_this.nodes], key=lambda n: dotself(T_this.nodes[n]['points'] - midp))
-        close_other = min([n for n in T_other.nodes], key=lambda n: dotself(T_other.nodes[n]['points'] - midp))
+        close_this = min(
+            [n for n in T_this.nodes if T_this.nodes[n]['end']], 
+            key=lambda n: dotself(T_this.nodes[n]['points'] - midp))
+        close_other = min(
+            [n for n in T_other.nodes if T_other.nodes[n]['end']], 
+            key=lambda n: dotself(T_other.nodes[n]['points'] - midp))
         # add midpoint to both graphs after finding closest
         midp_node = -new_node
-        T_this.add_node(midp_node, points=midp, skel_parent=None)
-        T_other.add_node(midp_node, points=midp, skel_parent=None)
+        T_this.add_node(
+            midp_node, points=midp, cell=None, 
+            original=False, middle=True,
+            entry_cell=R.nodes[e1]['cell'])
+        T_other.add_node(midp_node, points=midp, cell=None, original=False, middle=True)
         new_node += 1
         # add edge to both subgraphs
-        # T_this.add_edge(close_this, midp_node, original=False)
-        # T_other.add_edge(midp_node, close_other, original=False)
+        T_this.add_edge(close_this, midp_node, original=False)
+        T_other.add_edge(midp_node, close_other, original=False)
         S = nx.compose_all( (S, T_this, T_other) )
 
-        # S.add_edges_from(list(T_this.edges()) + list(T_other.edges()) + [(add1, add2)])
-        # S.add_nodes_from(list(T_this.nodes(data=True)) + list(T_other.nodes(data=True)))
-    
-    # deg1s = [n for n in S.nodes if S.degree(n) == 1]
-    # S.remove_nodes_from(deg1s)
-
+    for e1,e2 in S.edges:
+        S[e1][e2]['dist'] = np.sqrt(dotself(S.nodes[e2]['points'] - S.nodes[e1]['points']))
     return S
+
+def cul_de_sac_check(S:nx.Graph, n): 
+    deg = S.degree(n) == 1
+    orig = S.nodes[n]['original'] == 1
+    cell = S.nodes[n]['cell']
+    if cell is not None:
+        cellch = len(cell) > 3
+    else:
+        cellch = False
+    return deg and orig and cellch
+
 
 def rcross(H: nx.DiGraph, u:int, v:int, w:int) -> float:
     '''compute the vector cross product of edges `u`,`v` and `v`,`w` on `H`.

@@ -5,16 +5,16 @@ import networkx as nx
 
 if __name__ == '__main__':
    # generate a distribution of points in xy
-   points = np.random.normal(0, size=(15,2))
+   points = np.random.beta(4, 4, size=(100,2))
    # points = polygon.cluster_points(no_clusters=5, cluster_n=12, cluster_size=1, cluster_dist=1)
    # create a polygon and store it into G
-   G = polygon.polygon(points, holes=1, removals=80)
+   G = polygon.polygon(points, holes=3, removals=130)
    # sweep a line through the polygon and store 
    # J has the line sweep, R has the reeb graph,
    # H has the rotated line sweep
 
    ax = plt.axes()
-   J, R, H, S = bcd.line_sweep(G, theta=bcd.degree2rad(45))
+   J, R, H, S = bcd.line_sweep(G, theta=bcd.degree2rad(10))
    # plot stuff
    # fig, ax = plt.subplots(ncols=2, nrows=2, sharex=True, sharey=True, figsize=(7.5, 7.5), tight_layout=True)
    # for i, a in np.ndenumerate(ax):
@@ -36,7 +36,11 @@ if __name__ == '__main__':
    # plt.show()
    
    
-   polygon.draw_G(J, ax, ecolor='lightgray', style='-')
-   polygon.draw_G(S, ax, ecolorattr='original')
+   polygon.draw_G(J, ax, ecolor='gray',style='-', node_text=False, draw_nodes=False)
+   polygon.draw_G(S, ax, ecolorattr='dist', node_text=False, arrows=True, style=':')
    ax.set_aspect('equal')
+   for k1, v1 in S.nodes.items():
+      print(k1)
+      for k2, v2 in v1.items():
+         print('\t', k2, ':', v2)
    plt.show()

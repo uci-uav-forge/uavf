@@ -214,7 +214,9 @@ def draw_G(
     ecolor: str = None,
     ecolorattr: str = 'weight',
     node_text: bool = True,
-    style: str = '-'
+    style: str = '-',
+    m: str = '.',
+    draw_nodes = True,
     ) -> plt.Axes:
     '''Draw a DiGraph `G` with points stored in `posattr` onto `ax`'''
     pos = nx.get_node_attributes(G, posattr)
@@ -229,11 +231,12 @@ def draw_G(
         edge_color=ecolor,
         style=style,
         edge_cmap=plt.get_cmap('tab10'))
-    nx.draw_networkx_nodes(
-        G, pos, ax=ax,
-        node_shape='.',
-        node_color=nodecolor,
-        node_size=30,)
+    if draw_nodes:
+        nx.draw_networkx_nodes(
+            G, pos, ax=ax,
+            node_shape=m,
+            node_color=nodecolor,
+            node_size=30,)
     if node_text:
         for n in G.nodes: ax.text(pos[n][0], pos[n][1], s=str(n))
     ax.autoscale(tight=False)
