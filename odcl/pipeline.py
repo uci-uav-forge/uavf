@@ -300,7 +300,7 @@ class TargetInterpreter(object):
         return self.draw_all(img, targets)
 
 if __name__ == "__main__":
-    model_path = "mobilenet_ssd_v2.tflite"
+    model_path = "mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
     label_path = "coco_labels.txt"
     target_interpreter = TargetInterpreter(model_path, label_path)
 
