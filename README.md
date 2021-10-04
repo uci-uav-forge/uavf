@@ -13,10 +13,11 @@ v1.0 - Oct 4, 2021
 
 ## Hardware Requirements
 
-Google Coral TPU
-opencv
++ Google Coral TPU
 
-Your device must have a camera 
++ opencv
+
++ Your device must have a camera 
 
 Tested with Python 3.7.10
 
