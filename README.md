@@ -3,41 +3,40 @@ UAV Forge's ODCL repository.
 
 This repository contains all code necessary for recognizing AUVSI targets.
 
-### Installation / Setup
----
-Requires: 
-+ python 3.8
-+ opencv-python
-+ CUDA libs for GPU support
----
-1. Clone this repo: 
-```
-git clone https://github.com/uci-uav-forge/odcl.git
-``` 
+## Release History
 
-2. Create & activate virtual env: 
+v1.0 - Oct 4, 2021
+
++ Add inference on COCO targets with mobilenet SSD
++ Support for TPU
++ Basic display with openCV
+
+## Hardware Requirements
+
+Google Coral TPU
+opencv
+
+Your device must have a camera 
+
+Tested with Python 3.7.10
+
+## How to run the example
+
+1. Clone this repository and install requirements
+
+2. Install TPU libraries:
+
+https://coral.ai/docs/accelerator/get-started/#requirements
+
+3. Download mobilenet SSD model into this folder:
+
 ```
-python3 -m venv venv
+wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
 ```
 
-3. Activate virtual env
-+ in *nix: 
-```
-. venv/bin/activate
-```
-+ in Windows: 
-```
-source ./venv/Scripts/activate
-```
+4. Plug in your TPU
 
-4. Install required packages: 
+5. run pipeline.py
 ```
-pip3 install -r ./requirements.txt
+python odcl/pipeline.py
 ```
-
-5. Install `yolov5` into the same directory as this `README.md`:
-```
-git clone https://github.com/ultralytics/yolov5.git
-```
----
-
