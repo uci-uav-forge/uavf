@@ -15,11 +15,12 @@ BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
 
 
 class TargetInterpreter(object):
-    def __init__(self, model_path, label_path):
+    def __init__(self, model_path, label_path, thresh):
         self.interpreter = self.make_interpreter(model_path)
         self.interpreter.allocate_tensors()
         self.labels = self.get_labels(label_path)
         self.targets = []
+        self.thresh = thresh
 
     def make_interpreter(self, model_path_or_content, device=None, delegate=None):
         """Make new TPU interpreter instance given a model path
@@ -130,20 +131,18 @@ class TargetInterpreter(object):
         _, h, w, c = self.interpreter.get_input_details()[0]["shape"]
         return h, w, c
 
-    def interpret(self, img, thresh, top_k):
+    def interpret(self, img):
         self.set_input_tensor(img)
         self.interpreter.invoke()
-        self.targets = self.get_output(thresh, top_k)
+        self.targets = self.get_output(self.thresh)
 
-    def get_output(self, score_threshold, top_k):
+    def get_output(self, score_threshold):
         """Return list of detected objects
 
         Parameters
         ----------
         score_threshold : float
             number from 0-1 indicating thresh percentage
-        top_k : int
-            no. of top objects to return
 
         Returns
         -------
