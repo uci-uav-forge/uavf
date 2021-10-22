@@ -1,11 +1,10 @@
 from numpy.lib.shape_base import dsplit
-import tflite_runtime
 import numpy as np
 from collections import namedtuple
 from tflite_runtime import interpreter
-from threading import Thread
-import cv2, time, platform, math, random, atexit
+import cv2, platform, math, random, argparse
 import colorsys
+from termcolor import colored
 
 _EDGETPU_SHARED_LIB = {
     "Linux": "libedgetpu.so.1",
@@ -16,41 +15,10 @@ _EDGETPU_SHARED_LIB = {
 Target = namedtuple("Target", ["id", "score", "bbox"])
 BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
 
-# Camera object. Grabs frames from camera in a new thread
-# to avoid blocking main thread
-class VideoStreamCV(object):
-    def __init__(self, src=0, ready_timeout=10):
-        self.ready_timeout = ready_timeout
-        self.capture = cv2.VideoCapture(src)
-        self.thread = Thread(target=self.update, args=())
-        self.thread.daemon = True
-        self.thread.start()
-        while True:
-            img = self.get_img()
-            if img is not None:
-                self.h, self.w = img.shape[0], img.shape[1]
-                break
-        atexit.register(self.exit)
-
-    def update(self):
-        while True:
-            if self.capture.isOpened():
-                self.status, self.img = self.capture.read()
-            time.sleep(0.01)
-
-    def get_img(self):
-        try:
-            return self.img
-        except AttributeError:
-            return None
-
-    def exit(self):
-        print("releasing video stream")
-        self.capture.release()
-
 
 class TargetInterpreter(object):
-    def __init__(self, model_path, label_path):
+    def __init__(self, model_path, label_path, cpu):
+        self.cpu = cpu
         self.interpreter = self.make_interpreter(model_path)
         self.interpreter.allocate_tensors()
         self.labels = self.get_labels(label_path)
@@ -80,18 +48,9 @@ class TargetInterpreter(object):
         with open(path, "r") as f:
             for line in f.readlines():
                 cls, clsstr = line.strip().split(":")
-                cls = int(cls)
+                cls = int(cls) - 1
+                labels[cls] = clsstr
 
-                randcolor = colorsys.hsv_to_rgb(
-                    random.randint(0, 255) / 255.0,
-                    random.randint(200, 255) / 255.0,
-                    random.randint(180, 210) / 255.0,
-                )
-                color = tuple(int(255 * r) for r in randcolor)
-                labels[cls] = {
-                    "name": clsstr,
-                    "color": color,
-                }
         return labels
 
     def make_interpreter(self, model_path_or_content, device=None, delegate=None):
@@ -116,21 +75,27 @@ class TargetInterpreter(object):
         tflite.Interpreter
             the interpreter
         """
-        if delegate:
-            delegates = [delegate]
-        else:
-            delegates = [
-                self.load_edgetpu_delegate({"device": device} if device else {})
-            ]
+        if self.cpu == "tpu":
+            if delegate:
+                delegates = [delegate]
+            else:
+                delegates = [
+                    self.load_edgetpu_delegate({"device": device} if device else {})
+                ]
 
-        if isinstance(model_path_or_content, bytes):
-            return interpreter.Interpreter(
-                model_content=model_path_or_content, experimental_delegates=delegates
-            )
+            if isinstance(model_path_or_content, bytes):
+                return interpreter.Interpreter(
+                    model_content=model_path_or_content,
+                    experimental_delegates=delegates,
+                )
+            else:
+                return interpreter.Interpreter(
+                    model_path=model_path_or_content, experimental_delegates=delegates
+                )
+        elif self.cpu == "cpu":
+            return interpreter.Interpreter(model_path=model_path_or_content)
         else:
-            return interpreter.Interpreter(
-                model_path=model_path_or_content, experimental_delegates=delegates
-            )
+            raise ValueError("Must pass `cpu` or `tpu` to constructor")
 
     def load_edgetpu_delegate(self, options=None):
         """load edgetpu delegate from _EDGETPU_SHARED_LIB with options
@@ -223,10 +188,19 @@ class TargetInterpreter(object):
         list of Target
             list of namedtuples containing target info
         """
-        boxes = self.output_tensor(0)
-        category_ids = self.output_tensor(1)
-        scores = self.output_tensor(2)
-        n = self.output_tensor(3)
+
+        BOXES = 1
+        CATID = 3
+        SCORE = 0
+        N = 2
+
+        boxes = self.output_tensor(BOXES)
+        category_ids = self.output_tensor(CATID)
+        scores = self.output_tensor(SCORE)
+        n = self.output_tensor(N)
+
+        # for some reason, some models re-order the output tensors...
+        # print(boxes.shape, category_ids.shape, scores.shape, n.shape)
 
         def make(i):
             ymin, xmin, ymax, xmax = boxes[i]
@@ -242,6 +216,25 @@ class TargetInterpreter(object):
             )
 
         return [make(i) for i in range(int(n)) if scores[i] >= score_threshold]
+
+
+class TargetDrawer(object):
+    def __init__(self, labels):
+        # get labels
+        self.labels = labels
+        # get colors
+        self.colors = {}
+        for l in labels.keys():
+            self.colors[l] = self.get_rand_color()
+
+    @staticmethod
+    def get_rand_color():
+        # get a random color between 1 and 0
+        return colorsys.hsv_to_rgb(
+            random.randint(0, 255),
+            random.randint(200, 255),
+            random.randint(180, 210),
+        )
 
     def draw_target_bbox(self, img, target):
         """Draw a bbox, class label, and confidence score around a target onto image
@@ -264,60 +257,78 @@ class TargetInterpreter(object):
         pt1 = (xmin, ymin)
         pt2 = (xmax, ymax)
         # draw rectangle
-        img = cv2.rectangle(img, pt1, pt2, self.labels[target.id]["color"], 2)
+        img = cv2.rectangle(img, pt1, pt2, self.colors[target.id], 2)
         # draw text
         textpt = (pt1[0], pt1[1] + 25)
-        text = self.labels[target.id]["name"] + " : " + str(round(target.score * 100))
+        text = self.labels[target.id] + " : " + str(round(target.score * 100))
         img = cv2.putText(
             img,
             text,
             textpt,
             cv2.FONT_HERSHEY_SIMPLEX,
             0.75,
-            self.labels[target.id]["color"],
+            self.colors[target.id],
             2,
         )
         return img
 
-    def draw_all(self, img):
+    def draw_all(self, img, targets):
         """Draw all current targets onto img
 
         Parameters
         ----------
         img : cv2 Image
             (H, W, 3) 8-bit
+        targets: list of Target
+            targets to draw
 
         Returns
         -------
-        cv2 Image
+        (H, W, 3) 8-bit image
             Image with targets drawn
         """
-        for target in self.targets:
+        for target in targets:
             img = self.draw_target_bbox(img, target)
         return img
 
     def make_target_bbox_img_opencv(self, img, targets):
         return self.draw_all(img, targets)
 
+
 if __name__ == "__main__":
-    model_path = "mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
-    label_path = "coco_labels.txt"
-    target_interpreter = TargetInterpreter(model_path, label_path)
+    ap = argparse.ArgumentParser(description="Run inference on video stream")
+    ap.add_argument("--model", type=str, required=True, help="path to tflite model")
+    ap.add_argument("--labels", type=str, required=True, help="path to labels file")
+    ap.add_argument(
+        "--cpu",
+        type=str,
+        required=False,
+        default="cpu",
+        help=colored("cpu", "blue")
+        + " if using CPU, "
+        + colored("tpu", "blue")
+        + " if using TPU.",
+    )
+    opts = ap.parse_args()
+
+    from vsutils import VideoStreamCV
+
+    target_interpreter = TargetInterpreter(opts.model, opts.labels, opts.cpu)
 
     vs = VideoStreamCV()
+    draw = TargetDrawer(target_interpreter.labels)
     while True:
         img = vs.get_img()
         target_interpreter.interpret(img, 0.25, 5)
         for t in target_interpreter.targets:
-            obj_id_str = target_interpreter.labels[t.id]["name"]
+            obj_id_str = target_interpreter.labels[t.id]
             xmin = round(t.bbox[0], 2)
             ymin = round(t.bbox[1], 2)
             xmax = round(t.bbox[2], 2)
             ymax = round(t.bbox[3], 2)
-            obj_bbox_str = "({}, {}) to ({}, {})".format(xmin, ymin, xmax, ymax)
-            print("\tfound: id={}, bbox=[{}]".format(obj_id_str, obj_bbox_str))
-
-        img = target_interpreter.draw_all(img)
-        cv2.imshow('image', img)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+            # obj_bbox_str = "({}, {}) to ({}, {})".format(xmin, ymin, xmax, ymax)
+            # print("\tfound: id={}, bbox=[{}]".format(obj_id_str, obj_bbox_str))
+        img = draw.draw_all(img, target_interpreter.targets)
+        cv2.imshow("image", img)
+        if cv2.waitKey(25) & 0xFF == ord("q"):
             break
