@@ -9,18 +9,40 @@ _EDGETPU_SHARED_LIB = {
     "Windows": "edgetpu.dll",
 }[platform.system()]
 
+# this is a dict that re-orders the outputs of the model.
+# for some reason, some models have different orderings;
+# we want the order to be (boxes, category id, score, n)
+# but e.g. d2 gives it to us like
+# 0: score
+# 1: boxes
+# 2: n
+# 3: category
+#
+# so this dict is to re-order outputs, given different models.
+TENSOR_ORDERS = {"d2": (1, 3, 0, 2)}
+
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
 BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
 
 
 class TargetInterpreter(object):
-    def __init__(self, model_path, label_path, thresh):
+    def __init__(self, model_path, label_path, cpu, thresh):
+        self.cpu = cpu
+        self.labels = self.get_labels(label_path)
         self.interpreter = self.make_interpreter(model_path)
         self.interpreter.allocate_tensors()
-        self.labels = self.get_labels(label_path)
         self.targets = []
         self.thresh = thresh
+
+    def get_labels(self, label_path):
+        labels = {}
+        with open(label_path, "r") as f:
+            for ln in f.readlines():
+                cat_n, cat_label = ln.strip().split(":")
+                cat_n = int(cat_n) - 1
+                labels[cat_n] = cat_label
+        return labels
 
     def make_interpreter(self, model_path_or_content, device=None, delegate=None):
         """Make new TPU interpreter instance given a model path
@@ -44,21 +66,25 @@ class TargetInterpreter(object):
         tflite.Interpreter
             the interpreter
         """
-        if delegate:
-            delegates = [delegate]
-        else:
-            delegates = [
-                self.load_edgetpu_delegate({"device": device} if device else {})
-            ]
+        if self.cpu == "tpu":
+            if delegate:
+                delegates = [delegate]
+            else:
+                delegates = [
+                    self.load_edgetpu_delegate({"device": device} if device else {})
+                ]
 
-        if isinstance(model_path_or_content, bytes):
-            return interpreter.Interpreter(
-                model_content=model_path_or_content, experimental_delegates=delegates
-            )
-        else:
-            return interpreter.Interpreter(
-                model_path=model_path_or_content, experimental_delegates=delegates
-            )
+            if isinstance(model_path_or_content, bytes):
+                return interpreter.Interpreter(
+                    model_content=model_path_or_content,
+                    experimental_delegates=delegates,
+                )
+            else:
+                return interpreter.Interpreter(
+                    model_path=model_path_or_content, experimental_delegates=delegates
+                )
+        elif self.cpu == "cpu":
+            return interpreter.Interpreter(model_path=model_path_or_content)
 
     def load_edgetpu_delegate(self, options=None):
         """load edgetpu delegate from _EDGETPU_SHARED_LIB with options
@@ -149,10 +175,14 @@ class TargetInterpreter(object):
         list of Target
             list of namedtuples containing target info
         """
-        boxes = self.output_tensor(0)
-        category_ids = self.output_tensor(1)
-        scores = self.output_tensor(2)
-        n = self.output_tensor(3)
+        t0, t1, t2, t3 = TENSOR_ORDERS["d2"]
+
+        boxes = self.output_tensor(t0)
+        category_ids = self.output_tensor(t1)
+        scores = self.output_tensor(t2)
+        n = self.output_tensor(t3)
+
+        # print(boxes.shape, category_ids.shape, scores.shape, n.shape)
 
         def make(i):
             ymin, xmin, ymax, xmax = boxes[i]
