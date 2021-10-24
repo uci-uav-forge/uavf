@@ -34,7 +34,7 @@ class TargetDrawer(object):
             random.randint(180, 210),
         )
 
-    def draw_target_bbox(self, img, target):
+    def draw_target_bbox(self, img, target, color=None):
         """Draw a bbox, class label, and confidence score around a target onto image
 
         Parameters
@@ -54,8 +54,12 @@ class TargetDrawer(object):
         ymin, ymax = math.ceil(target.bbox.ymin * h), math.floor(target.bbox.ymax * h)
         pt1 = (xmin, ymin)
         pt2 = (xmax, ymax)
+
+        if color is None:
+            color = self.colors[target.id]
+
         # draw rectangle
-        img = cv2.rectangle(img, pt1, pt2, self.colors[target.id], 2)
+        img = cv2.rectangle(img, pt1, pt2, color, 2)
         # draw text
         textpt = (pt1[0], pt1[1] + 25)
         text = self.labels[target.id] + " : " + str(round(target.score * 100))
@@ -64,16 +68,16 @@ class TargetDrawer(object):
             text,
             textpt,
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.75,
-            self.colors[target.id],
-            2,
+            0.6,
+            color,
+            1,
         )
         pt1 = (1, 1)
         pt2 = (img.shape[1] - 1, img.shape[0] - 1)
         img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
         return img
 
-    def draw_all(self, img, targets):
+    def draw_all(self, img, targets, color=None):
         """Draw all current targets onto img
 
         Parameters
@@ -89,7 +93,7 @@ class TargetDrawer(object):
             Image with targets drawn
         """
         for target in targets:
-            img = self.draw_target_bbox(img, target)
+            img = self.draw_target_bbox(img, target, color=color)
         return img
 
     def make_target_bbox_img_opencv(self, img, targets):
