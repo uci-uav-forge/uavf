@@ -68,6 +68,9 @@ class TargetDrawer(object):
             self.colors[target.id],
             2,
         )
+        pt1 = (1, 1)
+        pt2 = (img.shape[1] - 1, img.shape[0] - 1)
+        img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
         return img
 
     def draw_all(self, img, targets):
