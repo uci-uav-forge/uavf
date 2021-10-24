@@ -19,7 +19,8 @@ _EDGETPU_SHARED_LIB = {
 # 3: category
 #
 # so this dict is to re-order outputs, given different models.
-TENSOR_ORDERS = {"d2": (1, 3, 0, 2)}
+
+TENSOR_ORDERS = {"efficientdetd2": (1, 3, 0, 2), "mobilenet": (0, 1, 2, 3)}
 
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
@@ -27,20 +28,28 @@ BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
 
 
 class TargetInterpreter(object):
-    def __init__(self, model_path, label_path, cpu, thresh):
+    def __init__(self, model_path, label_path, cpu, thresh, order_key="mobilenet"):
         self.cpu = cpu
         self.labels = self.get_labels(label_path)
         self.interpreter = self.make_interpreter(model_path)
         self.interpreter.allocate_tensors()
         self.targets = []
         self.thresh = thresh
+        # the key for assessing tensor orders
+        # there are 4 tensors returned by tflite object detectors:
+        # the bboxes, classes, class scores, and number of objects detected.
+        # the ordering of these tensors changes from model to model, some give
+        # bbox first, then classes, etc. while others give classes first, then
+        # bboxes, etc. These keys belong to `TENSOR_ORDERS` above which map the
+        # correct item to its ordering.
+        self.tensor_orders_key = order_key
 
     def get_labels(self, label_path):
         labels = {}
         with open(label_path, "r") as f:
             for ln in f.readlines():
                 cat_n, cat_label = ln.strip().split(":")
-                cat_n = int(cat_n) - 1
+                cat_n = int(cat_n)
                 labels[cat_n] = cat_label
         return labels
 
@@ -175,7 +184,7 @@ class TargetInterpreter(object):
         list of Target
             list of namedtuples containing target info
         """
-        t0, t1, t2, t3 = TENSOR_ORDERS["d2"]
+        t0, t1, t2, t3 = TENSOR_ORDERS[self.tensor_orders_key]
 
         boxes = self.output_tensor(t0)
         category_ids = self.output_tensor(t1)
