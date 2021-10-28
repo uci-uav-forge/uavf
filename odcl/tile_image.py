@@ -117,11 +117,11 @@ if __name__ == "__main__":
         inp = raw_img[hl:hu, wl:wu, :]
         inter_TPU.interpret(inp)
         if len(inter_TPU.targets) > 0:
-            drawn[hl:hu, wl:wu, :] = inp
+            drawn[hl:hu, wl:wu, :] = draw.draw_tile_frame(inp)
         for t in inter_TPU.targets:
             all_targs.append(Target(t.id, t.score, tiler.tile2board((i, j), t.bbox)))
 
-    drawn = draw.draw_all(drawn, all_targs, color=(65, 150, 255))
+    drawn = draw.draw_all(drawn, all_targs)
 
     outputfname = inp_stem + "_targets.jpg"
     print(outputfname)

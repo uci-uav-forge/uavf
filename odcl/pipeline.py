@@ -27,12 +27,14 @@ class TargetDrawer(object):
 
     @staticmethod
     def get_rand_color():
-        # get a random color between 1 and 0
-        return colorsys.hsv_to_rgb(
-            random.randint(0, 255),
-            random.randint(200, 255),
-            random.randint(180, 210),
+        # get a random color
+        rgb = colorsys.hsv_to_rgb(
+            random.uniform(0, 1),
+            random.uniform(0.6, 1),
+            random.uniform(0.8, 1),
         )
+        rgb = [min(255, int(c * 255)) for c in rgb]
+        return rgb
 
     def draw_tile_frame(self, img):
         """draw a frame around the input. Useful for visualizing tiles."""
@@ -55,7 +57,7 @@ class TargetDrawer(object):
             color = self.colors[target.id]
 
         # draw rectangle
-        img = cv2.rectangle(img, pt1, pt2, color, 2)
+        img = cv2.rectangle(img, pt1, pt2, color, 1)
         # draw text
         textpt = (pt1[0], pt1[1] + 25)
         text = self.labels[target.id] + " : " + str(round(target.score * 100))
