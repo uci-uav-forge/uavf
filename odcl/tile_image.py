@@ -8,18 +8,18 @@ from interpreter import BBox, Target
 
 
 class Tiler(object):
-    def __init__(self, size, offset):
+    def __init__(self, size: int, offset: int):
         # size of square image, e.g. 500 -> (500,500) tile
         self.size = size
         # tile offset in px
         self.offset = offset
 
     def get_tiles(self, raw_shape):
-        h, w = raw_shape[0], raw_shape[1]
+        self.h, self.w = raw_shape[0], raw_shape[1]
         # no of htiles
-        self.no_ht = h // self.size
+        self.no_ht = self.h // self.size
         # no of wtiles
-        self.no_wt = w // self.size
+        self.no_wt = self.w // self.size
 
         # remaining tiles get halved and added like, e.g.
         # ┌───────────────┐
@@ -37,11 +37,8 @@ class Tiler(object):
         # inference on a partial area is probably no good
 
         # pixels from top, left that the tiling actually starts
-        self.hremain2 = math.floor(h % self.size / 2)
-        self.wremain2 = math.floor(w % self.size / 2)
-        # and their relative values on interval [0,0]
-        self.relhremain2 = self.hremain2 / (self.no_ht * self.size)
-        self.relwremain2 = self.wremain2 / (self.no_wt * self.size)
+        self.hremain2 = math.floor(self.h % self.size / 2)
+        self.wremain2 = math.floor(self.w % self.size / 2)
 
         # total width of tiled part of image
         self.tiledw = self.no_ht * self.size
@@ -69,12 +66,21 @@ class Tiler(object):
         """
         i, j = tileidx
         x1, y1, x2, y2 = bbox
+        xmin = (float(i) + x1) / self.no_wt
+        ymin = (float(j) + y1) / self.no_ht
+        xmax = (float(i) + x2) / self.no_wt
+        ymax = (float(j) + y2) / self.no_ht
+
+        rel_off_w = self.wremain2 * 2 / self.w
+        rel_off_h = self.hremain2 * 2 / self.h
+        offx = lambda x: (x + rel_off_w / 2) * (1 - rel_off_w)
+        offy = lambda y: (y + rel_off_h / 2) * (1 - rel_off_h)
 
         return BBox(
-            xmin=(float(i) + x1) / self.no_wt + self.relwremain2,
-            ymin=(float(j) + y1) / self.no_ht + self.relhremain2,
-            xmax=(float(i) + x2) / self.no_wt + self.relwremain2,
-            ymax=(float(j) + y2) / self.no_ht + self.relhremain2,
+            xmin=offx(xmin),
+            ymin=offy(ymin),
+            xmax=offx(xmax),
+            ymax=offy(ymax),
         )
 
 
@@ -101,21 +107,21 @@ if __name__ == "__main__":
     draw = TargetDrawer(inter_TPU.labels)
     # for mobilenet, use `300`; for efficientdet, use `448`
     # offset does nothing for now
+
     tiler = Tiler(300, 25)
 
     drawn = np.zeros_like(raw_img)
 
-    all_targets = []
+    all_targs = []
     for (hl, hu), (wl, wu), (i, j) in tiler.get_tiles(raw_img.shape):
-        tile_input = raw_img[hl:hu, wl:wu, :]
-        inter_TPU.interpret(tile_input)
+        inp = raw_img[hl:hu, wl:wu, :]
+        inter_TPU.interpret(inp)
         if len(inter_TPU.targets) > 0:
-            drawn[hl:hu, wl:wu, :] = draw.draw_tile_frame(tile_input)
-
+            drawn[hl:hu, wl:wu, :] = inp
         for t in inter_TPU.targets:
-            all_targets.append(Target(t.id, t.score, tiler.tile2board((i, j), t.bbox)))
+            all_targs.append(Target(t.id, t.score, tiler.tile2board((i, j), t.bbox)))
 
-    drawn = draw.draw_all(drawn, all_targets, color=(56, 80, 255))
+    drawn = draw.draw_all(drawn, all_targs, color=(65, 150, 255))
 
     outputfname = inp_stem + "_targets.jpg"
     print(outputfname)
