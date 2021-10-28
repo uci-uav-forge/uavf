@@ -121,7 +121,7 @@ class TargetInterpreter(object):
         tensor_index = self.interpreter.get_input_details()[0]["index"]
         return self.interpreter.tensor(tensor_index)()[0]
 
-    def set_input_tensor(self, image):
+    def set_input_tensor(self, image, resize=False):
         """set the input tensor from (cv2) image array of size (h, w c)
 
         Parameters
@@ -129,8 +129,9 @@ class TargetInterpreter(object):
         image : np.array
             h, w, c
         """
-        h, w, c = self.input_image_size()
-        image = cv2.resize(image, (h, w))
+        if resize:
+            h, w, c = self.input_image_size()
+            image = cv2.resize(image, (h, w))
         self.input_tensor()[:, :, :] = image
 
     def output_tensor(self, i):

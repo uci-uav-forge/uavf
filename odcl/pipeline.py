@@ -34,20 +34,16 @@ class TargetDrawer(object):
             random.randint(180, 210),
         )
 
+    def draw_tile_frame(self, img):
+        """draw a frame around the input. Useful for visualizing tiles."""
+        pt1 = (1, 1)
+        pt2 = (img.shape[1] - 1, img.shape[0] - 1)
+        return cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+
     def draw_target_bbox(self, img, target, color=None):
         """Draw a bbox, class label, and confidence score around a target onto image
 
-        Parameters
-        ----------
-        img : cv2 image
-            (h, w, 3) 8-bit array
-        target : Target
-            target for drawing
-
-        Returns
-        -------
-        img
-            updated image with target drawn onto it
+        updated image with target drawn onto it
         """
         w, h = img.shape[1], img.shape[0]
         xmin, xmax = math.ceil(target.bbox.xmin * w), math.floor(target.bbox.xmax * w)
@@ -72,9 +68,7 @@ class TargetDrawer(object):
             color,
             1,
         )
-        pt1 = (1, 1)
-        pt2 = (img.shape[1] - 1, img.shape[0] - 1)
-        img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+
         return img
 
     def draw_all(self, img, targets, color=None):
