@@ -3,85 +3,69 @@ import numpy as np
 from argparse import ArgumentParser
 from time import time
 from pathlib import Path
-
 from interpreter import BBox, Target
+import pyinstrument
 
 
 class Tiler(object):
     def __init__(self, size: int, offset: int):
         # size of square image, e.g. 500 -> (500,500) tile
+        if offset >= size:
+            raise ValueError(
+                "Can't have offset greater than size! offset={}, size={}".format(
+                    offset, size
+                )
+            )
         self.size = size
         # tile offset in px
         self.offset = offset
 
     def get_tiles(self, raw_shape):
         self.h, self.w = raw_shape[0], raw_shape[1]
+
+        a1 = self.size - self.offset
+
         # no of htiles
-        self.no_ht = self.h // self.size
+        self.no_ht = self.h // a1
         # no of wtiles
-        self.no_wt = self.w // self.size
+        self.no_wt = self.w // a1
 
-        # remaining tiles get halved and added like, e.g.
-        # ┌───────────────┐
-        # │               │
-        # │ ┌─────┬─────┐ │
-        # │ │     │     │ │
-        # │ ├─────┼─────┤ │
-        # │ │     │     │ │
-        # │ └─────┴─────┘ │
-        # │               │
-        # └───────────────┘
-        # so that the tiling is "centered" in the image.
-        # we are throwing away data a little bit, but not
-        # much (448 px for an efficientdet v2), and doing
-        # inference on a partial area is probably no good
-
-        # pixels from top, left that the tiling actually starts
-        self.hremain2 = math.floor(self.h % self.size / 2)
-        self.wremain2 = math.floor(self.w % self.size / 2)
-
-        # total width of tiled part of image
-        self.tiledw = self.no_ht * self.size
-        # total height of tiled part of image
-        self.tiledh = self.no_wt * self.size
-
-        for i in range(self.no_wt):
-            for j in range(self.no_ht):
-                hlower = self.size * j + self.hremain2
-                hupper = self.size * (j + 1) + self.hremain2
-                wlower = self.size * i + self.wremain2
-                wupper = self.size * (i + 1) + self.wremain2
-                yield (hlower, hupper), (wlower, wupper), (i, j)
-
-    def tile2board(self, tileidx, bbox):
-        """convert bbox "tile coordinates" to "board coordinates"
-
-        bbox is a bbox
-        tileidx is a tuple (i, j) indicating which tile that bbox belongs to
-
-        integer indexes i, j also work as offset values, because bboxes
-        inside of tiles are given as floating points in the interval [0,1]
-
-        returns `bbox` object with new coordinates
-        """
-        i, j = tileidx
-        x1, y1, x2, y2 = bbox
-        xmin = (float(i) + x1) / self.no_wt
-        ymin = (float(j) + y1) / self.no_ht
-        xmax = (float(i) + x2) / self.no_wt
-        ymax = (float(j) + y2) / self.no_ht
-
-        rel_off_w = self.wremain2 * 2 / self.w
-        rel_off_h = self.hremain2 * 2 / self.h
-        offx = lambda x: (x + rel_off_w / 2) * (1 - rel_off_w)
-        offy = lambda y: (y + rel_off_h / 2) * (1 - rel_off_h)
-
-        return BBox(
-            xmin=offx(xmin),
-            ymin=offy(ymin),
-            xmax=offx(xmax),
-            ymax=offy(ymax),
+        print(
+            "Split {} x {} image into {} x {} tiles".format(
+                self.w, self.h, self.no_wt, self.no_ht
+            )
         )
+
+        wlower, hlower, i, j = 0, 0, 0, 0
+        wupper, hupper = self.size, self.size
+
+        tiles = []
+        # I'm sure there is a cleverer way to do this...
+        while wupper < self.w:
+            while hupper < self.h:
+                tiles.append(((hlower, hupper), (wlower, wupper), (i, j)))
+                hlower += a1
+                hupper += a1
+                j += 1
+            wlower += a1
+            wupper += a1
+            hlower = 0
+            hupper = self.size
+            i += 1
+
+        for t in tiles:
+            yield t
+
+    def tile2board(self, tbbox: BBox, wl, hl):
+        return BBox(
+            xmin=(tbbox.xmin * self.size + wl) / self.w,
+            ymin=(tbbox.ymin * self.size + hl) / self.h,
+            xmax=(tbbox.xmax * self.size + wl) / self.w,
+            ymax=(tbbox.ymax * self.size + hl) / self.h,
+        )
+
+    def merge_overlapping(self):
+        pass
 
 
 if __name__ == "__main__":
@@ -108,21 +92,27 @@ if __name__ == "__main__":
     # for mobilenet, use `300`; for efficientdet, use `448`
     # offset does nothing for now
 
-    tiler = Tiler(300, 25)
-
+    tiler = Tiler(300, -100)
     drawn = np.zeros_like(raw_img)
-
     all_targs = []
+
+    profiler = pyinstrument.Profiler()
+
+    profiler.start()
     for (hl, hu), (wl, wu), (i, j) in tiler.get_tiles(raw_img.shape):
         inp = raw_img[hl:hu, wl:wu, :]
+        img = draw.draw_tile_frame(inp)
         inter_TPU.interpret(inp)
-        if len(inter_TPU.targets) > 0:
-            drawn[hl:hu, wl:wu, :] = draw.draw_tile_frame(inp)
         for t in inter_TPU.targets:
-            all_targs.append(Target(t.id, t.score, tiler.tile2board((i, j), t.bbox)))
+            bbox = tiler.tile2board(t.bbox, wl, hl)
+            all_targs.append(Target(t.id, t.score, bbox))
 
+        drawn[hl:hu, wl:wu, :] = img
+    profiler.stop()
     drawn = draw.draw_all(drawn, all_targs)
 
     outputfname = inp_stem + "_targets.jpg"
     print(outputfname)
     cv2.imwrite(outputfname, drawn)
+
+    profiler.print()

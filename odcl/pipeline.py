@@ -36,11 +36,13 @@ class TargetDrawer(object):
         rgb = [min(255, int(c * 255)) for c in rgb]
         return rgb
 
-    def draw_tile_frame(self, img):
+    def draw_tile_frame(self, img, alpha=0.9):
         """draw a frame around the input. Useful for visualizing tiles."""
         pt1 = (1, 1)
         pt2 = (img.shape[1] - 1, img.shape[0] - 1)
-        return cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+        cpy = img.copy()
+        img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+        return cv2.addWeighted(cpy, alpha, img, (1 - alpha), 0)
 
     def draw_target_bbox(self, img, target, color=None):
         """Draw a bbox, class label, and confidence score around a target onto image
