@@ -5,6 +5,8 @@ from time import time
 from pathlib import Path
 from interpreter import BBox, Target
 import pyinstrument
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class Tiler(object):
@@ -29,12 +31,6 @@ class Tiler(object):
         self.no_ht = self.h // a1
         # no of wtiles
         self.no_wt = self.w // a1
-
-        print(
-            "Split {} x {} image into {} x {} tiles".format(
-                self.w, self.h, self.no_wt, self.no_ht
-            )
-        )
 
         wlower, hlower, i, j = 0, 0, 0, 0
         wupper, hupper = self.size, self.size
@@ -64,8 +60,47 @@ class Tiler(object):
             ymax=(tbbox.ymax * self.size + hl) / self.h,
         )
 
-    def merge_overlapping(self):
-        pass
+    def merge_overlapping(self, targets: list):
+        """probably can optimize this"""
+        # build an undirected connectivity graph for targets
+        T = nx.Graph()
+        # assign unique integer to each target
+        for v, t in enumerate(targets):
+            T.add_node(v, target=t)
+
+        # connect targets that overlap
+        for i, t1 in enumerate(targets):
+            for j, t2 in enumerate(targets[i + 1 :]):
+                j += i + 1
+                if t1.bbox.overlap(t2.bbox):
+                    T.add_edge(i, j)
+
+        merged_targets = []
+
+        # find connected components. Connected components are tiles
+        # that overlap one another.
+        for c in nx.connected_components(T):
+            # get list of targets
+            connected_targets = [T.nodes[v]["target"] for v in c]
+            # smallest xmin, ymin and largest xmax, ymax in connected component
+            # so that the box covers all targets in connected components
+            txmin = min(connected_targets, key=lambda t: t.bbox.xmin).bbox.xmin
+            tymin = min(connected_targets, key=lambda t: t.bbox.ymin).bbox.ymin
+            txmax = max(connected_targets, key=lambda t: t.bbox.xmax).bbox.xmax
+            tymax = max(connected_targets, key=lambda t: t.bbox.ymax).bbox.ymax
+            # target with largest confidence score
+            t_scoremax = max(connected_targets, key=lambda t: t.score)
+            # we use that target's score and id in the new merged target
+            tscore = t_scoremax.score
+            tcls = t_scoremax.id
+            # create new target. If there is only a single target in the list of
+            # connected components, this is just that target. But if there are
+            # multiples, this will be the box that holds all of them.
+            new_target = Target(
+                id=tcls, score=tscore, bbox=BBox(txmin, tymin, txmax, tymax)
+            )
+            merged_targets.append(new_target)
+        return merged_targets
 
 
 if __name__ == "__main__":
@@ -81,38 +116,38 @@ if __name__ == "__main__":
     # $ wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
     # $ mv mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite mobilenet.tflite
     # $ wget https://dl.google.com/coral/canned_models/coco_labels.txt
-    inter_TPU = TargetInterpreter(opts.model, opts.labels, "tpu", 0.33)
-    inp_path = Path(opts.i).resolve()
-    print("Reading: ", inp_path)
-
-    raw_img = cv2.imread(str(inp_path))
-    inp_stem = str(inp_path.parent / inp_path.stem)
+    inter_TPU = TargetInterpreter(opts.model, opts.labels, "tpu", 0.33, order_key="efficientdetd2")
 
     draw = TargetDrawer(inter_TPU.labels)
     # for mobilenet, use `300`; for efficientdet, use `448`
     # offset does nothing for now
 
-    tiler = Tiler(300, -100)
+    inp_path = Path(opts.i).resolve()
+    raw_img = cv2.imread(str(inp_path))
+    tiler = Tiler(448, 100)
     drawn = np.zeros_like(raw_img)
     all_targs = []
 
-    profiler = pyinstrument.Profiler()
-
-    profiler.start()
+    times = []
     for (hl, hu), (wl, wu), (i, j) in tiler.get_tiles(raw_img.shape):
+        t1 = time()
         inp = raw_img[hl:hu, wl:wu, :]
-        img = draw.draw_tile_frame(inp)
+            # img = draw.draw_tile_frame(inp)
         inter_TPU.interpret(inp)
         for t in inter_TPU.targets:
             bbox = tiler.tile2board(t.bbox, wl, hl)
             all_targs.append(Target(t.id, t.score, bbox))
+        drawn[hl:hu, wl:wu, :] = inp
+        t2 = time()
+        times.append(t2-t1)
+    all_targs = tiler.merge_overlapping(all_targs)
+    
+    times = np.array(times)
+    print("Inference on {}x{} tiles".format(tiler.no_ht , tiler.no_wt))
+    print("Done. per tile mean={}ms std={}ms".format(round(times.mean()*1000), round(times.std()*1000)))
+    print("Took {}ms".format(round(times.sum()*1000)))
 
-        drawn[hl:hu, wl:wu, :] = img
-    profiler.stop()
     drawn = draw.draw_all(drawn, all_targs)
-
-    outputfname = inp_stem + "_targets.jpg"
+    outputfname = "./" + str(inp_path.stem) + "_targets.jpg"
     print(outputfname)
     cv2.imwrite(outputfname, drawn)
-
-    profiler.print()
