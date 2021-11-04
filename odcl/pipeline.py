@@ -13,7 +13,24 @@ _EDGETPU_SHARED_LIB = {
 }[platform.system()]
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
-BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
+
+
+class BBox(object):
+    def __init__(self, xmin, ymin, xmax, ymax):
+        self.xmin = xmin
+        self.ymin = ymin
+        self.xmax = xmax
+        self.ymax = ymax
+        self.area = (self.xmax - self.xmin) * (self.ymax - self.ymin)
+
+    def overlap(self, other):
+        """check if this bbox overlaps with another bbox"""
+        xc = (self.xmin <= other.xmax) and (other.xmin <= self.xmax)
+        yc = (self.ymin <= other.ymax) and (other.ymin <= self.ymax)
+        if xc and yc:
+            return True
+        else:
+            return False
 
 
 class TargetDrawer(object):
@@ -59,7 +76,7 @@ class TargetDrawer(object):
             color = self.colors[target.id]
 
         # draw rectangle
-        img = cv2.rectangle(img, pt1, pt2, color, 1)
+        img = cv2.rectangle(img, pt1, pt2, color, 2)
         # draw text
         textpt = (pt1[0], pt1[1] + 25)
         text = self.labels[target.id] + " : " + str(round(target.score * 100))
@@ -70,7 +87,7 @@ class TargetDrawer(object):
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             color,
-            1,
+            2,
         )
 
         return img
