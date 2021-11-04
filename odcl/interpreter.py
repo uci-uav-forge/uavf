@@ -2,6 +2,7 @@ import colorsys, platform, cv2, random, math
 import numpy as np
 from tflite_runtime import interpreter
 from collections import namedtuple
+from pipeline import BBox
 
 _EDGETPU_SHARED_LIB = {
     "Linux": "libedgetpu.so.1",
@@ -24,7 +25,6 @@ TENSOR_ORDERS = {"efficientdetd2": (1, 3, 0, 2), "mobilenet": (0, 1, 2, 3)}
 
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
-BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
 
 
 class TargetInterpreter(object):
