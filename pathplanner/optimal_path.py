@@ -9,11 +9,17 @@ from scipy.spatial import Delaunay, delaunay_plot_2d
 def get_points(G: nx.DiGraph(), cell):
     return np.array([G.nodes[v]["points"] for v in cell])
 
+def tri_sign(p1, p2, p3):
+    return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
 
-def triangle_coll(tri, point):
-    # calculate a triangle collision
-    pass
-
+def triangle_coll(point, v1, v2, v3):
+    d1 = tri_sign(point, v1, v2)
+    d2 = tri_sign(point, v2, v3)
+    d3 = tri_sign(point, v3, v1)
+     
+    negative = d1 < 0 or d2 < 0 or d3 < 0
+    positive = d1 > 0 or d2 > 0 or d3 > 0
+    return not (negative and positive)
 
 if __name__ == "__main__":
     pts = cluster_points()
