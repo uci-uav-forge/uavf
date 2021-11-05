@@ -5,7 +5,7 @@ import networkx as nx
 
 if __name__ == '__main__':
    # generate a distribution of points in xy
-   points = np.random.beta(4, 4, size=(100,2))
+   points = np.random.beta(4, 4, size=(30,2))
    # points = polygon.cluster_points(no_clusters=5, cluster_n=12, cluster_size=1, cluster_dist=1)
    # create a polygon and store it into G
    G = polygon.polygon(points, holes=3, removals=130)
@@ -14,7 +14,7 @@ if __name__ == '__main__':
    # H has the rotated line sweep
 
    ax = plt.axes()
-   J, R, H, S = bcd.line_sweep(G, theta=bcd.degree2rad(10))
+   J, R, H, S = bcd.line_sweep(G, theta=bcd.degree2rad(0))
    # plot stuff
    # fig, ax = plt.subplots(ncols=2, nrows=2, sharex=True, sharey=True, figsize=(7.5, 7.5), tight_layout=True)
    # for i, a in np.ndenumerate(ax):
