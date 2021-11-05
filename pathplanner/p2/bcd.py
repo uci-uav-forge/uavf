@@ -10,7 +10,7 @@ import numpy as np
 import copy
 from matplotlib import pyplot as plt
 import enum
-import euclid3
+from math import ceil
 
 class Event(enum.Enum):
     CLOSE=1
@@ -66,7 +66,11 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
     # build the reebgraph of J
     R = build_reebgraph(J, cells)
     S = make_skelgraph(J, R)
-    return J, R, H, S
+    U = decompose(S)
+    return J, R, H, S, U
+
+def decompose(S: nx.DiGraph):
+    return S.subgraph([n for n in S.nodes if S.nodes[n]['original'] == True])
 
 def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
     p = np.zeros((2,), dtype=np.float64)
@@ -96,18 +100,17 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
     R.add_edges_from(rgedges)
     for n in R.nodes:
         R.nodes[n]['cell'] = rgcells[n]
-        
+    
+    cells_graph_list = []
     for n in R.nodes:
         c = R.nodes[n]['cell']
-        poly = []
-        for e1, _ in nx.find_cycle(nx.Graph(H.subgraph(c))):
-            poly.append(H.nodes[e1]['points'])
-        poly = np.array(poly)
-        if iscw(poly): poly = np.flip(poly, axis=0)
+        B, poly = get_cell_closed(H, c)
+        cells_graph_list.append(B)
+        # if not iscw(poly): poly = np.flip(poly, axis=0)
+        
         # TODO: all of this is bad because polyskel. It doesn't seem
         # too hard to rewrite polyskel to store connectivity from the
         # get-go.
-        print(iscw(poly))
         def skl_sortkey(skl): return skl[1]
         skels = polyskel.skeletonize(poly, holes=[])
         # good lord
@@ -122,8 +125,8 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
         epsilon = np.array([1e-5, 1e-5])
         elist = []
         # WHY??
-        for i, (pt1, _, _) in enumerate(skels):
-            for j, (_, _, neighbors2) in enumerate(skels):
+        for i, (pt1, h, _) in enumerate(skels):
+            for j, (_, h, neighbors2) in enumerate(skels):
                 if i != j or j != i:
                     # WHY????
                     for n2 in neighbors2:
@@ -139,28 +142,20 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
             T = nx.Graph(elist)
             for n_ in T.nodes:
                 T.nodes[n_]['points'] = skels[n_][0]
+                T.nodes[n_]['height'] = skels[n_][1]
 
         R.nodes[n]['centroid'] = np.array(middle)
         # graph of skeleton. we will traverse this when 
         # passing directly through a cell without scanning
-        R.nodes[n]['tgraph'] = T
-
-    # TODO
-    # P is an empty undirected graph
-    # for c node/cell/skeleton in eulerian tour of RG:
-        # compose the skeleton with P
-        # on P: mark the edges that were just added with an "internal" weight
-        # at every edge between nodes in the eulerian tour
-        # find the midpoint of the edge
-        # find the closest point on our skeleton to the midpoint
-        # find the closest point on their skeleton to the midpoint
-        # add an edge on P to that point
-        # then the next node will be the cell we just connected
-        # or we will eventually get there
-    # clip degree-1 "internal" edges/nodes from P
-        # NOTE this may not be necessary, because of how skeletons are formed;
-        # their ends may be the closest points by default.
+        R.nodes[n]['tgraph'] = T 
     return R
+
+def get_cell_closed(G: nx.DiGraph, cell):
+   cycs = nx.simple_cycles(G.subgraph(cell))
+   cycle = max(cycs, key=lambda e: len(e))
+   edges = [(cycle[i], cycle[i+1]) for i, _ in enumerate(cycle[:-1])] + [(cycle[-1], cycle[0])]
+   points = np.row_stack([G.nodes[i]['points'] for i in cycle])
+   return G.edge_subgraph(edges).copy(), points
 
 def get_points_array(H:nx.Graph, nlist:list = None, posattr:str='points'):
     if nlist == None:
