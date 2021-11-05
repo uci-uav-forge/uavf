@@ -1,16 +1,10 @@
-from typing import Generator
-from networkx.classes.function import degree
-from networkx.utils.decorators import preserve_random_state
-from numpy.core.fromnumeric import sort
-from numpy.random.mtrand import vonmises
-from p2 import polygon
 from polyskel import polyskel
 import networkx as nx
 import numpy as np
-import copy
-from matplotlib import pyplot as plt
-import enum
-from math import ceil
+import copy, enum
+import matplotlib.pyplot as plt
+from . import polygon
+from shapely import geometry
 
 class Event(enum.Enum):
     CLOSE=1
@@ -23,6 +17,59 @@ class Event(enum.Enum):
 def rad2degree(rad): return rad*180/np.pi
 def degree2rad(deg): return deg*np.pi/180
 
+
+def discretize_entire(J:nx.DiGraph, R:nx.Graph, gridsz:float):
+    pts = get_points_array(J)
+    xmin, xmax = np.min(pts[:,0]), np.max(pts[:,0])
+    ymin, ymax = np.min(pts[:,1]), np.max(pts[:,1])
+    x, y = np.meshgrid(np.arange(xmin, xmax, gridsz), np.arange(ymin, ymax, gridsz))
+    P = nx.grid_2d_graph(*x.shape)
+    polygons=[]
+    for n in R.nodes:
+        polygons.append(geometry.Polygon(R.nodes[n]['cellpts']))
+    delnodes = []
+    for n in P.nodes:
+        point = np.array((x[n], y[n]))
+        if any([p.contains(geometry.Point(point)) for p in polygons]):
+            P.nodes[n]['points'] = point
+        else:
+            delnodes.append(n)
+    P.remove_nodes_from(delnodes)
+    P = P.subgraph(max(nx.connected_components(P), key=len))
+    return P
+
+def add_discretized_cells(J:nx.DiGraph, R:nx.Graph, theta, gridsz) -> None:
+    for n in R.nodes:
+        P = discretize_cell(J, R.nodes[n]['cell'], theta, gridsz)
+        R.nodes[n]['grid'] = P
+
+def discretize_cell(J:nx.DiGraph, c, theta, gridsz, diags=True):
+    # offset by small amount so that grid begins just inside of polygon edge
+    eps = 0.0001
+    pts = get_points_array(J, c)
+    matr = make_rot_matrix(theta)
+    revmatr = make_rot_matrix(-theta)
+    # rotate points
+    pts = np.dot(pts, matr)
+    poly = geometry.Polygon(pts)
+    # cover cell in points
+    xmin, xmax = np.min(pts[:,0]) + eps, np.max(pts[:,0])
+    ymin, ymax = np.min(pts[:,1]) + eps, np.max(pts[:,1])
+    x, y = np.meshgrid(np.arange(xmin, xmax, gridsz), np.arange(ymin, ymax, gridsz))
+    # draw 2dgraph
+    P = nx.grid_2d_graph(*x.shape)
+    rm_node_list = []
+    for n in P.nodes:
+        point = np.array((x[n], y[n]))
+        if poly.contains(geometry.Point(point)):
+            P.nodes[n]['points'] = np.dot(point, revmatr)
+        else:
+            rm_node_list.append(n)
+    P.remove_nodes_from(rm_node_list)
+    ccs = list(nx.connected_components(P))
+    if len(ccs) > 1:
+        P = P.subgraph(max(ccs, key=len))
+    return P
 
 def iscw(points: np.ndarray) -> bool:
     '''Determine orientation of a set of points
@@ -44,7 +91,28 @@ def iscw(points: np.ndarray) -> bool:
     if c > 0: return True
     else: return False
 
-def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
+def line_sweep(G: nx.DiGraph, theta: float = 0, posattr: str = 'points') -> tuple:
+    '''Perform a boustrophedon line sweep over a world graph G.
+
+    Parameters
+    ----------
+    G : nx.DiGraph
+        World graph. Contains an outer boundary, which is made up of a clockwise ordering of edges
+        with weight=1, and optionally contains holes, which are counterclockwise orderings of edges 
+        with weight=2. Worlds must be non-degenerate planar graphs!
+    theta : float, optional
+        Angle of the line sweep from x-axis, by default 0
+    posattr : str, optional
+        attribute of points in `G`, by default 'points'
+
+    Returns
+    -------
+    tuple
+        H, which is a graph of the new bdc-composed world rotated to `theta`
+        J, which is the graph of the new bdc-compoased world rotated back to its original orientation
+        R, which is the reeb graph containing connectvitity information between each cell
+        S, which is the skel graph containing connected straight skeletons of each cell in `R`.
+    '''
     # sorted node list becomes our list of events
     H = rotate_graph(G, theta, posattr=posattr)
     # sort left to right and store sorted node list in L.
@@ -63,20 +131,47 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
         cells = append_cell(H, c, cells)
     # rotate the graph back into original orientation
     J = rotate_graph(H, -theta, posattr=posattr)
-    return J, cells
+    # # build the reebgraph of J
+    R = build_reebgraph(J, cells)
+    # S = create_skelgraph(R, J)
+    return J, R
 
-def decompose(S: nx.DiGraph):
-    return S.subgraph([n for n in S.nodes if S.nodes[n]['original'] == True])
+def rg_centroid(H: nx.DiGraph, cell: set) -> np.ndarray:
+    '''Get centroid of a cell `cell` made up of nodes in `H`
 
-def rg_centroid(R: nx.Graph, H: nx.DiGraph, cell: set) -> np.ndarray:
+    Parameters
+    ----------
+    H : nx.DiGraph
+        The world graph
+    cell : set
+        An ordered or unordered list of nodes in `H`
+
+    Returns
+    -------
+    np.ndarray
+        the centroid as an xy point.
+    '''
     p = np.zeros((2,), dtype=np.float64)
     for c in cell:
         p += H.nodes[c]['points']
     p /= len(cell)
     return p
 
-def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
-    '''wowwww dude refactor this'''
+def build_reebgraph(H: nx.DiGraph, cells: list) -> nx.Graph:
+    '''Build the reebgraph on `H` using the cell information contained in 'cells'
+
+    Parameters
+    ----------
+    H : nx.DiGraph
+        The bdc composed world
+    cells : list
+        each entry in cells is a list of nodes in `H` which form a closed cell in the bdc composition
+
+    Returns
+    -------
+    nx.Graph
+        Graph, `R` which represents connectivity of each cell in `H`
+    '''
     rgedges, rgcells = [], {}
     for i, a in enumerate(cells.values()):
         for j, b in enumerate(cells.values()):
@@ -96,64 +191,182 @@ def build_reebgraph(H: nx.DiGraph, cells: list) -> None:
     R.add_edges_from(rgedges)
     for n in R.nodes:
         R.nodes[n]['cell'] = rgcells[n]
-    
-    cells_graph_list = []
-    for n in R.nodes:
-        c = R.nodes[n]['cell']
-        B, poly = get_cell_closed(H, c)
-        cells_graph_list.append(B)
-        # if not iscw(poly): poly = np.flip(poly, axis=0)
+        centroid = rg_centroid(H, rgcells[n])
+        R.nodes[n]['centroid'] = centroid
+        cellpts = [H.nodes[c]['points'] for c in rgcells[n]]
+        # close the polygon
+        cellpts.append(cellpts[0])
+        cellpts = np.array(cellpts)
+        R.nodes[n]['cellpts'] = cellpts
         
-        # TODO: all of this is bad because polyskel. It doesn't seem
-        # too hard to rewrite polyskel to store connectivity from the
-        # get-go.
-        def skl_sortkey(skl): return skl[1]
-        skels = polyskel.skeletonize(poly, holes=[])
-        # good lord
-        newskels = []
-        for u, v, w in skels:
-            u = np.array(list(u))
-            neww = []
-            for x in w:
-                neww.append(np.array(list(x)))
-            newskels.append((u, v, neww))
-        skels = newskels
-        epsilon = np.array([1e-5, 1e-5])
-        elist = []
-        # WHY??
-        for i, (pt1, h, _) in enumerate(skels):
-            for j, (_, h, neighbors2) in enumerate(skels):
-                if i != j or j != i:
-                    # WHY????
-                    for n2 in neighbors2:
-                        if np.all(np.abs(pt1 - n2) <= epsilon):
-                            # IM DEAD
-                            elist.append((i, j))
-        if not elist:
-            middle = rg_centroid(R, H, c)
-            T = nx.Graph()
-            T.add_node(1, points=middle)
+        # plt.plot(cellpts[:,0], cellpts[:,1])
+        # triangles can't have straight skeleton
+        if len(rgcells[n]) > 3:
+            skel = polyskel.skeletonize(cellpts, holes=[])
+            skel = fix_polyskel(skel)
+            T = traverse_polyskel(R, n, skel)
         else:
-            middle = list(max(skels, key=skl_sortkey)[0])
-            T = nx.Graph(elist)
-            for n_ in T.nodes:
-                T.nodes[n_]['points'] = skels[n_][0]
-                T.nodes[n_]['height'] = skels[n_][1]
-
-        R.nodes[n]['centroid'] = np.array(middle)
-        # graph of skeleton. we will traverse this when 
-        # passing directly through a cell without scanning
-        R.nodes[n]['tgraph'] = T 
+            T = nx.Graph()
+            T.add_node(0, points=centroid, interior=True, 
+            parent=(R.nodes[n]['cell'], R.nodes[n]['cellpts'])
+            )
+        for e1, e2 in T.edges:
+            T[e1][e2]['interior'] = True
+        R.nodes[n]['skel_graph'] = T
     return R
 
-def get_cell_closed(G: nx.DiGraph, cell):
-   cycs = nx.simple_cycles(G.subgraph(cell))
-   cycle = max(cycs, key=lambda e: len(e))
-   edges = [(cycle[i], cycle[i+1]) for i, _ in enumerate(cycle[:-1])] + [(cycle[-1], cycle[0])]
-   points = np.row_stack([G.nodes[i]['points'] for i in cycle])
-   return G.edge_subgraph(edges).copy(), points
+def create_skelgraph(R: nx.Graph, H: nx.DiGraph) -> nx.Graph:
+    '''Create a "skelgraph" from a bdc world `H` and its reeb graph, `R`.
+    A skelgraph is a graph of the straight skeletons of each cell of a world `H`,
+    joined by the midpoints of each cell wall on `H`. 
 
-def get_points_array(H:nx.Graph, nlist:list = None, posattr:str='points'):
+    Traversing the skelgraph of `H` means visiting each cell the boustrophedon
+    decomposition of `H`.
+
+    Parameters
+    ----------
+    R : nx.Graph
+        The reeb graph of the world
+    H : nx.DiGraph
+        The BDC of the world
+
+    Returns
+    -------
+    nx.Graph
+        An undirected graph joining the straight skeleton of each cell.
+    '''
+    # in preparation to join, make nodes unique
+    unique_node = 0
+    for n in R.nodes:
+        unique_node = remap_nodes_unique(unique_node, R.nodes[n]['skel_graph'])
+
+    visited = set()
+    for this, that in nx.eulerian_circuit(nx.eulerize(R)):
+        if frozenset((this, that)) not in visited:
+            visited.add(frozenset((this, that)))
+            # midpoint is the midpoint of the line between cells of 'this' and 'that' nodes
+            # on reeb graph. We walk through each transition between cells, finding the midpoint
+            # and adding it to the straight skeletons in R.
+            midp = get_midpoint_shared(H, R, this, that)
+            this_closest = get_closest_on_skel(R, this, midp)
+            that_closest = get_closest_on_skel(R, that, midp)
+            # get midpoint node
+            midp_node = -unique_node
+            unique_node += 1
+            R.nodes[this]['skel_graph'].add_node(midp_node, interior=False, points=midp, parent=None)
+            R.nodes[this]['skel_graph'].add_edge(this_closest, midp_node, interior=False)
+            R.nodes[that]['skel_graph'].add_node(midp_node, interior=False, points=midp, parent=None)
+            R.nodes[that]['skel_graph'].add_edge(that_closest, midp_node, interior=False)
+    # compose all
+    for n in R.nodes:
+        S = nx.compose_all([R.nodes[n]['skel_graph'] for n in R.nodes])
+    for e1, e2 in S.edges:
+        S[e1][e2]['distance'] = np.linalg.norm(S.nodes[e1]['points'] - S.nodes[e2]['points'])
+    return S
+    
+def get_closest_on_skel(R: nx.graph, rnode: int, midp: np.array) -> np.array:
+    '''Get the closest point of a skel graph stored in the `rnode` of `R` to the midpoint `midp`.
+
+    Parameters
+    ----------
+    R : nx.graph
+        Reeb graph containing straight skeleton in key 'skel_graph'
+    rnode : int
+        node on that reeb graph
+    midp : np.array
+        the point to test
+
+    Returns
+    -------
+    int
+        a node on skel_graph which is closest to `midp`
+    '''
+    this_connectors = []
+    for n in R.nodes[rnode]['skel_graph'].nodes:
+        if R.nodes[rnode]['skel_graph'].nodes[n]['interior']:
+            thispt = R.nodes[rnode]['skel_graph'].nodes[n]['points']
+            dist = dotself(midp - thispt)
+            this_connectors.append((n, dist))
+    # return closest
+    return sorted(this_connectors, key=lambda t: t[1])[0][0]
+
+
+def fix_polyskel(skel: list):
+    '''this is a helper function for casting the results of `polyskel` to
+    numpy arrays, rather than Euler3 points
+
+    Parameters
+    ----------
+    skel : list
+        results of `polyskel` function call
+
+    Returns
+    -------
+    list
+        each element of this list contains origin, height, and leafs. 
+        see polyskel documentation for more
+    '''
+    newskel = []
+    def strip(leaf): return np.array(leaf)
+    for origin, height, leafs in skel:
+        origin = np.array(origin)
+        leafs = list(map(strip, leafs))
+        newskel.append((origin, height, leafs))
+    return newskel
+
+def traverse_polyskel(R: nx.Graph, rn: int, skel: list) -> nx.Graph:
+    '''This is a helper function for casting the list returned by `polyskel` to 
+    a networkx Graph.
+
+    This function also adds the list from `skel` to a reebgraph stored in `R` at node `rn`.
+
+    Parameters
+    ----------
+    R : nx.Graph
+        Reeb Graph
+    rn : int
+        node on the reeb graph
+    skel : list
+        list returned by polyskel
+
+    Returns
+    -------
+    nx.Graph
+        the straight skel graph
+    '''
+    epsilon = 1e-5
+    elist = []
+    for i, (pt1, _, _) in enumerate(skel):
+        for j, (_, _, lfs2) in enumerate(skel):
+            for l in lfs2:
+                if dotself(pt1 - l) <= epsilon:
+                    elist.append((i, j))
+    T = nx.Graph(elist)
+    for n in T.nodes:
+        T.nodes[n]['points'] = skel[n][0]
+        T.nodes[n]['interior'] = True
+        T.nodes[n]['parent'] = R.nodes[rn]['cell'], R.nodes[rn]['cellpts']
+    return T
+
+def get_points_array(H:nx.Graph, nlist:list = None, posattr:str='points') -> np.ndarray:
+    '''Get an array of points from `H` which stores points in `posattr` from indices in `nlist`
+
+    Returns all points in H by default.
+
+    Parameters
+    ----------
+    H : nx.Graph
+        world graph
+    nlist : list, optional
+        subset of nodes on H to get points from, by default None
+    posattr : str, optional
+        attribute that the points are stored under, by default 'points'
+
+    Returns
+    -------
+    np.ndarray
+        Mx2 array for M points 
+    '''
     if nlist == None:
         nlist = list(H.nodes())
     points = np.empty((len(nlist), 2))
@@ -162,15 +375,74 @@ def get_points_array(H:nx.Graph, nlist:list = None, posattr:str='points'):
     return points
     
 def get_midpoint_shared(H: nx.DiGraph, R: nx.Graph, e1: int, e2: int) -> np.ndarray:
+    '''Get the midpoint of the line which joins two cells, e1 and e2.
+
+    E.g, returns the point x from two neighboring rectangular cells:
+
+    ┌──────────┐
+    │          │
+    │    e1    │
+    │          │
+    └───┬──x───┴──┐
+        │         │
+        │    e2   │
+        │         │
+        └─────────┘
+
+    Parameters
+    ----------
+    H : nx.DiGraph
+        the world graph
+    R : nx.Graph
+        the reeb graph of the world `H`
+    e1 : int
+        first shared edge. Node of `R`
+    e2 : int
+        second shared edge. Node of `R`
+
+    Returns
+    -------
+    np.ndarray
+        the midpoint
+    '''
     n1, n2 = R[e1][e2]['shared']
     p1, p2 = H.nodes[n1]['points'], H.nodes[n2]['points']
     v = (p2-p1)/2
     return p1 + v
 
-def dotself(x): return np.dot(x, x)
+def dotself(x:np.ndarray) -> float: 
+    '''dot a vector x with itself to produce a scalar
+
+    Parameters
+    ----------
+    x : np.ndarray
+        the vector
+
+    Returns
+    -------
+    float
+        scalar value |x|^2
+    '''
+    return np.dot(x, x)
 
 
-def remap_nodes_unique(new_node: int, T: nx.Graph):
+def remap_nodes_unique(new_node: int, T: nx.Graph) -> int:
+    '''Alters T in place, replacing its non-unique nodes by iterating on `new_node`.
+    we can run this function on several graphs, thus guaranteeing that their nodes
+    do not collide.
+
+    Parameters
+    ----------
+    new_node : int
+        starting value for new nodes
+    T : nx.Graph
+        A graph with integer nodes
+
+    Returns
+    -------
+    int
+        ending value for new nodes
+    '''
     mapping = {}
     for n in T.nodes:
         mapping[n] = -new_node
@@ -179,11 +451,23 @@ def remap_nodes_unique(new_node: int, T: nx.Graph):
     return new_node
 
 def make_skelgraph(H: nx.DiGraph, R: nx.Graph):
+    '''Make the "straight skeleton graph" over the world `H` with 
+    its reeb-graph `R`.
+
+    Parameters
+    ----------
+    H : nx.DiGraph
+        The world. Must already be BDC decomposed.
+    R : nx.Graph
+        Reeb graph of the world.
+
+    Returns
+    -------
+    nx.Graph
+        the "skeleton" graph. This undirected graph is made up of the straight skeleton
+        of each cell, connected by the midpoints of the dividing lines between cells.
+    '''
     S = nx.Graph()
-    # TODO: sooo, this is only necessary because we didn't index by 
-    # point directly, but instead by index. WHOOPS! We'd have to
-    # rewrite probably the entire reeb graph fuction if we wanted to
-    # do without this proxy node list...
     new_node = 0
     eulerian = nx.eulerian_circuit(nx.eulerize(R))
     for n in R.nodes:
@@ -313,7 +597,17 @@ def append_cell(H: nx.DiGraph, v: int, cells:dict) -> list:
             cells[to_add] = path
     return cells
 
-def splitmerge_points(H: nx.DiGraph, v: int):
+def splitmerge_points(H: nx.DiGraph, v: int) -> None:
+    '''Alters H in place to produce split/merge points
+    from an event on node `v`
+
+    Parameters
+    ----------
+    H : nx.DiGraph
+        Shape graph
+    v : int
+        index of the event vertex
+    '''
     a, b = get_intersects(H, v)
     if a is not None:
         ai = max(H.nodes()) + 1
@@ -391,6 +685,22 @@ def get_intersects(H: nx.DiGraph, v: int) -> tuple:
     return above, below
 
 def intersect_vertical_line(p1: np.ndarray, p2: np.ndarray, pv: np.ndarray) -> np.ndarray:
+    '''Get line intersect on the line formed by [p1, p2] for the point at `pv`
+
+    Parameters
+    ----------
+    p1 : np.ndarray
+        end point of line
+    p2 : np.ndarray
+        end point of line
+    pv : np.ndarray
+        point of intersect
+
+    Returns
+    -------
+    np.ndarray
+        line from `pv` to the point of intersection
+    '''
     m = abs(pv[0] - p1[0]) / abs(p2[0] - p1[0])
     # y = mx + b
     py = m * (p2[1] - p1[1]) + p1[1]
