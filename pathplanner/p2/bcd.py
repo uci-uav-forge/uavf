@@ -63,11 +63,7 @@ def line_sweep(G: nx.DiGraph, theta: float, posattr: str = 'points') -> tuple:
         cells = append_cell(H, c, cells)
     # rotate the graph back into original orientation
     J = rotate_graph(H, -theta, posattr=posattr)
-    # build the reebgraph of J
-    R = build_reebgraph(J, cells)
-    S = make_skelgraph(J, R)
-    U = decompose(S)
-    return J, R, H, S, U
+    return J, cells
 
 def decompose(S: nx.DiGraph):
     return S.subgraph([n for n in S.nodes if S.nodes[n]['original'] == True])
