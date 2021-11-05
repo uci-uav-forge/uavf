@@ -51,24 +51,41 @@ if __name__ == "__main__":
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(projection="3d")
 
-    newh = cp.Variable(shape=H.shape)
 
+    # new h is a free variable corresponding to H
+    newh = cp.Variable(shape=H.shape)
+    # how important do we want smoothness to be?
+    # alpha higher -> smoother curve, but maybe not as low
+    # alpha lower -> jagged curve, but lower 
     alpha = 3.0
 
+    # minimum distance
+    buffer = 0.2
+
+    # number of times to propagate difference-finding
     relaxations = 12
-    # as low as possible, with minimum variation
+    
+    # we have to calculate smoothness across multiple directions
     smoothnessx = cp.diff(newh, 1, axis=0)
     smoothnessy = cp.diff(newh, 1, axis=1)
     smoothness = 0
+
+    # sum squares for n relaxations
     for _ in range(relaxations):
         smoothness += cp.sum_squares(smoothnessx) + cp.sum_squares(smoothnessy)
 
+    # cost function also penalizes distance
     cost_fn = cp.sum_squares(newh - H) + smoothness * alpha
-    hconstraint = newh - H >= 0.05
+
+    # we add a constraint that we are never 
+    hconstraint = newh - H >= buffer
+
+    # solve the problem
     constraints = [hconstraint]
     problem = cp.Problem(cp.Minimize(cost_fn), constraints)
     problem.solve()
 
+    # make plots
     ax1.plot_surface(X, Y, H, cmap=cm.get_cmap("cividis"))
     ax1.plot_wireframe(X, Y, newh.value, colors="red")
 
