@@ -1,21 +1,37 @@
-from datetime import datetime
-from os import PRIO_USER
-from matplotlib import transforms
 from scipy import spatial
 import numpy as np
 import networkx as nx
 from matplotlib import pyplot as plt
-from matplotlib import cm
-import warnings
+import copy
 
-def cluster_points(no_clusters: int = 3, cluster_n: int = 10, cluster_size:int = 1, cluster_dist:int = 1) -> np.ndarray:
-    ''' generate clusters of points '''
-    pts = np.zeros((no_clusters * cluster_n, 2))
-    loc = np.array([0,0], dtype='float64')
-    for c in range(no_clusters):
-        pts[c * cluster_n:(c+1)* cluster_n, :] = np.random.normal(loc=loc, scale=cluster_size, size=(cluster_n, 2))
-        loc += np.random.uniform(low=-cluster_dist, high=cluster_dist, size=np.shape(loc))
+def beta_clusters(clusters: int=3, ppc: int=20, alpha:float=4.0, beta: float=4.0) -> np.ndarray:
+    pts = np.zeros((clusters*ppc, 2))
+    loc = np.array([0,0], dtype=float)
+    for c in range(clusters):
+        # each cluster is a "block" in the pts array between (c) : (c+1) multiplied by ppc.
+        pts[c*ppc : (c+1)*ppc] = np.random.beta(a=alpha, b=beta, size=(ppc, 2) ) + loc
+        # move center point of cluster
+        loc += np.random.uniform(low=-1, high=1, size=loc.shape)
     return pts
+
+def remove_close_points(points: np.ndarray, eps: float = 0.07) -> np.ndarray:
+    def dist(p1, p2): 
+        line = p2-p1
+        return np.linalg.norm(line)
+    del_list = []
+    for i, p1 in enumerate(points):
+        for j, p2 in enumerate(points[i:]):
+            j += i
+            if dist(p1, p2) < eps and i != j:
+                avg = (p2 + p1)/2
+                points[i,:] = avg
+                del_list.append(j)
+    mask = np.ones(points.shape[0], dtype=bool)
+    mask[del_list] = False
+    points = points[mask]
+    if points.shape[0] < 3:
+        raise ValueError('Deleted too many close points! Epsilon may be set too high.')
+    return points
 
 def removable_interiors(dt: spatial.Delaunay) -> tuple:
     '''find indices of interior simplices that are safe to remove in dt'''
@@ -120,6 +136,7 @@ def polygon(points: np.ndarray, holes: int = 0, removals: int = 30) -> nx.DiGrap
         Graph containing the polygon.
     '''
     dt = spatial.Delaunay(points)
+    dt_orig = copy.deepcopy(dt)
     # remove holes
     for _ in range(holes):
         safe, _ = removable_interiors(dt)
@@ -191,7 +208,7 @@ def polygon(points: np.ndarray, holes: int = 0, removals: int = 30) -> nx.DiGrap
         elif cw and not outer:
             outputgraphs.append(nx.reverse(M, copy=True))
     out_graph = nx.compose_all(outputgraphs)
-    return out_graph
+    return out_graph, dt, dt_orig
     
 def addcw(H: nx.DiGraph, e1: int, e2: int) -> float:
     '''determine which way the edge is pointing
@@ -205,6 +222,32 @@ def addcw(H: nx.DiGraph, e1: int, e2: int) -> float:
     p1, p2 = H.nodes[e1]['points'], H.nodes[e2]['points']
     return (p2[0] - p1[0]) * (p2[1] + p1[1])
 
+
+def stupid_spiky_polygon(R_inner:int, R_outer:int, n=10, ):
+    delta = 2 * np.pi / n
+    theta = 0
+    points = []
+    while theta < 2 * np.pi:
+        r = np.random.uniform(R_inner,R_outer)
+        points.append([r,theta])
+        theta += delta
+    points = np.array(points)
+    G = nx.Graph()
+    def polar2cart(p):
+        x = p[0] * np.cos(p[1])
+        y = p[0] * np.sin(p[1])
+        return np.array([x,y])
+    for i, p in enumerate(points):
+        G.add_node(i, points=polar2cart(p))
+    for i in range(points.shape[0]):
+        if i == points.shape[0]-1:
+            G.add_edge(i, 0)
+        else:
+            G.add_edge(i, i+1)
+    return points, G
+        
+
+
 def draw_G(
     G: nx.DiGraph, 
     ax: plt.Axes, 
@@ -213,6 +256,7 @@ def draw_G(
     nodecolor: str = 'k', 
     ecolor: str = None,
     ecolorattr: str = 'weight',
+    ecmap = 'tab10',
     node_text: bool = True,
     style: str = '-',
     m: str = '.',
@@ -230,7 +274,7 @@ def draw_G(
         arrows=arrows,
         edge_color=ecolor,
         style=style,
-        edge_cmap=plt.get_cmap('tab10'))
+        edge_cmap=plt.get_cmap(ecmap))
     if draw_nodes:
         nx.draw_networkx_nodes(
             G, pos, ax=ax,
