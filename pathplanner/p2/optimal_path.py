@@ -8,33 +8,20 @@ from scipy.spatial import distance
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 
-def set_equal(x, y, h, ax):
-    """https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to"""
-    # Create cubic bounding box to simulate equal aspect ratio
-    """Fix equal aspect bug for 3D plots."""
-    xlim = ax.get_xlim3d()
-    ylim = ax.get_ylim3d()
-    zlim = ax.get_zlim3d()
-    xmean = np.mean(xlim)
-    ymean = np.mean(ylim)
-    zmean = np.mean(zlim)
-    plot_radius = max(
-        [
-            abs(lim - mean)
-            for lims, mean in ((xlim, xmean), (ylim, ymean), (zlim, zmean))
-            for lim in lims
-        ]
-    )
-    ax.set_xlim3d([xmean - plot_radius, xmean + plot_radius])
-    ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
-    ax.set_zlim3d([-0.25, np.max(h) + np.max(h) / 10])
-
-
 def astar(X, Y, H, start, goal, dist_heur="euclidean", heur_cost=0.1):
-    """X, Y are 2d coordinates.
+    """Astar function
 
-    start is idx ij
-    goal is idx ij
+    `X`, `Y`, `H` are 2d arrays indicating x, y, h scalars. `start`, `goal` are
+    tuples; they are the index of a start point and an end point in those `X`, `Y`
+    arrays.
+
+    dist_heur is a string that can take values `"euclidean"`, `"least_diff"`, or `"lowest"`
+    to generate the euclidean path in R3, the pairwise least diff path, or the lowest path,
+    respectively.
+
+    `heur_cost` is not required for `"euclidean"`, but is required for `"least_diff"` and
+    `"lowest"` paths. It corresponds to the cost that should be added to the R2 euclidean
+    distance when using those heuristics.
     """
 
     def yield_neighbors(ij):
@@ -91,28 +78,36 @@ def astar(X, Y, H, start, goal, dist_heur="euclidean", heur_cost=0.1):
                     openset.add(n)
 
 
-def reconstruct_path(camefrom, current):
+def reconstruct_path(predecessors, current):
+    """from a map of `predecessors` and a `current` point, trace
+    backwards a path from the current point to the origin point"""
     total = [current]
-    while current in camefrom:
-        current = camefrom[current]
+    while current in predecessors:
+        current = predecessors[current]
         total.append(current)
     return total
 
 
 def rand_idx(X):
-    """numpy u suk >:("""
+    """what the heck numpy >:("""
     xidx = list(np.ndindex(X.shape))
     idx_of_rand_xidx = np.random.choice(len(xidx))
     return xidx[idx_of_rand_xidx]
 
 
 def generate_xy_grid(xrange, yrange, step):
+    """make a new xy grid. `xrange` and `yrange` are tuples of (min, max)
+    pairs. step is the step size of the grid."""
+    # TODO: test heterogenous range values
     xmin, xmax = xrange
     ymin, ymax = yrange
     return np.meshgrid(np.arange(xmin, xmax, step), np.arange(ymin, ymax, step))
 
 
 def generate_obstacles(n, xrange, yrange, radrange, height_range):
+    """generate `n` random cylindrical obstacles and store into a
+    list of tuples. each item is the (point, radius, height).
+    range is the high/low point of a uniform distribution"""
     obstacles = []
     xmin, xmax = xrange
     ymin, ymax = yrange
@@ -130,6 +125,8 @@ def generate_obstacles(n, xrange, yrange, radrange, height_range):
 
 
 def place_obstacles(X, Y, obstacles):
+    """make a new grid, H, containing obstacle points.
+    points with no obstacles are at 0"""
     H = np.zeros_like(X)
     # check each point
     for ij in np.ndindex(X.shape):
@@ -144,36 +141,45 @@ def place_obstacles(X, Y, obstacles):
 def get_optimal_grid(H, buffer, min_climb, min_acc_climb, min_altitude, verbose=True):
     # new h is a free variable corresponding to H
     newh = cp.Variable(shape=H.shape)
-    # we add a constraint that we are always <buffer> away
-    # from object
-    hconstraint = newh - H >= buffer
-    # add derivative to cost to smoothen the path a bit
-    # smooth_cost = 0
-    # for _ in range(n_relaxations):
-    #     dx = cp.diff(newh, 1, axis=0)
-    #     dy = cp.diff(newh, 1, axis=1)
-    #     smooth_cost += cp.sum_squares(dx) + cp.sum_squares(dy)
-
-    ground_constr = newh >= min_altitude
-    d2x_constr = cp.abs(cp.diff(newh, 2, axis=0)) <= min_acc_climb
-    d2y_constr = cp.abs(cp.diff(newh, 2, axis=1)) <= min_acc_climb
-    dx_constr = cp.abs(cp.diff(newh, 1, axis=0)) <= min_climb
-    dy_constr = cp.abs(cp.diff(newh, 1, axis=1)) <= min_climb
-
-    cost_fn = cp.sum_squares(newh - H)  # + alpha * smooth_cost
-
-    # solve the problem
-    constraints = [
-        hconstraint,
-        d2x_constr,
-        d2y_constr,
-        ground_constr,
-        dx_constr,
-        dy_constr,
-    ]
+    hc = newh - H >= buffer
+    gc = newh >= min_altitude
+    # 2nd partial with respect to h -> change in climb rate
+    d2xc = cp.abs(cp.diff(newh, 2, axis=0)) <= min_acc_climb
+    d2yc = cp.abs(cp.diff(newh, 2, axis=1)) <= min_acc_climb
+    # 1st partial with respect to h -> climb rate
+    dxc = cp.abs(cp.diff(newh, 1, axis=0)) <= min_climb
+    dyc = cp.abs(cp.diff(newh, 1, axis=1)) <= min_climb
+    # lowest possible
+    cost_fn = cp.sum_squares(newh - H)
+    constraints = [hc, gc, d2xc, d2yc, dxc, dyc]
     problem = cp.Problem(cp.Minimize(cost_fn), constraints)
     problem.solve(verbose=verbose, solver="ECOS")
     return newh.value
+
+
+def set_equal(h, ax):
+    """this ensures that the 3d axis `ax` is scaled properly. Distances
+    in x and y are equal aspect ratio.
+
+    https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to"""
+    # Create cubic bounding box to simulate equal aspect ratio
+    """Fix equal aspect bug for 3D plots."""
+    xlim = ax.get_xlim3d()
+    ylim = ax.get_ylim3d()
+    zlim = ax.get_zlim3d()
+    xmean = np.mean(xlim)
+    ymean = np.mean(ylim)
+    zmean = np.mean(zlim)
+    plot_radius = max(
+        [
+            abs(lim - mean)
+            for lims, mean in ((xlim, xmean), (ylim, ymean), (zlim, zmean))
+            for lim in lims
+        ]
+    )
+    ax.set_xlim3d([xmean - plot_radius, xmean + plot_radius])
+    ax.set_ylim3d([ymean - plot_radius, ymean + plot_radius])
+    ax.set_zlim3d([-0.25, np.max(h) + np.max(h) / 10])
 
 
 def plot_grid(
@@ -182,12 +188,35 @@ def plot_grid(
     Y,
     H,
     Hnew,
-    cmap_floor="viridis",
+    cmap="viridis",
     color_surface="white",
     alpha_surface=0.4,
     ptype="surface",
 ):
+    """Make a plot.
 
+    Parameters
+    ----------
+    fig : plt.figure
+    X : np.ndarray
+    Y : np.ndarray
+    H : np.ndarray
+    Hnew : np.ndarray
+    cmap : str, optional
+        colormap to use for the "ground", by default "viridis"
+    color_surface : str, optional
+        color to use for the grid/sheet, by default "white"
+    alpha_surface : float, optional
+        alpha of the surface, by default 0.4
+    ptype : str, optional
+        either "surface" or "wireframe" corresponding to one of those two
+        plot types, by default "surface"
+
+    Returns
+    -------
+    ax
+        plt.Axis()
+    """
     ax = fig.add_subplot(projection="3d")
     # https://stackoverflow.com/questions/30223161/matplotlib-mplot3d-how-to-increase-the-size-of-an-axis-stretch-in-a-3d-plo/30419243#30419243
     ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, 1, 0.45, 1]))
@@ -198,7 +227,7 @@ def plot_grid(
         X,
         Y,
         H,
-        cmap=cm.get_cmap(cmap_floor),
+        cmap=cm.get_cmap(cmap),
         zorder=1,
         rcount=rcount,
         ccount=ccount,
@@ -228,7 +257,7 @@ def plot_grid(
             ccount=ccount,
         )
 
-    set_equal(X, Y, H, ax)
+    set_equal(H, ax)
 
     return ax
 
@@ -252,7 +281,7 @@ if __name__ == "__main__":
     Hnew = get_optimal_grid(H, buffer, min_climb, min_acc_climb, min_altitude)
     # plot
     fig = plt.figure(figsize=(8, 4.5), dpi=120, tight_layout=True)
-    ax = plot_grid(fig, X, Y, H, Hnew, ptype="surface")
+    ax = plot_grid(fig, X, Y, H, Hnew, ptype="wireframe")
 
     # get start, end in areas that are all over the map
     start = (2, 2)
