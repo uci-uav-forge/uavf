@@ -13,7 +13,24 @@ _EDGETPU_SHARED_LIB = {
 }[platform.system()]
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
-BBox = namedtuple("BBox", ["xmin", "ymin", "xmax", "ymax"])
+
+
+class BBox(object):
+    def __init__(self, xmin, ymin, xmax, ymax):
+        self.xmin = xmin
+        self.ymin = ymin
+        self.xmax = xmax
+        self.ymax = ymax
+        self.area = (self.xmax - self.xmin) * (self.ymax - self.ymin)
+
+    def overlap(self, other):
+        """check if this bbox overlaps with another bbox"""
+        xc = (self.xmin <= other.xmax) and (other.xmin <= self.xmax)
+        yc = (self.ymin <= other.ymax) and (other.ymin <= self.ymax)
+        if xc and yc:
+            return True
+        else:
+            return False
 
 
 class TargetDrawer(object):
@@ -27,27 +44,27 @@ class TargetDrawer(object):
 
     @staticmethod
     def get_rand_color():
-        # get a random color between 1 and 0
-        return colorsys.hsv_to_rgb(
-            random.randint(0, 255),
-            random.randint(200, 255),
-            random.randint(180, 210),
+        # get a random color
+        rgb = colorsys.hsv_to_rgb(
+            random.uniform(0, 1),
+            random.uniform(0.6, 1),
+            random.uniform(0.8, 1),
         )
+        rgb = [min(255, int(c * 255)) for c in rgb]
+        return rgb
+
+    def draw_tile_frame(self, img, alpha=0.9):
+        """draw a frame around the input. Useful for visualizing tiles."""
+        pt1 = (1, 1)
+        pt2 = (img.shape[1] - 1, img.shape[0] - 1)
+        cpy = img.copy()
+        img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+        return cv2.addWeighted(cpy, alpha, img, (1 - alpha), 0)
 
     def draw_target_bbox(self, img, target, color=None):
         """Draw a bbox, class label, and confidence score around a target onto image
 
-        Parameters
-        ----------
-        img : cv2 image
-            (h, w, 3) 8-bit array
-        target : Target
-            target for drawing
-
-        Returns
-        -------
-        img
-            updated image with target drawn onto it
+        updated image with target drawn onto it
         """
         w, h = img.shape[1], img.shape[0]
         xmin, xmax = math.ceil(target.bbox.xmin * w), math.floor(target.bbox.xmax * w)
@@ -70,11 +87,9 @@ class TargetDrawer(object):
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             color,
-            1,
+            2,
         )
-        pt1 = (1, 1)
-        pt2 = (img.shape[1] - 1, img.shape[0] - 1)
-        img = cv2.rectangle(img, pt1, pt2, color=(255, 255, 255), thickness=2)
+
         return img
 
     def draw_all(self, img, targets, color=None):
