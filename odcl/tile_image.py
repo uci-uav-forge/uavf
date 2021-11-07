@@ -208,6 +208,25 @@ class Tiler(object):
         new_ymax = max(bbA.ymax, bbB.ymax)
         return BBox(new_xmin, new_ymin, new_xmax, new_ymax)
 
+    def parse_localTarget(self, target: 'Target object from Interpreter', wl: int, hl: int):
+        '''
+        Inputs:
+        --------
+            target -> Target (from interpreter.py)
+            wl -> location of min x value of box
+            hl -> location of min y value of box
+
+        Outputs:
+        --------
+            target -> Target (from interpreter.py)
+
+        Description:
+        ------------
+            reformats tiled target information (local position) to the overall image's location (global).
+        '''
+        bbox = self.tile2board(target.bbox, wl, hl)
+        return Target(target.id, target.score, bbox)
+
 
 if __name__ == "__main__":
     ap = ArgumentParser()
