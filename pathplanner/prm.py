@@ -25,29 +25,6 @@ def plot_mpl3d(X, Y, H, Hnew):
     ax.plot_surface(X, Y, H, cmap=cm.get_cmap("Blues"), zorder=1)
 
 
-def solve_path(X, Y, H, Hnew, start, goal):
-    path_points = 10
-    path = cp.Variable((path_points, 2))
-    cost = 0
-    # start at start and go to goal
-    c1 = path[0, :] == start
-    c2 = path[-1, :] == goal
-    # we are inside the domain
-    c4 = cp.max(path[:, 0]) <= X.max()
-    c5 = cp.min(path[:, 0]) >= X.min()
-    c6 = cp.max(path[:, 1]) <= Y.max()
-    c7 = cp.min(path[:, 1]) >= Y.min()
-    # h
-    for p in path[1:-1]:
-        cost += cp.sum_squares(p - goal)
-        n = cp.floor(X.shape[0] * (p[0] - X.min()) / (X.max() - X.min()))
-        m = cp.floor(X.shape[1] * (p[1] - Y.min()) / (Y.max() - Y.min()))
-        cost += H[n, m]
-    prob = cp.Problem(cp.Minimize(cost), [c1, c2, c4, c5, c6, c7])
-    prob.solve(verbose=True, solver="ECOS")
-    return path.value
-
-
 class PRM(object):
     def __init__(self, X, Y, H):
         # the surface given by X, Y, H
