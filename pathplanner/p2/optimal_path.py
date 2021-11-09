@@ -138,7 +138,9 @@ def place_obstacles(X, Y, obstacles):
     return H
 
 
-def get_optimal_grid(H, buffer, min_climb, min_acc_climb, min_altitude, verbose=True):
+def get_optimal_grid(
+    H, buffer, min_climb, min_acc_climb, min_altitude, verbose=True, solver="ECOS"
+):
     # new h is a free variable corresponding to H
     newh = cp.Variable(shape=H.shape)
     hc = newh - H >= buffer
@@ -153,7 +155,7 @@ def get_optimal_grid(H, buffer, min_climb, min_acc_climb, min_altitude, verbose=
     cost_fn = cp.sum_squares(newh - H)
     constraints = [hc, gc, d2xc, d2yc, dxc, dyc]
     problem = cp.Problem(cp.Minimize(cost_fn), constraints)
-    problem.solve(verbose=verbose, solver="ECOS")
+    problem.solve(verbose=verbose, solver=solver)
     return newh.value
 
 
@@ -271,7 +273,7 @@ if __name__ == "__main__":
     # amount to penalize height when drawing a* path
     astar_heightcost = 0.001
 
-    xrange, yrange = (0, 60), (0, 60)
+    xrange, yrange = (0, 50), (0, 50)
     radrange = (5, 18)
     hrange = (1, 50)
 
