@@ -219,7 +219,7 @@ def plot_grid(
     ax
         plt.Axis()
     """
-    ax = fig.add_subplot(projection="3d")
+    ax = fig.add_subplot(projection="3d", facecolor="silver")
     # https://stackoverflow.com/questions/30223161/matplotlib-mplot3d-how-to-increase-the-size-of-an-axis-stretch-in-a-3d-plo/30419243#30419243
     ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, 1, 0.45, 1]))
 
@@ -282,7 +282,7 @@ if __name__ == "__main__":
     H = place_obstacles(X, Y, obstacles)
     Hnew = get_optimal_grid(H, buffer, min_climb, min_acc_climb, min_altitude)
     # plot
-    fig = plt.figure(figsize=(8, 4.5), dpi=120, tight_layout=True)
+    fig = plt.figure(figsize=(8, 4.5), dpi=120, tight_layout=True, facecolor="silver")
     ax = plot_grid(fig, X, Y, H, Hnew, ptype="wireframe")
 
     # get start, end in areas that are all over the map
