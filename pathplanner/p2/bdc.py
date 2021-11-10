@@ -17,10 +17,34 @@ class Event(enum.Enum):
 
 
 def rad2degree(rad):
+    """Convert angle from radians to degrees
+
+    Parameters
+    ----------
+    rad : int or float
+        Angle in radians
+
+    Returns
+    -------
+    float
+        angle in degrees
+    """
     return rad * 180 / np.pi
 
 
 def degree2rad(deg):
+    """Convert angle from degrees to radians
+
+    Parameters
+    ----------
+    deg : int or float
+        angle in degrees
+
+    Returns
+    -------
+    float
+        angle in radians
+    """
     return deg * np.pi / 180
 
 
@@ -882,8 +906,20 @@ def lower_upper(H: nx.DiGraph, v: int):
     return lower, upper, above
 
 
-def qcross(H: nx.DiGraph, vA: int, v: int, vB: int) -> bool:
-    """compute a quick cross product over nodes `vA`, `v`, `vB` on `H`."""
+def qcross(H, vA, v, vB):
+    """Compute cross product on ordered nodes `vA`, `v`, `vB` of graph `H`.
+
+    Parameters
+    ----------
+    H : nx.DiGraph
+        The graph for which `vA`, `v`, `vB` are nodes.
+    vA : int
+        Node of H.
+    v : int
+        Node of H
+    vB : int
+        Node of H
+    """
     # find vectors with tails at `v` and pointing to vA, vB
     p1 = H.nodes[vA]["points"]
     p2 = H.nodes[vB]["points"]
