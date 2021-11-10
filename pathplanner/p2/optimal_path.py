@@ -170,9 +170,11 @@ def plot_mpl3d(
     Hground,
     Hsheet,
     zsquash=0.5,
-    sheetcmap="ocean",
-    groundcmap="copper",
+    sheetcmap="plasma",
+    groundcmap="ocean",
     sheet_alpha=0.4,
+    wireframe=False,
+    wirecount=20,
 ):
     """Put surfaces from `Hground` (the "ground") and `Hsheet` (the "sheet") onto an `ax.` `ax` must
     be a 3d axis.
@@ -199,6 +201,8 @@ def plot_mpl3d(
         colormap of the ground, by default "copper"
     sheet_alpha : float, optional
         alpha of the sheet. 1.0 is completely opaque, 0.0 is not visible, by default 0.4
+    wireframe : bool, optional
+        whether to draw wireframe or surface
 
     Returns
     -------
@@ -210,19 +214,31 @@ def plot_mpl3d(
     # squash z-axis a bit
     ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, 1, zsquash, 1]))
     # draw sheet
-    ax.plot_surface(
-        X, Y, Hsheet, alpha=sheet_alpha, cmap=cm.get_cmap(sheetcmap), zorder=2
-    )
+    if wireframe:
+        ax.plot_wireframe(
+            X,
+            Y,
+            Hsheet,
+            zorder=2,
+            linewidths=0.5,
+            colors="red",
+            rcount=wirecount,
+            ccount=wirecount,
+        )
+    else:
+        ax.plot_surface(
+            X, Y, Hsheet, alpha=sheet_alpha, cmap=cm.get_cmap(sheetcmap), zorder=2
+        )
     # draw ground
     ax.plot_surface(X, Y, Hground, cmap=cm.get_cmap(groundcmap), zorder=1)
 
 
 if __name__ == "__main__":
-    xrange, yrange, step = (0, 50), (0, 40), 1
+    xrange, yrange, step = (0, 50), (0, 50), 1
     X, Y = generate_xy_grid(xrange, yrange, step)
-    obstacles = generate_obstacles(4, xrange, yrange, (4, 10), (3, 8))
+    obstacles = generate_obstacles(3, xrange, yrange, (5, 12), (2, 8))
     Hground = place_obstacles(X, Y, obstacles)
-    dh, d2h, buffer, min_h = 0.5, 0.05, 1.0, 4.0
+    dh, d2h, buffer, min_h = 0.4, 0.05, 1.0, 1.5
     Hsheet = get_optimal_grid(Hground, buffer, dh, d2h, min_h)
     # plot 2d
     fig1 = plt.figure()
@@ -232,6 +248,6 @@ if __name__ == "__main__":
     # plot 3d
     fig2 = plt.figure(tight_layout=True)
     ax2 = fig2.add_subplot(projection="3d")
-    plot_mpl3d(ax2, X, Y, Hground, Hsheet)
+    plot_mpl3d(ax2, X, Y, Hground, Hsheet, wireframe=True)
 
     plt.show()

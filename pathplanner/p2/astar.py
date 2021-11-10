@@ -1,21 +1,17 @@
 import numpy as np
 from collections import defaultdict
+from matplotlib.collections import LineCollection
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 
-def astar(X, Y, H, start, goal, dist_heur="euclidean", heur_cost=0.1):
+def astar(X, Y, H, start, goal, hcost=0.1):
     """Astar function
 
     `X`, `Y`, `H` are 2d arrays indicating x, y, h scalars. `start`, `goal` are
     tuples; they are the index of a start point and an end point in those `X`, `Y`
     arrays.
 
-    dist_heur is a string that can take values `"euclidean"`, `"least_diff"`, or `"lowest"`
-    to generate the euclidean path in R3, the pairwise least diff path, or the lowest path,
-    respectively.
-
-    `heur_cost` is not required for `"euclidean"`, but is required for `"least_diff"` and
-    `"lowest"` paths. It corresponds to the cost that should be added to the R2 euclidean
-    distance when using those heuristics.
+    `hcost` adjusts how much the planner takes into account `h`
     """
 
     def yield_neighbors(ij):
@@ -32,22 +28,15 @@ def astar(X, Y, H, start, goal, dist_heur="euclidean", heur_cost=0.1):
 
     def h(ij1, ij2):
         """distance heuristic on indices of X, Y."""
-        # R3 distance
-        if dist_heur == "euclidean":
-            pt1 = np.array((X[tuple(ij1)], Y[tuple(ij1)], H[tuple(ij1)]))
-            pt2 = np.array((X[tuple(ij2)], Y[tuple(ij2)], H[tuple(ij2)]))
-            d = np.linalg.norm(pt2 - pt1)
-        # R2 distance + height diff between i, j
-        elif dist_heur == "least_diff":
-            pt1 = np.array((X[tuple(ij1)], Y[tuple(ij1)]))
-            pt2 = np.array((X[tuple(ij2)], Y[tuple(ij2)]))
-            d = np.linalg.norm(pt2 - pt1) + heur_cost * np.abs(H[ij1] - H[ij2])
-        # R2 distance + absolute height of destination
-        elif dist_heur == "lowest":
-            pt1 = np.array((X[tuple(ij1)], Y[tuple(ij1)]))
-            pt2 = np.array((X[tuple(ij2)], Y[tuple(ij2)]))
-            d = np.linalg.norm(pt2 - pt1) + heur_cost * np.abs(H[ij2])
-        return d
+        i1, j1 = ij1
+        i2, j2 = ij2
+        x1, y1, h1 = X[i1, j1], Y[i1, j1], H[i1, j1]
+        x2, y2, h2 = X[i2, j2], Y[i2, j2], H[i2, j2]
+        pt1 = np.array([x1, y1, h1])
+        pt2 = np.array([x2, y2, h2])
+        v = np.array([1.0, 1.0, hcost])
+        d = (pt2 + pt1 / 2) * v
+        return np.linalg.norm(d)
 
     openset = {start}
     came_from = dict()
@@ -80,3 +69,53 @@ def reconstruct_path(predecessors, current):
         current = predecessors[current]
         total.append(current)
     return total
+
+
+def get_line(X, Y, H, path, dims=2, c="k"):
+    xyh = np.stack((X, Y, H), axis=-1)
+    lc = []
+    for i, _ in enumerate(path):
+        i, j = path[i]
+        if dims == 2:
+            xy = xyh[i, j, :2]
+            lc.append(xy)
+        if dims == 3:
+            xy = xyh[i, j, :]
+            lc.append(xy)
+    return np.array(lc)
+
+
+if __name__ == "__main__":
+    import optimal_path
+    from matplotlib import pyplot as plt
+    from matplotlib import cm
+
+    xrange, yrange, step = (0, 50), (0, 50), 1
+    X, Y = optimal_path.generate_xy_grid(xrange, yrange, step)
+    obstacles = optimal_path.generate_obstacles(3, xrange, yrange, (5, 12), (2, 8))
+    Hground = optimal_path.place_obstacles(X, Y, obstacles)
+    dh, d2h, buffer, min_h = 0.4, 0.05, 1.0, 1.5
+    Hsheet = optimal_path.get_optimal_grid(Hground, buffer, dh, d2h, min_h)
+    # plot 2d
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot()
+    optimal_path.plot_mpl_2d(ax1, X, Y, Hsheet)
+
+    # plot 3d
+    fig2 = plt.figure(tight_layout=True)
+    ax2 = fig2.add_subplot(projection="3d")
+    optimal_path.plot_mpl3d(ax2, X, Y, Hground, Hsheet, wireframe=True)
+
+    start = 1, 1
+    goal = (X.shape[0] - 1, X.shape[1] - 1)
+
+    heurs = ("euclideanR3", "least_diff", "lowest", "euclideanR2")
+    heur_cost = [0, 1.0, 2.0, 4.0, 8.0, 10.0]
+
+    for i, hc in enumerate(heur_cost):
+        print(i)
+        path = astar(X, Y, Hsheet, start, goal, hcost=hc)
+        lc = get_line(X, Y, Hsheet, path)
+        ax1.plot(lc[:, 0], lc[:, 1], label="H Cost={}".format(hc))
+    ax1.legend()
+    plt.show()
