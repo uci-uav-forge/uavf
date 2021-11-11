@@ -160,6 +160,7 @@ def get_optimal_grid(H, buffer, max_dh, max_d2h, min_h, verbose=True, solver="EC
 
 def plot_mpl_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):
     ax.contour(X, Y, Hsheet, cmap=cm.get_cmap(cmap), levels=levels, linewidths=1)
+    ax.set_aspect("equal")
     return ax
 
 
@@ -170,8 +171,8 @@ def plot_mpl3d(
     Hground,
     Hsheet,
     zsquash=0.5,
-    sheetcmap="plasma",
-    groundcmap="ocean",
+    sheetcmap="gist_earth",
+    groundcmap="bone",
     sheet_alpha=0.4,
     wireframe=False,
     wirecount=20,
@@ -211,26 +212,36 @@ def plot_mpl3d(
         you don't necessarily need to do anything with this (just calling the function on `ax` is
         enough to alter the object)
     """
-    # squash z-axis a bit
-    ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, 1, zsquash, 1]))
+    ar = X.shape[0] / X.shape[1]
+    ax.set_box_aspect((1, 1*ar, zsquash))
     # draw sheet
     if wireframe:
-        ax.plot_wireframe(
+        hmin, hmax = Hsheet.min(), Hsheet.max()
+        norm = plt.Normalize((hmin-hmax)*0.03, hmax)
+        colors = cm.get_cmap(sheetcmap)(norm(Hsheet))
+        s = ax.plot_surface(
             X,
             Y,
             Hsheet,
             zorder=2,
             linewidths=0.5,
-            colors="red",
-            rcount=wirecount,
-            ccount=wirecount,
+            shade= False,
+            facecolors=colors,
+            rcount=X.shape[0],
+            ccount=X.shape[1],
         )
+        s.set_facecolor((0,0,0,0))
     else:
         ax.plot_surface(
             X, Y, Hsheet, alpha=sheet_alpha, cmap=cm.get_cmap(sheetcmap), zorder=2
         )
     # draw ground
     ax.plot_surface(X, Y, Hground, cmap=cm.get_cmap(groundcmap), zorder=1)
+
+    ax.set_xlim3d(X.min(),X.max())
+    ax.set_ylim3d(Y.min(),Y.max())
+    ax.set_zlim3d(Hground.min(), Hsheet.max())
+    return ax
 
 
 if __name__ == "__main__":
