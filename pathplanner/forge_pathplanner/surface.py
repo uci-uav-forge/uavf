@@ -165,7 +165,7 @@ def plot_mpl_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):
 
 
 def plot_mpl3d(
-    ax,
+    ax: Axes3D,
     X,
     Y,
     Hground,
@@ -214,6 +214,7 @@ def plot_mpl3d(
     """
     ar = X.shape[0] / X.shape[1]
     ax.set_box_aspect((1, 1*ar, zsquash))
+    ax.set_proj_type("ortho")
     # draw sheet
     if wireframe:
         hmin, hmax = Hsheet.min(), Hsheet.max()
