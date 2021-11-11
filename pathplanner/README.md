@@ -7,14 +7,14 @@ pip install git+https://github.com/uci-uav-forge/pathplanner
 
 
 # Package Components
-+ bdc.py
++ [bdc.py](forge_pathplanner/bdc.py)
     + Boustrophedon Decomposition (line sweep) algorithm
     + Reeb Graph construction
     + (EXPERIMENTAL) feasible path generation from Reeb Graph via Straight Skeleton
-+ polygon.py
++ [polygon.py](forge_pathplanner/polygon.py)
     + non-convex polygon generation 
     + 2d polygon (boundary) visualization
-+ surface.py
++ [surface.py](forge_pathplanner/surface.py)
     + generate surface to embed in R^3
     + optimally embed surface to minimize height, while:
         + clearing obstacles constraint
@@ -23,16 +23,16 @@ pip install git+https://github.com/uci-uav-forge/pathplanner
     + visualize surfaces in 2D with `matplotlib`
     + visualize surfaces in 3D with `matplotlib` (buggy)
     + visualize surfaces in 3D with `mayavi` -- requires `mayavi` installation
-+ prm.py
++ [prm.py](forge_pathplanner/prm.py)
     + generate PRM (Probabilistic Roadmap Planner) for embedded surface
     + PRM uses delaunay triangulation to compute edges
     + tunable cost function
     + visualize PRM with `matplotlib`
-+ astar.py
++ [astar.py](forge_pathplanner/astar.py)
     + generate A-Star planner for embedded surface
     + tunable cost function
     + visualize A-Star planner output
-+ rrt.py
++ [rrt.py](forge_pathplanner/rrt.py)
     + generate RRT (Rapidly Exploring Random Tree) planner for embedded surface
     + tunable cost function
     + visualize RRT with `matplotlib`
