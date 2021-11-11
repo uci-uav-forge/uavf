@@ -6,7 +6,7 @@ pip install git+https://github.com/uci-uav-forge/pathplanner
 ```
 
 
-## Package Components
+# Package Components
 + bdc.py
     + Boustrophedon Decomposition (line sweep) algorithm
     + Reeb Graph construction
@@ -18,7 +18,7 @@ pip install git+https://github.com/uci-uav-forge/pathplanner
     + generate surface to embed in R^3
     + optimally embed surface to minimize height, while:
         + clearing obstacles constraint
-        + 1st, 2nd $x, y$ derivative constraints
+        + 1st, 2nd *x, y* derivative constraints
         + minimum height constraint
     + visualize surfaces in 2D with `matplotlib`
     + visualize surfaces in 3D with `matplotlib` (buggy)
@@ -37,17 +37,7 @@ pip install git+https://github.com/uci-uav-forge/pathplanner
     + tunable cost function
     + visualize RRT with `matplotlib`
 
-## Example Images
-
-### PRM Planner
-![PRM Planner](images/prm.png)
-
-The least-cost path, given by $g(\bar{x}_1, \bar{x}_2)$, is chosen, where $g$ is a function that computes the cost based on least difference between $\bar{x}_1$ and $\bar{x}_2$. It's hard to visualize differences in paths, because longer paths tend to have much larger differences.
-
-### RRT Planner
-![RRT Planner](images/rrt.png)
-
-The cost function causes the tree to prefer routing around tall things rather than through them.
+# Techniques
 
 ## Complete Coverage Planning:
 
@@ -55,7 +45,7 @@ We use boustrophedon decomposition to decompose an area (with or without holes) 
 
 ## Polgyon Generation:
 
-We generate random 2-D planar polygons (test worlds) for planning problems in $\mathbb{R}^2$. The algorithm works as follows:
+We generate random 2-D planar polygons (test worlds) for planning problems in R^2. The algorithm works as follows:
 
 1. Get a random collection of points.
 2. Triangulate the points.
@@ -66,3 +56,22 @@ We generate random 2-D planar polygons (test worlds) for planning problems in $\
 7. Order the points of each boundary using depth-first search.
 8. Reverse (or not) the list of points depending on whether they belong to boundaries or not.
 9. Return each labeled list of points; boundary points are CW, hole points are CCW.
+
+# Example Images
+
+### PRM Planner
+![PRM Planner](images/prm.png)
+
+The least-cost path, given by *g(**x1**, **x2**)*, is chosen, where *g* is a function that computes the cost based on least difference between ***x1*** and ***x2*** and ***x1***, ***x2*** are vectors in R^3. It's hard to visualize differences in paths, because longer paths tend to have much larger differences.
+
+### RRT Planner
+![RRT Planner](images/rrt.png)
+
+The cost function causes the tree to prefer routing around tall things rather than through them.
+
+# Planned Features
+
++ Integrate `bdc` with `surface`
++ Allow holes in `surface` while maintaining smoothness
++ Update planners to deal with holes on the sheet
++ GPS coordinate conversion
