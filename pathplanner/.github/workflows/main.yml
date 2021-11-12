@@ -21,7 +21,7 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
-        path: docs/_build/html/
+        path: docs/_build/html/    
     # Publish built docs to gh-pages branch.
     # ===============================
     - name: Commit documentation changes
@@ -39,6 +39,7 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
+        force: true
         branch: gh-pages
         directory: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
