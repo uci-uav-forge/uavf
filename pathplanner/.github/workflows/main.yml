@@ -11,13 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: install dependencies
-      run: | 
-        pip install pydata-sphinx-theme sphinx-autoapi
     - uses: actions/checkout@v1
     # Standard drop-in approach that should work for most people.
     - uses: ammaraskar/sphinx-action@master
       with:
+        pre-build-command: "pip install pydata-sphinx-theme sphinx-autoapi"
         docs-folder: "docs/"
     # Great extra actions to compose with:
     # Create an artifact of the html output.
