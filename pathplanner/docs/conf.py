@@ -13,8 +13,13 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../forge_pathplanner"))
-
+sys.path.insert(0, os.path.abspath(".."))
+try:
+    import forge_pathplanner
+except ImportError:
+    raise ImportError(
+        "check that `forge_pathplanner` is available to your system path."
+    )
 
 # -- Project information -----------------------------------------------------
 
@@ -29,12 +34,20 @@ author = "Mike Sutherland"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "autoapi.extension",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "sphinx.ext.intersphinx",
+    "numpydoc",
 ]
+
+autoapi_type = "python"
+autoapi_dirs = ["../forge_pathplanner/"]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -53,7 +66,10 @@ autodoc_mock_imports = ["scipy", "numpy", "matplotlib", "cvxpy"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+html_theme = "pydata_sphinx_theme"
+
+html_theme_options = {"sidebarwidth": "150"}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -61,3 +77,11 @@ html_theme = "alabaster"
 html_static_path = ["_static"]
 
 master_doc = "index"
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "networkx": ("https://networkx.org/documentation/stable/", None),
+}
