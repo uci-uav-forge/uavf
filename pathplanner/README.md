@@ -4,6 +4,15 @@
 ```
 pip install git+https://github.com/uci-uav-forge/pathplanner
 ```
+## Package Documentation
+
+Up to date documentation is available here:
+
+https://uci-uav-forge.github.io/pathplanner/index.html
+
+This site is automatically updated when commits are added to `main`!
+
+Documentation is parsed from [numpy docstrings](https://www.sphinx-doc.org/en/master/usage/extensions/example_numpy.html) in the code.
 
 
 # Package Components
