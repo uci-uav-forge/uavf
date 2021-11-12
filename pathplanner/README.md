@@ -69,6 +69,11 @@ The least-cost path, given by *g(**x1**, **x2**)*, is chosen, where *g* is a fun
 
 The cost function causes the tree to prefer routing around tall things rather than through them.
 
+### A-star Planner
+![Astar Planner](images/astar.png)
+
+Three cost functions are shown. The functions vary by how much they penalize height when computing a path. The average height of a new path is multiplied by *h* and added to the R^2 distance to/from the goal.
+
 # Planned Features
 
 + Integrate `bdc` with `surface`
