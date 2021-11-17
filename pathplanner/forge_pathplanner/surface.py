@@ -109,7 +109,9 @@ def place_obstacles(X, Y, obstacles):
     return H
 
 
-def get_optimal_grid(H, buffer, max_dh, max_d2h, min_h, verbose=True, solver="ECOS"):
+def get_optimal_grid(
+    H, buffer, max_dh, max_d2h, min_h, step, verbose=True, solver="ECOS"
+):
     """Get an optimal height grid corresponding to a surface above the ground from an
     obstacle height grid `H`. The height grid has a minimum dh/dx, d2h/d2x, min h,
     and buffer between tall obstacles and the surface. The input grid `H` is structured
@@ -130,6 +132,8 @@ def get_optimal_grid(H, buffer, max_dh, max_d2h, min_h, verbose=True, solver="EC
         values correspond to a "smoother" sheet.
     min_h : float
         minimum altitude of the sheet `h`, irrespective of obstacles
+    step : step
+        grid step
     verbose : bool, optional
         whether to print verbose solver information, by default True
     solver : str, optional
@@ -144,15 +148,20 @@ def get_optimal_grid(H, buffer, max_dh, max_d2h, min_h, verbose=True, solver="EC
     newh = cp.Variable(shape=H.shape)
     hc = newh - H >= buffer
     gc = newh >= min_h
-    # 2nd partial with respect to h -> change in climb rate
-    d2xc = cp.abs(cp.diff(newh, 2, axis=0)) <= max_d2h
-    d2yc = cp.abs(cp.diff(newh, 2, axis=1)) <= max_d2h
     # 1st partial with respect to h -> climb rate
-    dxc = cp.abs(cp.diff(newh, 1, axis=0)) <= max_dh
-    dyc = cp.abs(cp.diff(newh, 1, axis=1)) <= max_dh
+    dhx = cp.diff(newh, 1, axis=0)
+    dhy = cp.diff(newh, 1, axis=1)
+    dxc = cp.abs(dhx) / step <= max_dh
+    dyc = cp.abs(dhy) / step <= max_dh
+    # 2nd partial with respect to h -> change in climb rate
+    d2hx = cp.diff(newh, 2, axis=0)
+    d2hy = cp.diff(newh, 2, axis=1)
+    d2hxc = cp.abs(d2hx) / (step ** 2) <= max_d2h
+    d2hyc = cp.abs(d2hy) / (step ** 2) <= max_d2h
+
     # lowest possible
     cost_fn = cp.sum_squares(newh - H)
-    constraints = [hc, gc, d2xc, d2yc, dxc, dyc]
+    constraints = [hc, gc, dxc, dyc, d2hxc, d2hyc]
     problem = cp.Problem(cp.Minimize(cost_fn), constraints)
     problem.solve(verbose=verbose, solver=solver)
     return newh.value
@@ -213,12 +222,12 @@ def plot_mpl3d(
         enough to alter the object)
     """
     ar = X.shape[0] / X.shape[1]
-    ax.set_box_aspect((1, 1*ar, zsquash))
+    ax.set_box_aspect((1, 1 * ar, zsquash))
     ax.set_proj_type("ortho")
     # draw sheet
     if wireframe:
         hmin, hmax = Hsheet.min(), Hsheet.max()
-        norm = plt.Normalize((hmin-hmax)*0.03, hmax)
+        norm = plt.Normalize((hmin - hmax) * 0.03, hmax)
         colors = cm.get_cmap(sheetcmap)(norm(Hsheet))
         s = ax.plot_surface(
             X,
@@ -226,12 +235,12 @@ def plot_mpl3d(
             Hsheet,
             zorder=2,
             linewidths=0.5,
-            shade= False,
+            shade=False,
             facecolors=colors,
             rcount=X.shape[0],
             ccount=X.shape[1],
         )
-        s.set_facecolor((0,0,0,0))
+        s.set_facecolor((0, 0, 0, 0))
     else:
         ax.plot_surface(
             X, Y, Hsheet, alpha=sheet_alpha, cmap=cm.get_cmap(sheetcmap), zorder=2
@@ -239,27 +248,32 @@ def plot_mpl3d(
     # draw ground
     ax.plot_surface(X, Y, Hground, cmap=cm.get_cmap(groundcmap), zorder=1)
 
-    ax.set_xlim3d(X.min(),X.max())
-    ax.set_ylim3d(Y.min(),Y.max())
+    ax.set_xlim3d(X.min(), X.max())
+    ax.set_ylim3d(Y.min(), Y.max())
     ax.set_zlim3d(Hground.min(), Hsheet.max())
     return ax
 
 
 if __name__ == "__main__":
-    xrange, yrange, step = (0, 50), (0, 50), 1
-    X, Y = generate_xy_grid(xrange, yrange, step)
-    obstacles = generate_obstacles(3, xrange, yrange, (5, 12), (2, 8))
-    Hground = place_obstacles(X, Y, obstacles)
-    dh, d2h, buffer, min_h = 0.4, 0.05, 1.0, 1.5
-    Hsheet = get_optimal_grid(Hground, buffer, dh, d2h, min_h)
-    # plot 2d
-    fig1 = plt.figure()
-    ax1 = fig1.add_subplot()
-    plot_mpl_2d(ax1, X, Y, Hsheet)
+    dh, d2h, buffer, min_h = 4.0, 7.5, 0.4, 0.25
+    obstacles = [((0.6, -0.25), 0.7, 0.3), ((0, 0), 0.3, 0.5)]
+    fig = plt.figure(figsize=(9, 9))
+    ax1 = (fig.add_subplot(3, 2, 1), fig.add_subplot(3, 2, 3), fig.add_subplot(3, 2, 5))
+    ax2 = (
+        fig.add_subplot(3, 2, 2, projection="3d"),
+        fig.add_subplot(3, 2, 4, projection="3d"),
+        fig.add_subplot(3, 2, 6, projection="3d"),
+    )
+    xrange, yrange = (-1, 1), (-1, 1)
+    # get 3 surfaces at different resolutions (step sizes)
+    for i, step in enumerate([0.025, 0.05, 0.1]):
+        X, Y = generate_xy_grid(xrange, yrange, step)
+        Hground = place_obstacles(X, Y, obstacles)
+        Hsheet = get_optimal_grid(Hground, buffer, dh, d2h, min_h, step)
+        # plot 2d
+        plot_mpl_2d(ax1[i], X, Y, Hsheet)
 
-    # plot 3d
-    fig2 = plt.figure(tight_layout=True)
-    ax2 = fig2.add_subplot(projection="3d")
-    plot_mpl3d(ax2, X, Y, Hground, Hsheet, wireframe=True)
+        # plot 3d
+        plot_mpl3d(ax2[i], X, Y, Hground, Hsheet, wireframe=True)
 
     plt.show()
