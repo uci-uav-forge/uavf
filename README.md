@@ -3,6 +3,11 @@ UAV Forge's ODCL repository.
 
 This repository contains all code necessary for recognizing AUVSI targets.
 
+## Documentation
+Documentation is available at: 
+
+https://uci-uav-forge.github.io/odcl/
+
 ## Release History
 
 v1.0 - Oct 4, 2021
