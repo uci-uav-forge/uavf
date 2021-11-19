@@ -48,6 +48,7 @@ class Tiler(object):
             hlower = 0
             hupper = self.size
             i += 1
+            j = 0
 
         for t in tiles:
             yield t
@@ -102,7 +103,7 @@ class Tiler(object):
             merged_targets.append(new_target)
         return merged_targets
 
-    def parse_localTarget(self, target: 'Target object from Interpreter', wl: int, hl: int):
+    def parse_localTarget(self, target, wl: int, hl: int):
         '''
         Inputs:
         --------
