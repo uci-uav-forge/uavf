@@ -107,7 +107,7 @@ if __name__ == "__main__":
     obstacles = surface.generate_obstacles(10, (15, 65), yrange, (4, 7), (1, 2.5))
     Hground = surface.place_obstacles(X, Y, obstacles)
     buffer, max_dh, max_d2h, min_h = 0.5, 0.2, 0.03, 0.5
-    Hsheet = surface.get_optimal_grid(Hground, buffer, max_dh, max_d2h, min_h)
+    Hsheet = surface.get_optimal_grid(Hground, buffer, max_dh, max_d2h, min_h, step)
 
     # Plot 3d surface
     fig1 = plt.figure(figsize=(8, 10), tight_layout=True)
