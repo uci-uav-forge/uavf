@@ -3,6 +3,7 @@ import cvxpy as cp
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
+from scipy.interpolate import RegularGridInterpolator
 
 
 def rand_idx(X):
@@ -110,7 +111,18 @@ def place_obstacles(X, Y, obstacles):
 
 
 def get_optimal_grid(
-    H, buffer, max_dh, max_d2h, min_h, step, verbose=True, solver="ECOS"
+    X,
+    Y,
+    H,
+    buffer,
+    max_dh,
+    max_d2h,
+    min_h,
+    step,
+    waypoints=None,
+    waypointcost=1e3,
+    verbose=True,
+    solver="ECOS",
 ):
     """Get an optimal height grid corresponding to a surface above the ground from an
     obstacle height grid `H`. The height grid has a minimum dh/dx, d2h/d2x, min h,
@@ -144,26 +156,54 @@ def get_optimal_grid(
     np.ndarray
         an array with the same dimensions as `H`, corresponding to the sheet above `H`.
     """
-    # new h is a free variable corresponding to H
+    constraints = []
+    cost = 0
+
+    # new h is a free variable with same shape as
     newh = cp.Variable(shape=H.shape)
+
     hc = newh - H >= buffer
+    constraints.append(hc)
     gc = newh >= min_h
+    constraints.append(gc)
+
     # 1st partial with respect to h -> climb rate
     dhx = cp.diff(newh, 1, axis=0)
     dhy = cp.diff(newh, 1, axis=1)
-    dxc = cp.abs(dhx) / step <= max_dh
-    dyc = cp.abs(dhy) / step <= max_dh
+    dxc = cp.abs(dhx) <= max_dh * step
+    dyc = cp.abs(dhy) <= max_dh * step
+    constraints.append(dxc)
+    constraints.append(dyc)
+
     # 2nd partial with respect to h -> change in climb rate
     d2hx = cp.diff(newh, 2, axis=0)
     d2hy = cp.diff(newh, 2, axis=1)
-    d2hxc = cp.abs(d2hx) / (step ** 2) <= max_d2h
-    d2hyc = cp.abs(d2hy) / (step ** 2) <= max_d2h
+    d2hxc = cp.abs(d2hx) <= max_d2h * step * 2
+    d2hyc = cp.abs(d2hy) <= max_d2h * step * 2
+    constraints.append(d2hxc)
+    constraints.append(d2hyc)
+
+    # waypoints
+    if waypoints is not None:
+        for wp in waypoints:
+            # find closest grid point
+            wpx_i = np.argmin(np.abs(X - wp[0]), axis=1)[0]
+            wpy_i = np.argmin(np.abs(Y - wp[1]), axis=0)[0]
+            # add a cost
+            cost += cp.abs(newh[wpy_i, wpx_i] - wp[2]) * waypointcost
 
     # lowest possible
-    cost_fn = cp.sum_squares(newh - H)
-    constraints = [hc, gc, dxc, dyc, d2hxc, d2hyc]
-    problem = cp.Problem(cp.Minimize(cost_fn), constraints)
-    problem.solve(verbose=verbose, solver=solver)
+    cost += cp.sum(cp.abs(dhx)) + cp.sum(cp.abs(dhy))
+    cost += cp.sum(newh) * 1e-1
+    problem = cp.Problem(cp.Minimize(cost), constraints)
+
+    # solve problem
+    if solver is not None:
+        problem.solve(verbose=verbose, solver=solver)
+    else:
+        problem.solve(verbose=verbose)
+
+    # return solved value
     return newh.value
 
 
@@ -248,9 +288,9 @@ def plot_mpl3d(
     # draw ground
     ax.plot_surface(X, Y, Hground, cmap=cm.get_cmap(groundcmap), zorder=1)
 
-    ax.set_xlim3d(X.min(), X.max())
-    ax.set_ylim3d(Y.min(), Y.max())
-    ax.set_zlim3d(Hground.min(), Hsheet.max())
+    ax.set_box_aspect(
+        [X.max() - X.min(), Y.max() - Y.min(), Hsheet.max() - Hground.min()]
+    )
     return ax
 
 
