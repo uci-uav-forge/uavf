@@ -120,7 +120,7 @@ def get_optimal_grid(
     min_h,
     step,
     waypoints=None,
-    waypointcost=1e3,
+    waypointcost=1e4,
     verbose=True,
     solver="ECOS",
 ):
@@ -172,8 +172,10 @@ def get_optimal_grid(
     dhy = cp.diff(newh, 1, axis=1)
     dxc = cp.abs(dhx) <= max_dh * step
     dyc = cp.abs(dhy) <= max_dh * step
-    constraints.append(dxc)
-    constraints.append(dyc)
+    cost += cp.sum(cp.abs(dhx)) * 1e1
+    cost += cp.sum(cp.abs(dhy)) * 1e1
+    # constraints.append(dxc)
+    # constraints.append(dyc)
 
     # 2nd partial with respect to h -> change in climb rate
     d2hx = cp.diff(newh, 2, axis=0)
@@ -182,6 +184,8 @@ def get_optimal_grid(
     d2hyc = cp.abs(d2hy) <= max_d2h * step * 2
     constraints.append(d2hxc)
     constraints.append(d2hyc)
+    # cost += cp.sum(cp.abs(d2hx)) * 1e1
+    # cost += cp.sum(cp.abs(d2hy)) * 1e1
 
     # waypoints
     if waypoints is not None:
@@ -191,10 +195,11 @@ def get_optimal_grid(
             wpy_i = np.argmin(np.abs(Y - wp[1]), axis=0)[0]
             # add a cost
             cost += cp.abs(newh[wpy_i, wpx_i] - wp[2]) * waypointcost
+            # constraints += [cp.abs(newh[wpy_i, wpx_i] - wp[2]) <= 50]
 
     # lowest possible
-    cost += cp.sum(cp.abs(dhx)) + cp.sum(cp.abs(dhy))
-    cost += cp.sum(newh) * 1e-1
+    # cost += cp.sum(cp.abs(dhx)) + cp.sum(cp.abs(dhy))
+    cost += cp.sum(newh)
     problem = cp.Problem(cp.Minimize(cost), constraints)
 
     # solve problem
