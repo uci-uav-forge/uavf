@@ -123,15 +123,15 @@ class SheetRRT(RRTStar):
             # points in R2
             p1 = self.T.nodes[v]["point"]
             p2 = x
-            nsteps = ceil(np.linalg.norm(p2 - p1))
+            nsteps = ceil(np.linalg.norm(p2 - p1) * 1.1)
             points = np.linspace(p1, p2, nsteps)
             xyh = self.r2r3(points, method="nearest")
             xyh *= np.array([1.0, 1.0, self.g])
             # diff
-            # diff = np.diff(xyh, n=1, axis=0)
-            # c= np.linalg.norm(diff, axis=1).sum()
+            diff = np.diff(xyh, n=1, axis=0)
+            c = np.linalg.norm(diff, axis=1).sum()
             # norm sum
-            c = np.linalg.norm(xyh, axis=1).sum()
+            # c = np.linalg.norm(xyh, axis=1).sum()
 
             return self.T.nodes[v]["cost"] + c
         else:

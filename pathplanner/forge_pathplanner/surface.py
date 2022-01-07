@@ -156,50 +156,53 @@ def get_optimal_grid(
     np.ndarray
         an array with the same dimensions as `H`, corresponding to the sheet above `H`.
     """
+    S = cp.Variable(shape=H.shape)
+    n_points = S.shape[0] * S.shape[1]
     constraints = []
     cost = 0
 
-    # new h is a free variable with same shape as
-    newh = cp.Variable(shape=H.shape)
+    # Minimum Altitude Constraint
+    min_alt_constraint = S - H >= buffer
+    # Safe Altitude Constraint
+    safe_alt_constraint = S >= min_h
 
-    hc = newh - H >= buffer
-    constraints.append(hc)
-    gc = newh >= min_h
-    constraints.append(gc)
+    constraints.append(min_alt_constraint)
+    constraints.append(safe_alt_constraint)
 
-    # 1st partial with respect to h -> climb rate
-    dhx = cp.diff(newh, 1, axis=0)
-    dhy = cp.diff(newh, 1, axis=1)
-    dxc = cp.abs(dhx) <= max_dh * step
-    dyc = cp.abs(dhy) <= max_dh * step
-    cost += cp.sum(cp.abs(dhx)) * 1e1
-    cost += cp.sum(cp.abs(dhy)) * 1e1
-    # constraints.append(dxc)
-    # constraints.append(dyc)
+    # Magnitude of First Partials dh/dx
+    dhx, dhy = cp.abs(cp.diff(S, 1, axis=0)), cp.abs(cp.diff(S, 1, axis=1))
 
-    # 2nd partial with respect to h -> change in climb rate
-    d2hx = cp.diff(newh, 2, axis=0)
-    d2hy = cp.diff(newh, 2, axis=1)
-    d2hxc = cp.abs(d2hx) <= max_d2h * step * 2
-    d2hyc = cp.abs(d2hy) <= max_d2h * step * 2
-    constraints.append(d2hxc)
-    constraints.append(d2hyc)
-    # cost += cp.sum(cp.abs(d2hx)) * 1e1
-    # cost += cp.sum(cp.abs(d2hy)) * 1e1
+    # First Derivative Constraints
+    dhx_c, dhy_c = dhx <= max_dh * step, dhy <= max_dh * step
+    # constraints.append(dhx_c)
+    # constraints.append(dhy_c)
+
+    # First Derivative Costs (Normed by Array Size)
+    cost += cp.sum(dhx) / n_points * 1e2
+    cost += cp.sum(dhy) / n_points * 1e2
+
+    # Magnitude of Second Partials d2h/dx2
+    d2hx, d2hy = cp.abs(cp.diff(S, 2, axis=0)), cp.abs(cp.diff(S, 2, axis=1))
+    d2hx_c, d2hy_c = d2hx <= max_d2h * step * 2, d2hy <= max_d2h * step * 2
+    constraints.append(d2hx_c)
+    constraints.append(d2hy_c)
+
+    cost += cp.sum(d2hx) / n_points * 1e2
+    cost += cp.sum(d2hy) / n_points * 1e2
 
     # waypoints
     if waypoints is not None:
         for wp in waypoints:
-            # find closest grid point
-            wpx_i = np.argmin(np.abs(X - wp[0]), axis=1)[0]
-            wpy_i = np.argmin(np.abs(Y - wp[1]), axis=0)[0]
-            # add a cost
-            cost += cp.abs(newh[wpy_i, wpx_i] - wp[2]) * waypointcost
-            # constraints += [cp.abs(newh[wpy_i, wpx_i] - wp[2]) <= 50]
+            # find closest 4 grid points
+            wpy_i = np.argsort(np.abs(X - wp[0]), axis=1)[0][:4]
+            wpx_i = np.argsort(np.abs(Y - wp[1]), axis=0)[0][:4]
+            # average of quadrilateral
+            average = cp.sum(S[wpx_i, wpy_i]) / 4
+            # add to cost
+            cost += cp.abs(average - wp[2]) * waypointcost
 
     # lowest possible
-    # cost += cp.sum(cp.abs(dhx)) + cp.sum(cp.abs(dhy))
-    cost += cp.sum(newh)
+    cost += cp.sum(S) / n_points * 1e2
     problem = cp.Problem(cp.Minimize(cost), constraints)
 
     # solve problem
@@ -209,7 +212,7 @@ def get_optimal_grid(
         problem.solve(verbose=verbose)
 
     # return solved value
-    return newh.value
+    return S.value
 
 
 def plot_mpl_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):

@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from scipy.interpolate import RegularGridInterpolator
+from itertools import cycle
+from matplotlib.cm import get_cmap
 
 # From https://kespry.force.com/s/article/Finding-Your-State-Plane-Coordinate-System
 CRS = {
@@ -112,7 +114,7 @@ if __name__ == "__main__":
     boundaries = mission.l_get_boundaries()[0]
     obstacles = mission.l_get_obstacles()
     searchgrid = mission.l_get_search_boundaries()
-    waypoints = mission.l_get_ordered_waypoints()
+    waypoints = mission.l_get_ordered_waypoints()[:10, :]
 
     # plot obstacles as circles
     for o in obstacles:
@@ -121,9 +123,6 @@ if __name__ == "__main__":
 
     # plot outer boundaries and search grid
     ax1.plot(boundaries[:, 0], boundaries[:, 1], lw=2, c="k", label="Outer Border")
-    ax1.plot(
-        searchgrid[:, 0], searchgrid[:, 1], lw=1, ls="--", c="g", label="Search Grid"
-    )
 
     # step size -- this is the grid size, in feet
     step = 40
@@ -150,45 +149,52 @@ if __name__ == "__main__":
     surface.plot_mpl_2d(ax1, X, Y, Hsheet, levels=40)
 
     # plot each waypoint
-    dist, n, route_step = 0.0, 0, 2.5
+    dist, route_step = 0.0, 2.5
     interp = RegularGridInterpolator((X[0, :], Y[:, 0]), Hsheet.T)
     # plot of route distance, heights
     route_d, route_h = [], []
     # scatter plot of waypoint distance, heights
     waypoint_d, waypoint_h = [], []
-    for i, a in enumerate(waypoints[:-1]):
-        print("Path {} of {}".format(i, waypoints.shape[0]))
-        n += 1
+    # colors to cycle through when drawing routes
+    colors = get_cmap("jet")(np.linspace(0, 1, num=10))
+    for i, (a, color) in enumerate(zip(waypoints, cycle(colors))):
+        print("Path {} of {}".format(i + 1, waypoints.shape[0]))
+        # draw waypoints on 2d map
+        ax1.text(a[0], a[1], str("p {}".format(i)))
+        # put waypoint labels on route chart
+        ax3.text(dist, a[2], str("p {}".format(i)))
+        # last one
+        if i + 1 == waypoints.shape[0]:
+            continue
+
         # next waypoint
         b = waypoints[i + 1]
 
-        hcost = 1e5
+        hcost = 2
         srrt = rrt.SheetRRT(X.shape, X, Y, Hsheet, hcost)
-        vstart, vend = srrt.make(a[:2], b[:2], 150, np.linalg.norm(a[:2] - b[:2]))
+        vstart, vend = srrt.make(a[:2], b[:2], 400, np.linalg.norm(a[:2] - b[:2]))
         path = srrt.get_path(vstart, vend)
-        ax1.plot(path[:, 0], path[:, 1])
+        ax1.plot(path[:, 0], path[:, 1], c=color, label="{}->{}".format(i, i + 1))
 
         h_on_sheet = interp((a[0], a[1]), method="linear")
-        # draw waypoints on 2d map
-        ax1.text(a[0], a[1], str("p {}".format(i)))
 
-        # calculate points for route between waypoints
-        route_dist = np.linalg.norm(b[:2] - a[:2])
-        route_steps = int(np.ceil(route_dist / route_step))
-        route_points = np.linspace(a[:2], b[:2], num=route_steps)
-
-        # fill array for waypoint route chart
         waypoint_d.append(dist)
         waypoint_h.append(a[2])
-        # put waypoint labels on route chart
-        ax3.text(dist, h_on_sheet, str("p {}".format(n)))
 
-        # fill arrays for route chart
-        for rp in route_points:
-            rph = interp((rp[0], rp[1]), method="linear")
-            route_d.append(dist)
-            route_h.append(rph)
-            dist += route_step
+        # go through path
+        for j in range(path.shape[0] - 1):
+            u = path[j]
+            v = path[j + 1]
+            route_dist = np.linalg.norm(u - v)
+            route_steps = int(np.ceil(route_dist / route_step))
+            route_points = np.linspace(u, v, num=route_steps)
+
+            # fill arrays for route chart
+            for rp in route_points:
+                rph = interp((rp[0], rp[1]), method="linear")
+                route_d.append(dist)
+                route_h.append(rph)
+                dist += route_step
 
     # scatter plot of each waypoint on route
     ax3.scatter(waypoint_d, waypoint_h, label="Waypoints", c="r", marker="*")
