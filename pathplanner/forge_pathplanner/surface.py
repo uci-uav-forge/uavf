@@ -1,6 +1,7 @@
 import numpy as np
 import cvxpy as cp
 import matplotlib.pyplot as plt
+from typing import Tuple
 
 
 def generate_xy_grid(xrange, yrange, step):
@@ -27,7 +28,13 @@ def generate_xy_grid(xrange, yrange, step):
     return np.meshgrid(np.arange(xmin, xmax, step), np.arange(ymin, ymax, step))
 
 
-def generate_random_obstacles(n, xrange, yrange, radrange, height_range):
+def generate_random_obstacles(
+    n,
+    xrange: Tuple[float, float],
+    yrange: Tuple[float, float],
+    radrange: Tuple[float, float],
+    height_range: Tuple[float, float],
+) -> dict:
     """Generate list of `n` random obstacles within the x, y space.
 
     Parameters
@@ -45,9 +52,8 @@ def generate_random_obstacles(n, xrange, yrange, radrange, height_range):
 
     Returns
     -------
-    list of tuple
-        list of tuples with obstacle information:
-        [((x, y), radius, height), ...]
+    list of dict
+        dict with keys "x", "y", "r", "h"
     """
     obstacles = []
     xmin, xmax = xrange
@@ -55,13 +61,14 @@ def generate_random_obstacles(n, xrange, yrange, radrange, height_range):
     rmin, rmax = radrange
     hmin, hmax = height_range
     for _ in range(n):
-        # center
-        ocent = np.array([np.random.uniform(xmin, xmax), np.random.uniform(ymin, ymax)])
-        # radius
-        orad = np.random.uniform(rmin, rmax)
-        # height
-        oheight = np.random.unibform(hmin, hmax)
-        obstacles.append((ocent, orad, oheight))
+        obstacles.append(
+            {
+                "x": np.random.uniform(xmin, xmax),
+                "y": np.random.uniform(ymin, ymax),
+                "r": np.random.uniform(rmin, rmax),
+                "h": np.random.uniform(hmin, hmax),
+            }
+        )
     return obstacles
 
 
@@ -79,9 +86,8 @@ def place_obstacles(X, Y, obstacles):
         MxN array of x values.
     Y : np.ndarray
         MxN array of y values.
-    obstacles : list
-        list containing tuples, each with:
-        ((obstacle x, obstacle y), obstacle radius, obstacle height)
+    obstacles : list of dict
+        eahc obstacle is dict with fields "x", "y", "r", "h"
 
     Returns
     -------
@@ -94,9 +100,10 @@ def place_obstacles(X, Y, obstacles):
     for ij in np.ndindex(X.shape):
         pt = np.array([X[ij], Y[ij]])
         # against each obstacle
-        for ocent, orad, oheight in obstacles:
-            if np.dot(pt - ocent, pt - ocent) < orad * orad:
-                H[ij] = oheight
+        for o in obstacles:
+            ocent = np.array([o["x"], o["y"]])
+            if np.dot(pt - ocent, pt - ocent) < o["r"] * o["r"]:
+                H[ij] = o["h"]
     return H
 
 
@@ -108,7 +115,7 @@ def get_optimal_grid(
     max_dh,
     max_d2h,
     min_h,
-    step,
+    step: Tuple[float, float],
     waypoints=None,
     waypointcost=1e4,
     verbose=True,
@@ -147,38 +154,28 @@ def get_optimal_grid(
         an array with the same dimensions as `H`, corresponding to the sheet above `H`.
     """
     S = cp.Variable(shape=H.shape)
-    n_points = S.shape[0] * S.shape[1]
-    constraints = []
-    cost = 0
+
+    constraints, cost = [], 0.0
 
     # Minimum Altitude Constraint
     min_alt_constraint = S - H >= buffer
     # Safe Altitude Constraint
     safe_alt_constraint = S >= min_h
-
     constraints.append(min_alt_constraint)
     constraints.append(safe_alt_constraint)
 
     # Magnitude of First Partials dh/dx
     dhx, dhy = cp.abs(cp.diff(S, 1, axis=0)), cp.abs(cp.diff(S, 1, axis=1))
-
     # First Derivative Constraints
-    dhx_c, dhy_c = dhx <= max_dh * step, dhy <= max_dh * step
-    # constraints.append(dhx_c)
-    # constraints.append(dhy_c)
-
-    # First Derivative Costs (Normed by Array Size)
-    cost += cp.sum(dhx) / n_points * 1e2
-    cost += cp.sum(dhy) / n_points * 1e2
+    dhx_c, dhy_c = dhx <= max_dh * step[0], dhy <= max_dh * step[1]
+    constraints.append(dhx_c)
+    constraints.append(dhy_c)
 
     # Magnitude of Second Partials d2h/dx2
     d2hx, d2hy = cp.abs(cp.diff(S, 2, axis=0)), cp.abs(cp.diff(S, 2, axis=1))
-    d2hx_c, d2hy_c = d2hx <= max_d2h * step * 2, d2hy <= max_d2h * step * 2
+    d2hx_c, d2hy_c = d2hx <= max_d2h * step[0] * 2, d2hy <= max_d2h * step[1] * 2
     constraints.append(d2hx_c)
     constraints.append(d2hy_c)
-
-    cost += cp.sum(d2hx) / n_points * 1e2
-    cost += cp.sum(d2hy) / n_points * 1e2
 
     # waypoints
     if waypoints is not None:
@@ -192,7 +189,7 @@ def get_optimal_grid(
             cost += cp.abs(average - wp[2]) * waypointcost
 
     # lowest possible
-    cost += cp.sum(S) / n_points * 1e2
+    cost += cp.sum(S)
     problem = cp.Problem(cp.Minimize(cost), constraints)
 
     # solve problem
