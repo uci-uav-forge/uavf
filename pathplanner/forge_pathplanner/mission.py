@@ -65,6 +65,24 @@ class Mission(object):
         gridstep = (stepx, stepy)
         return X, Y, gridstep
 
+    def get_nearest_grid_idx(self, x, y, X, Y):
+        """get index of the nearest grid point in (X, Y) to a point (x, y)
+
+        Parameters
+        ----------
+        x : float
+            point x
+        y : float
+            point y
+        X : np.ndarray
+            array of grid points X
+        Y : np.ndarray
+            array of grid points Y
+        """
+        ix = np.argmin(np.abs(X - x))
+        iy = np.argmin(np.abs(Y - y))
+        print(ix, iy)
+
     def l_get_boundaries(self):
         bounds, min_heights, max_heights = [], [], []
         for fz in self.mission_json["flyZones"]:

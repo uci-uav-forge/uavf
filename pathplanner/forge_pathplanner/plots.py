@@ -1,9 +1,9 @@
-from matplotlib.axes import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 
-def plot_mpl3d(
+def plot_surface_3d(
     ax: Axes3D,
     X,
     Y,
@@ -84,7 +84,7 @@ def plot_mpl3d(
     return ax
 
 
-def plot_mpl_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):
+def plot_surface_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):
     ax.contour(X, Y, Hsheet, cmap=cm.get_cmap(cmap), levels=levels, linewidths=1)
     ax.set_aspect("equal")
     return ax
