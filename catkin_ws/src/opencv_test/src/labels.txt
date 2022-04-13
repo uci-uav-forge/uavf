@@ -1,0 +1,14 @@
+0:circle
+1:diamond
+2:halfcircle
+3:heart
+4:hexagon
+5:hexstar
+6:moon
+7:octagon
+8:pentagon
+9:pentstar
+10:plus
+11:square
+12:trapezoid
+13:triangle
