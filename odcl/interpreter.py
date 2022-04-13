@@ -1,8 +1,7 @@
-import colorsys, platform, cv2, random, math
+import platform, cv2
 import numpy as np
 from tflite_runtime import interpreter
 from collections import namedtuple
-from pipeline import BBox
 
 _EDGETPU_SHARED_LIB = {
     "Linux": "libedgetpu.so.1",
@@ -26,6 +25,19 @@ TENSOR_ORDERS = {"efficientdetd2": (1, 3, 0, 2), "mobilenet": (0, 1, 2, 3)}
 
 Target = namedtuple("Target", ["id", "score", "bbox"])
 
+# added as a data type
+class BBox(object):
+    def __init__(self, xmin, ymin, xmax, ymax):
+        self.xmin = xmin
+        self.ymin = ymin
+        self.xmax = xmax
+        self.ymax = ymax
+        self.area = (self.xmax - self.xmin) + (self.ymax - self.ymin)
+    def overlap(self, other):
+        xc = (self.xmin <= other.xmax) and (other.xmin <= self.xmax)
+        yc = (self.ymin <= other.ymax) and (other.ymin <= self.ymax)
+        return (xc and yc)
+
 
 class TargetInterpreter(object):
     def __init__(self, model_path, label_path, cpu, thresh, order_key="mobilenet"):
@@ -43,6 +55,10 @@ class TargetInterpreter(object):
         # bboxes, etc. These keys belong to `TENSOR_ORDERS` above which map the
         # correct item to its ordering.
         self.tensor_orders_key = order_key
+
+        
+        t0, t1, t2, t3 = TENSOR_ORDERS[self.tensor_orders_key]
+        self.category_ids = self.output_tensor(t1)
 
     def get_labels(self, label_path):
         labels = {}
@@ -171,7 +187,6 @@ class TargetInterpreter(object):
         self.set_input_tensor(img)
         self.interpreter.invoke()
         self.targets = self.get_output(self.thresh)
-
     def get_output(self, score_threshold):
         """Return list of detected objects
 

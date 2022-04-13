@@ -1,12 +1,8 @@
 import math, cv2, os
 import numpy as np
-from argparse import ArgumentParser
-from time import time
 from pathlib import Path
 from interpreter import BBox, Target
-import pyinstrument
 import networkx as nx
-import matplotlib.pyplot as plt
 
 
 class Tiler(object):
@@ -122,7 +118,7 @@ class Tiler(object):
         bbox = self.tile2board(target.bbox, wl, hl)
         return Target(target.id, target.score, bbox)
 
-
+'''
 if __name__ == "__main__":
     ap = ArgumentParser()
     ap.add_argument("--i", type=str, required=True, help="input image")
@@ -144,7 +140,7 @@ if __name__ == "__main__":
 
     inp_path = Path(opts.i).resolve()
     raw_img = cv2.imread(str(inp_path))
-    tiler = Tiler(448, 100)
+    tiler = Tiler(384, 100)
     drawn = np.zeros_like(raw_img)
     all_targs = []
 
@@ -171,3 +167,4 @@ if __name__ == "__main__":
     outputfname = "./" + str(inp_path.stem) + "_targets.jpg"
     print(outputfname)
     cv2.imwrite(outputfname, drawn)
+'''
