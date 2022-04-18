@@ -1,0 +1,2 @@
+wget -O "./example_images/cars.jpg" https://unsplash.com/photos/L_oGlsWJSy8/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjUwMDY0MjA2&force=true
+wget -O "./example_images/plaza.jpg" https://unsplash.com/photos/F7I6sexmIS8/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjUwMTI3ODIw&force=true
