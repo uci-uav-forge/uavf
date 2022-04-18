@@ -22,7 +22,7 @@ except ImportError:
 # -- Project information -----------------------------------------------------
 
 project = "UAV Forge Object Detection, Classification, and Localization Pipeline"
-copyright = "2021, Mike Sutherland & An Dang"
+copyright = ""
 author = "Mike Sutherland"
 
 
