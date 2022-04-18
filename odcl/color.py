@@ -1,11 +1,37 @@
 import numpy as np
 import cv2
 import logging
+from sklearn import neighbors
+from pathlib import Path
+import os
+
+COLOR_NAMES = {
+    0: "white",
+    1: "black",
+    2: "gray",
+    3: "red",
+    4: "blue",
+    5: "green",
+    6: "yellow",
+    7: "purple",
+    8: "brown",
+    9: "orange",
+}
+# is there a better way to do this?
+COLOR_DB = (Path(__file__).parent / "labcolors.npy").resolve()
 
 
 class Color(object):
     def __init__(self):
-        pass
+        # Load color data from disk when new color obj is created...
+        color_data = np.load(COLOR_DB)
+        self.colorClassifier = neighbors.KNeighborsClassifier(n_neighbors=1)
+        self.colorClassifier.fit(color_data[:, :3], color_data[:, 3])
+
+    def get_readable_color(self, bgrcolor):
+        labcolor = cv2.cvtColor(bgrcolor.reshape(1, 1, 3), cv2.COLOR_BGR2LAB)
+        color_id = self.colorClassifier.predict(labcolor.reshape(1, -1))[0]
+        return COLOR_NAMES[color_id]
 
     def kmeans(self, img, k=3):
         pixels = img.reshape(-1, 3)

@@ -4,6 +4,23 @@ import logging
 import cv2, time
 import numpy as np
 from color import Color
+from uuid import uuid4
+
+
+class FoundTarget(object):
+    def __init__(self):
+        self.uuid = uuid4()  # unique target id
+        self.image = None  # image of the target
+        self.shape = None  # shape
+        self.character = None  # letter/number
+        self.shapecolor = None  # shape color
+        self.charcolor = None  # character color
+        self.coord_gps = None  # GPS coordinate
+        self.coord_local = None  # local "image" coordinate
+        self.time = None  # time detected
+        self.raw_frame = None  # raw image from which this targ was extracted
+        self.telemetry = None  # vehicle telemetry upon capture
+        self.target = None  # target object corresponding to this object
 
 
 class Pipeline(object):
@@ -66,21 +83,30 @@ class Pipeline(object):
             }
 
     def process_color(self, cropped_img):
-        segmented_image, centers = self.color.kmeans(cropped_img)
-        lmask, shape_color, letter_color = self.color.target_segmentation(
-            segmented_image
-        )
+        lmask, shape_color, letter_color = self.color.target_segmentation(cropped_img)
         return lmask, shape_color, letter_color
+
+    def _mask_compare(self, img, mask, sz=(400, 400)):
+        """utility to compare the extracted letter mask to the image side-by-side"""
+        rsz_img = cv2.resize(img, sz)
+        rsz_mask = cv2.resize(mask, sz)
+        rsz_mask = cv2.cvtColor(rsz_mask, cv2.COLOR_GRAY2RGB)
+        return np.concatenate((rsz_img, rsz_mask), axis=1)
 
     def run(self, raw, gps):
         """Primary run method for the imaging pipeline"""
         targets = self.inference_over_tiles(raw)
         for targ in self.parse_targets(raw, targets, self.interpreter):
+            logging.info(f"Target: class={targ['class']},\t score={targ['score']}")
+            lmask, shape_color, letter_color = self.process_color(targ["image"])
+            scolor_str = self.color.get_readable_color(shape_color)
+            lcolor_str = self.color.get_readable_color(letter_color)
             logging.info(
-                f"Found target: class={targ['class']},\t score={targ['score']}"
+                f"\tTarget shapecolor: {scolor_str} lettercollor: {lcolor_str}"
             )
-            cv2.imshow("Target", cv2.resize(targ["image"], (500, 500)))
-            cv2.waitKey(500)
+
+            cv2.imshow("Target", self._mask_compare(targ["image"], lmask))
+            cv2.waitKey(2500)
 
 
 if __name__ == "__main__":
@@ -91,7 +117,7 @@ if __name__ == "__main__":
         level=logging.INFO,
     )
 
-    FILE_PATH = "./example_images/plaza.jpg"
+    FILE_PATH = "./example_images/plaza_sm.jpg"
 
     interpreter = TargetInterpreter(
         MODEL_PATH,
