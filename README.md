@@ -4,45 +4,14 @@ UAV Forge's ODCL repository.
 This repository contains all code necessary for recognizing AUVSI targets.
 
 ## Documentation
-Documentation is available at: 
+Documentation is automatically generated & hosted when commits are made to `core`. It can be found here: https://uci-uav-forge.github.io/odcl/
 
-https://uci-uav-forge.github.io/odcl/
+## Developer Guide
 
-## Release History
+Recognizing targets and submitting them to interop takes place on multiple devices and over radio using ROS. To simplify development, we have split the repository into two main branches: `core` and `ros`. These branches are separately maintained to keep the ROS-based components necessary for communication and orchestration separate from the core functionality of the image pipeline.
 
-v1.0 - Oct 4, 2021
+This allows developers who don't have a ROS environment handy to develop the main functionality of the imaging system, and it also maintains a clear separation of core model code from ROS code.
 
-+ Add inference on COCO targets with mobilenet SSD
-+ Support for TPU
-+ Basic display with openCV
+## Installation
 
-## Hardware Requirements
-
-+ Google Coral TPU
-
-+ opencv
-
-+ Your device must have a camera 
-
-Tested with Python 3.7.10
-
-## How to run the example
-
-1. Clone this repository and install requirements
-
-2. Install TPU libraries:
-
-https://coral.ai/docs/accelerator/get-started/#requirements
-
-3. Download mobilenet SSD model into this folder:
-
-```
-wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
-```
-
-4. Plug in your TPU
-
-5. run pipeline.py
-```
-python odcl/pipeline.py
-```
+See "Installation" here: https://uci-uav-forge.github.io/odcl/
