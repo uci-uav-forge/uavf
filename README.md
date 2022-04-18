@@ -3,6 +3,9 @@ UAV Forge's ODCL repository.
 
 This repository contains all code necessary for recognizing AUVSI targets.
 
+⚠️ The core odcl code is in the `core` branch! ⚠️
+⚠️ The ROS code is in the `ros` branch! ⚠️
+
 ## Documentation
 Documentation is automatically generated & hosted when commits are made to `core`. It can be found here: https://uci-uav-forge.github.io/odcl/
 
