@@ -1,12 +1,12 @@
-import cv2
 import numpy as np
+import cv2
+import logging
 
 
 class Color(object):
     def __init__(self):
         pass
 
-    # image processing methods
     def kmeans(self, img, k=3):
         pixels = img.reshape(-1, 3)
         pixels = np.float32(pixels)
