@@ -1,8 +1,11 @@
+***************
 Getting Started
 ***************
 
+This page is a guide on how to get started with the ``core`` software.
+
 Prerequisites
--------------
+=============
 
 We have tested the API under linux and MacOS. Development of ``odcl`` should be possible under Windows, but is untested. 
 
@@ -51,6 +54,9 @@ This will download a couple of high-resolution example images into ``example_ima
     bash ./example_models.sh
 
 This will download a pre-trained TPU and CPU compatible model into ``models`` directory.
+
+Run The Pipeline
+================
 
 Then, you can run the script in ``pipeline.py``:
 
