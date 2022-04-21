@@ -16,6 +16,24 @@ pip install -r requirements.txt
 
 to get the packages needed.
 
+It's very common to use a GPU for training. To use tensorflow with an NVIDIA GPU, follow this guide:
+
+https://www.tensorflow.org/install/gpu
+
+It's common also to run training notebooks in Google Colab. To do this:
+
+1. Open Google Colab (https://colab.research.google.com/)
+
+2. Go to File > Open Notebook
+
+3. Go to the "Github" tab
+
+4. In another tab, open `train.ipynb` from this repository.
+
+5. Copy/Paste the URL into the box that says `Enter a GitHub URL or search by organization or user`
+
+6. The notebook will open in Google Colab.
+
 ## Training
 
 This repository uses tflite-model-maker to create the object detectors. 
