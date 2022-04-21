@@ -1,0 +1,12 @@
+# Blender v2.82 (sub 7) OBJ File: ''
+# www.blender.org
+mtllib Triangle.mtl
+o Triangle
+v -0.044597 -0.000000 0.026640
+v 0.044597 -0.000000 0.026640
+v 0.000000 0.000000 -0.056949
+vn 0.0000 1.0000 0.0000
+g Triangle_Triangle_Triangle
+usemtl Triangle
+s 1
+f 1//1 2//1 3//1
