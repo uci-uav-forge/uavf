@@ -1,0 +1,14 @@
+circle
+diamond
+halfcircle
+heart
+hexagon
+hexstar
+moon
+octagon
+pentagon
+pentstar
+plus
+square
+trapezoid
+triangle
