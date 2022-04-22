@@ -252,3 +252,50 @@ Then go to ``docs/`` and build HTML documentation:
     make html
 
 Navigate to ``docs/build/html/index.html`` in your web browser to see the documentation. You will need to run ``make html`` to see your code changes reflected.
+
+Running Tests
+=============
+
+We use `pytest <https://docs.pytest.org/en/latest/>`_ to run our tests.
+
+Because the pipeline uses compiled tensorflow models and takes images as input, we need to download them before running tests that touch that functionality. So running tests is a two-step process. From the root of the repository;
+
+First, download the models:
+
+.. code-block:: bash
+
+    bash ./prepare_tests.sh
+
+This will download models and test images to ``tests/fixture_setup``.
+
+Second, run the tests:
+
+.. code-block::
+
+    pytest
+
+Tests with full resolution images can run very slowly (several minutes), because they perform inference on the CPU. These are skipped by default, but to run them, you can pass in the ``--slow`` flag to pytest:
+
+.. code-block:: bash
+
+    pytest --slow
+
+Tests can be run with a TPU delegate instead of on the CPU. To run the tests with a TPU, you must have a TPU installed (they will fail if no TPU is detected.) Then, pass in the ``--tpu`` flag to pytest:
+
+.. code-block:: bash
+
+    pytest --tpu
+
+Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so slow when the TPU is used!
+
+``pytest`` Flag Summary:
+------------------------
+
+=====================  ==================================
+Flags                  Outcome
+=====================  ==================================
+``--tpu``              Runs slow tests on a TPU.
+``--slow``             Runs slow tests on CPU.
+``--tpu --slow``       Runs slow tests on a TPU and CPU.
+No Flags               Runs only fast tests, only on CPU.
+=====================  ==================================
