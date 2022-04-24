@@ -12,12 +12,13 @@ import time
 import cv2
 from math import ceil
 
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # From https://kespry.force.com/s/article/Finding-Your-State-Plane-Coordinate-System
 CRS = {
     "Irvine": pyproj.CRS.from_epsg(2230),
-    "Langley": pyproj.CRS.from_epsg(2283),
+    "Maryland": pyproj.CRS.from_epsg(2283),
     "WGS84": pyproj.CRS.from_epsg(4326),
 }
 

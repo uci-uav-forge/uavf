@@ -10,7 +10,18 @@ Development Goals
 Purpose of This Software
 ------------------------
 
-This is the documentation for UCI's ODCL (Object Detection, Classification, and Localization) pipeline. This software is intended to be used on-board a UAV to find and recognize "targets" on the ground. Targets are flat, colored shapes (hexagon, triangle, square, etc.) with visible alphanumeric characters pasted on them (ABCD... 789). The pipeline takes a single raw image from the on-board camera and produces a list (possibly empty!) containing information about the targets that are visible in the raw image. To recognize targets, it uses a custom deep-learning based object detector and a host of other computer vision and computational geometry algorithms to find and extract target information from the raw image.
+This package is a collection of tools for UCI's competition team at the `AUVSI SUAS <https://www.auvsi-suas.org/>`_. The AUVSI SUAS is a student competition in which an Autonomous Aerial System navigates through waypoints, avoids other vehicles and static obstacles, identifies and submits objects on the ground, and performs mapping tasks.
+
+This package contains python modules for:
+
+    * Autonomous Navigation (``planner``)
+    * Object Detection, Classification, and Localization (``odcl``)
+    * Interoperability with the AUVSI SUAS (``interop``)
+
+This package is intended to be deployed both on the vehicle and on the ground station. To orchestrate the mission and manage communications between the vehicle and the ground, we use `ROS Noetic <http://wiki.ros.org/noetic>`_. 
+
+For more about how we manage simultaneous development of the package and the ROS components, see :ref:`software-architecture`. 
+
 
 Development Ethos
 -----------------
@@ -27,15 +38,50 @@ Because this software has some unique deployment characteristics, development wo
 
 With these goals in mind, we can talk about how the software is structured.
 
+
+.. _software-architecture:
+
 Software Architecture
 =====================
 
-You may have noticed that the `main` branch is completely empty. This is intentional!
+Why Do We Have to Do This?
+--------------------------
 
-There are two main branches:
+Running Python programs with ROS requires making them available to system python. There are several ways to do this:
 
-* ``Core``
+    1. Configure python files in the catkin workspace to be available to system python.
 
-* ``ROS``
+    2. Install python packages into the system python.
 
-The main distinguishing factor between the two branches are the dependencies and integration/testing requirements. 
+For dependencies (such as ``numpy`` or ``scipy``), developers usually opt for (2). For simple ROS programs or small scripts, (1) is fine. But developing complex software the (1) strategy introduces significant development overhead: modules and submodules need to be manually marked in catkin; when they are used by ROS, they are not imported from the workspace, but rather copied to system python and imported from there.
+
+To get around these issues with catkin, and for some other reasons, we are opting for (2): we release the python software as a standalone package, manage its deployment with ``pip`` instead of ROS, and call its APIs from within ROS program, as we would any other package, like ``numpy`` or ``scipy``.
+
+
+Repository Structure
+--------------------
+
+Therefore, there are two branches in the repository:
+
+    * ``main`` -- contains the python package
+    * ``ROS`` -- contains the ROS package
+
+The development of these two branches are kept *entirely separate*.
+
+To install the package to system python (e.g., on board the UAV or on the Ground Station), we run:
+
+.. code-block:: bash
+
+    pip install git+https://github.com/uci-uav-forge/uavf.git
+
+outside of a virtual environment. This will install the ``uavf`` package into the system python. Then, from ``catkin_ws/src``, we run:
+
+.. code-block:: bash
+
+    git clone https://github.com/uci-uav-forge/uavf.git
+
+    git checkout ROS
+
+    catkin make
+
+to checkout the ROS package and build it. Inside of the ROS software, we can import the python package and use its APIs. 

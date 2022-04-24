@@ -446,17 +446,6 @@ def get_points_array(
 def get_midpoint_shared(H: nx.DiGraph, R: nx.Graph, e1: int, e2: int) -> np.ndarray:
     """Get the midpoint of the line which joins two cells, e1 and e2.
 
-    E.g, returns the point x from two neighboring rectangular cells:
-
-    ┌──────────┐
-    │          │
-    │    e1    │
-    │          │
-    └───┬──x───┴──┐
-        │         │
-        │    e2   │
-        │         │
-        └─────────┘
 
     Parameters
     ----------
