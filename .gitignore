@@ -1,5 +1,8 @@
 ################# VS Code / Misc Stuff
 
+# example
+example/
+
 # we really do not want training data in the repo!
 training/data
 # or checkpoints!

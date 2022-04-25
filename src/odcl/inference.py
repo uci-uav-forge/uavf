@@ -1,10 +1,8 @@
 import platform, cv2
 import numpy as np
 from tflite_runtime import interpreter
-from collections import namedtuple
 import logging
 import networkx as nx
-import time
 
 _EDGETPU_SHARED_LIB = {
     "Linux": "libedgetpu.so.1",
