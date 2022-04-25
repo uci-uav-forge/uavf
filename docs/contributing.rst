@@ -27,13 +27,13 @@ We are trying to make it so that adding contributions to the UAV Forge codebase 
 2. Create a new issue. To do this, click on "issues" tab, and then go to "new issue." You can also review existing issues here.
 
 .. image:: _static/contr01.png
-    :width: 60%
+    :width: 70%
     :align: center
 
 On the issues tag, go to "New issue":
 
 .. image:: _static/contr02.png
-    :width: 60%
+    :width: 70%
     :align: center
 
 Write as much detail about your issue as you can. Remember that things you post in issues are public, so they will help other developers understand what you are working on or what bugs you have encountered.
@@ -41,8 +41,12 @@ Write as much detail about your issue as you can. Remember that things you post 
 When you're ready to post the issue, click "Submit new issue."
 
 .. image:: _static/contr03.png
-    :width: 60%
+    :width: 70%
     :align: center
+
+I submitted the issue and it was assigned #27. You can view it on Github:
+
+`Issue #27 <https://github.com/uci-uav-forge/uavf/issues/27>`_
 
 When your issue has been created, it becomes a new "board" where you can post discussion about the issue: your progress on solving it or implementation, implementation details or questions, and so on. You can tag other users with "@" to call attention to some part of the issue.
 
@@ -60,6 +64,46 @@ Linking commits to issues is especially helpful, because if you click on the com
 
 Let's make that commit...
 
+Now that the commit is in, I can see the precise state of the code by clicking on it. This paragraph is not visible -- because when I made the commit I hadn't written it yet!
+
+You can also link to commits easily by copying either a direct web link to the commit or a hash of the commit. In this case, the hash is:
+
+64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9
+
+If I put that into a comment on the issue, I can link to the commit. This is the case for any commit in the codebase, even those outside of this particular issue.
+
+.. image:: _static/contr07.png
+    :width: 70%
+    :align: center
+
+Now, we have made our issue. When we start working on it, we want to create a branch from the repository. Typically, we want to branch from ``dev``, rather than ``main``. ``dev`` is the "working" branch of the codebase, and ``main`` is the "production" branch.
+
+We can create branches manually with git. It's a good idea to name branches with 1-3 summary words. It's also good practice to preface the branch with the issue number.
+
+.. code-block::bash
+
+    git branch 27-example-issue
+    git checkout 27-example-issue
+
+Github also includes a handy function to make branches from issues directly. They can then be pulled into the local repository:
+
+.. image:: _static/contr04.png
+    :width: 60%
+    :align: center
+
+If you use Github's functionality to do this, remember to branch from ``dev`` and not ``main``.
+
+Then, we work on the issue. 
+
+.. warning::
+
+    Remember to commit only code to the repository! For guidelines, see :ref:`in-repository`.
+
+When we are satisfied that our issue is completed, we submit a Pull Request. In essence, what we are doing is asking to merge our branch back into ``dev`` so that it can be integrated with the project.
+
+On most open-source projects, only core maintainers can accept a pull request (sometimes abbreviated PR). It's not uncommon for pull requests to recieve lots of back-and-forth talk between core maintainers and contributors before they are accepted, and sometimes they are denied outright. Usually, though, pull requests are much appreciated!
+
+.. _in-repository:
 What should go into the repository?
 ===================================
 
@@ -98,7 +142,7 @@ Working with ROS has some requirements that make it somewhat more difficult to w
 We also keep ROS code separate because `it's good practice to do so anyway <http://www.artificialhumancompanions.com/structure-python-based-ros-package/>`_. This is for several reasons, but it mostly has to do with how ROS is integrated with Python. In a nutshell, ROS always needs to use the system Python; even though standard Python development usually uses virtual environments to manage dependencies:
 
 .. image:: https://imgs.xkcd.com/comics/python_environment_2x.png
-    :width: 60%
+    :width: 50%
     :align: center
 
 So, to avoid development hell, we put the bulk of the functionality into the ``core`` branch, install ``core`` (and all of its dependencies) onto the vehicle's system python, and then we can just import the core package and use its funcationality in our ROS scripts.
