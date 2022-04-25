@@ -5,35 +5,37 @@ Contributing
 This page is a guide to making contributions to the codebase.
 
 
-Core Developer Workflow
-=======================
+Workflow
+========
 
 Useful to Know
 --------------
 
-The core deveopment workflow presumes some knowledge of ``git``. If you are brand new to ``git``, you may have these questions:
+The core deveopment workflow presumes some knowledge of ``git``. We are assuming that you are using ``git`` from the command line.
+
+If you are brand new to ``git``, you may have these questions:
 
 * *What is git? Branches, merging, commits? How do I install git?* → `Read the git-scm guide <https://git-scm.com/book/en/v2>`_
 
 * *What is GitHub? What are issues and pull requests?* → `Read the github flow guide <https://docs.github.com/en/get-started/quickstart/github-flow>`_
 
 
-Our Workflow
-------------
+How to Contribute
+-----------------
 
 1. An issue, bug, or new feature is identified on the project's `issue tracker <https://github.com/uci-uav-forge/odcl/issues>`_.
 
-2. You create a new branch from ``core-dev``.
+2. You create a new branch from ``dev``.
 
 3. You implement and test your changes in that branch.
 
-4. When you are satisfied with your changes: You make a new pull request with *base* ``core-dev`` and *compare* ``feature-branch``
+4. When you are satisfied with your changes: You make a new pull request with *base* ``dev`` and *compare* ``feature-branch``
 
     * Go to https://github.com/uci-uav-forge/odcl/pulls
 
     * Click the green "New Pull Request" button
 
-    * choose ``core-dev`` as the base, and your branch as the compare
+    * choose ``dev`` as the base, and your ``feature-branch`` branch as the compare
 
     * You can do this in the main codebase, or in your own fork of the project.
 
@@ -85,12 +87,6 @@ We want to do this for any file that isn't code, like binary files, images, mode
 
 Software Structure
 ==================
-
-The software is organized into two main components:
-
-* ``core``, which is a python package that contains all functionality of the imaging pipeline
-* ``ROS``, which is a ROS package that has the ROS functionality. ``core`` is a dependency of ``ROS``.
-
 
 ROS
 ---
