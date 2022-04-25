@@ -60,25 +60,25 @@ In this example, I might make a commit referencing the issue:
 
     git commit -m "#27 Added images to contribution section"
 
-When adding issue tags into commits helps link specific issues to specific commits, which helps other developers better understand how changes in the codebase are being made. I am going to commit some of the images I am adding to the branch, and tag them with the issue number I created here -- you can see that the commit I made showed up on the issue page!
+Adding issue tags into commits helps link specific issues to specific commits, which helps other developers better understand how changes in the codebase are being made. I am going to commit some of the images I am adding to the branch, and tag them with the issue number I created here -- you can see that the commit I made showed up on the issue page!
 
 Linking commits to issues is especially helpful, because if you click on the commit, you can exactly reproduce the state of the code from that commit. This helps other developers work collaboratively on the issue.
 
 Let's make that commit...
 
-Now that the commit is in, I can see the precise state of the code by clicking on it. This paragraph is not visible -- because when I made the commit I hadn't written it yet!
+Now that the commit is in, I can see the precise state of the code by clicking on the commit from in the issues page (If you're lazy to go there, `click here <https://github.com/uci-uav-forge/uavf/commit/64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9>`_). This paragraph is not visible -- because when I made the commit I hadn't written it yet!
 
 You can also link to commits easily by copying either a direct web link to the commit or a hash of the commit. In this case, the hash is:
 
 64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9
 
-If I put that into a comment on the issue, I can link to the commit. This is the case for any commit in the codebase, even those outside of this particular issue.
+If I put that into a comment on the issue, I can link to the commit. This is the case for any commit in the codebase, even those outside of this particular issue. Feel free to try this out in issue #27.
 
 .. image:: _static/contr07.png
     :width: 70%
     :align: center
 
-Now, we have made our issue. When we start working on it, we want to create a branch from the repository. Typically, we want to branch from ``dev``, rather than ``main``. ``dev`` is the "working" branch of the codebase, and ``main`` is the "production" branch.
+Now, we have made our issue. When we start working on it, we want to create a branch from the repository. Typically, we want to branch from ``dev``, rather than ``main``. ``dev`` is the "working" branch of the codebase, and ``main`` is the "production" branch. Changes are usually made and integrated in the ``dev`` branch, and then when they really are ready, they go to ``main``.
 
 We can create branches manually with git. It's a good idea to name branches with 1-3 summary words. It's also good practice to preface the branch with the issue number.
 
