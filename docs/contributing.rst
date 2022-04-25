@@ -11,52 +11,54 @@ Workflow
 Useful to Know
 --------------
 
-The core deveopment workflow presumes some knowledge of ``git``. We are assuming that you are using ``git`` from the command line.
-
-If you are brand new to ``git``, you may have these questions:
+The development workflow presumes some working knowledge of ``git``.  If you are brand new to ``git``, you may have these questions:
 
 * *What is git? Branches, merging, commits? How do I install git?* → `Read the git-scm guide <https://git-scm.com/book/en/v2>`_
 
 * *What is GitHub? What are issues and pull requests?* → `Read the github flow guide <https://docs.github.com/en/get-started/quickstart/github-flow>`_
 
+How to make a Contribution
+--------------------------
 
-How to Contribute
------------------
+We are trying to make it so that adding contributions to the UAV Forge codebase is as easy as possible. We are also trying to use development tools that are in place across industry and academia. So: follow this guide! It's easy and well worth it.
 
-1. An issue, bug, or new feature is identified on the project's `issue tracker <https://github.com/uci-uav-forge/odcl/issues>`_.
+1. You have an idea for a new feature, or you discover a bug that needs to be fixed.
 
-2. You create a new branch from ``dev``.
+2. Create a new issue. To do this, click on "issues" tab, and then go to "new issue." You can also review existing issues here.
 
-3. You implement and test your changes in that branch.
+.. image:: _static/contr01.png
+    :width: 60%
+    :align: center
 
-4. When you are satisfied with your changes: You make a new pull request with *base* ``dev`` and *compare* ``feature-branch``
+On the issues tag, go to "New issue":
 
-    * Go to https://github.com/uci-uav-forge/odcl/pulls
+.. image:: _static/contr02.png
+    :width: 60%
+    :align: center
 
-    * Click the green "New Pull Request" button
+Write as much detail about your issue as you can. Remember that things you post in issues are public, so they will help other developers understand what you are working on or what bugs you have encountered.
 
-    * choose ``dev`` as the base, and your ``feature-branch`` branch as the compare
+When you're ready to post the issue, click "Submit new issue."
 
-    * You can do this in the main codebase, or in your own fork of the project.
+.. image:: _static/contr03.png
+    :width: 60%
+    :align: center
 
-5. When you have created a new PR that fixes some issue in the issue tracker, you can link to the PR in the issue thread. 
+When your issue has been created, it becomes a new "board" where you can post discussion about the issue: your progress on solving it or implementation, implementation details or questions, and so on. You can tag other users with "@" to call attention to some part of the issue.
 
-.. note:: 
-    
-    Try to keep as much discussion as possible on the issue tracker so that the development process is well documented. Good things to include are:
+Often, you will make multiple commits on a feature branch. When making your commits, add the number of the issue in the commit message with a hastag.
 
-    * A summary of the changes
+In this example, I might make a commit referencing the issue:
 
-    * Rationale for the changes
+.. code-block:: bash
 
-    * What other parts of the codebase do the changes impact?
+    git commit -m "#27 Added images to contribution section"
 
-.. note::
+When adding issue tags into commits helps link specific issues to specific commits, which helps other developers better understand how changes in the codebase are being made. I am going to commit some of the images I am adding to the branch, and tag them with the issue number I created here -- you can see that the commit I made showed up on the issue page!
 
-    In general, you want to test your changes to make sure they work before merging them into ``core-dev.`` Unit tests are ideal! Remember that changes to parts of the codebase may break other parts.
+Linking commits to issues is especially helpful, because if you click on the commit, you can exactly reproduce the state of the code from that commit. This helps other developers work collaboratively on the issue.
 
-
-Try to keep new features and bug fixes contained rationally in a single branch.
+Let's make that commit...
 
 What should go into the repository?
 ===================================
