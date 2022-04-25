@@ -17,11 +17,15 @@ sys.path.insert(0, os.path.abspath("../src"))
 try:
     import odcl
 except ImportError:
-    raise ImportError("check that `odcl` is available to your system path.")
+    raise ImportError("Csheck that `odcl` is available to Python.")
+try:
+    import planner
+except ImportError:
+    raise ImportError("Check that `pathplanner` is available to Python.")
 
 # -- Project information -----------------------------------------------------
 
-project = "UAV Forge Object Detection, Classification, and Localization Pipeline"
+project = "UAV Forge"
 copyright = ""
 author = "Mike Sutherland"
 
@@ -55,7 +59,7 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-pygments_style = None
+pygments_style = "friendly"
 
 autodoc_mock_imports = ["scipy", "numpy", "matplotlib"]
 

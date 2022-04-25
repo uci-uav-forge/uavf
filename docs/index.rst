@@ -3,9 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-####################################
-UAV Forge ODCL Project Documentation
-####################################
+################################
+UAV Forge Software Documentation
+################################
 
 .. toctree::
    :maxdepth: 2
@@ -14,7 +14,7 @@ UAV Forge ODCL Project Documentation
    Overview<overview>
    Getting Started<getting_started>
    Contributing<contributing>
-   Git Repository<https://github.com/uci-uav-forge/odcl>
+   Git Repository<https://github.com/uci-uav-forge/uavf>
    Developers<developers>
 
 Indices and tables

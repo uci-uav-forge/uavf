@@ -219,7 +219,7 @@ Software Structure
 ROS
 ---
 
-Working with ROS has some requirements that make it somewhat more difficult to work with than you may be used to. In particular, using ROS *requires* a Linux operating system. We have a few laptops with linux installed already, but we expect that most people aren't using linux natively and may not be used to working with the OS. So rather than making the entire piece of software dependent on linux to even run, we have separated the ROS-dependent code and the standard `core` code.
+Working with ROS has some requirements that make it somewhat more difficult to work with than you may be used to. In particular, using ROS *requires* a Linux operating system. We have a few laptops with linux installed already, but we expect that most people aren't using linux natively and may not be used to working with the OS. So rather than making the entire piece of software dependent on linux to even run, we have separated the ROS-dependent code and the standard ``main`` code.
 
 We also keep ROS code separate because `it's good practice to do so anyway <http://www.artificialhumancompanions.com/structure-python-based-ros-package/>`_. This is for several reasons, but it mostly has to do with how ROS is integrated with Python. In a nutshell, ROS always needs to use the system Python; even though standard Python development usually uses virtual environments to manage dependencies:
 
@@ -227,7 +227,7 @@ We also keep ROS code separate because `it's good practice to do so anyway <http
     :width: 50%
     :align: center
 
-So, to avoid development hell, we put the bulk of the functionality into the ``core`` branch, install ``core`` (and all of its dependencies) onto the vehicle's system python, and then we can just import the core package and use its funcationality in our ROS scripts.
+So, to avoid development hell, we put the bulk of the functionality into the ``main`` branch, install ``main`` package (and all of its dependencies) onto the vehicle's system python, and then we can just import the ``uavf`` package and use its functionality in our ROS scripts.
 
 The Golden Rule of ROS Development
 ``````````````````````````````````
@@ -281,14 +281,14 @@ Great! Let's just push to the ``ROS`` branch and commit. Sounds good, right?
 Why not?
 
 * Nobody can run, debug, or test this code if they don't have access to a ROS system.
-* These changes will not be included in ``core``, so documentation will not be automatically generated for this method
-* Someone working on ``core`` might never see this piece of code, so they might write their own ``count_pixels`` function
-* Someone running ``pytest`` on the ``core`` branch will not be able to run the tests for this piece of code
+* These changes will not be included in ``main``, so documentation will not be automatically generated for this method
+* Someone working on ``main`` might never see this piece of code, so they might write their own ``count_pixels`` function
+* Someone running ``pytest`` on the ``main`` branch will not be able to run the tests for this piece of code (if they are written)
 
 Do This Instead
 ```````````````
 
-Put this method somewhere in ``core``. Let's say in :py:mod:`pipeline`:
+Put this method somewhere in ``main``. Let's say in :py:mod:`pipeline`:
 
 .. code-block:: python
 
@@ -329,7 +329,7 @@ Then, call it from the piece of code in the ``ROS`` branch.:
 
             pub.publish(pipeline.count_pixels)
 
-This difference is crucial to understand: the first way commingles ``core`` functionality with ROS code, making debugging and testing a nightmare. The second way keeps ``core`` functionality in ``core``, which allows everyone working on the codebase (not just the linux developers) to understand and debug it. 
+This difference is crucial to understand: the first way commingles ``main`` functionality with ROS code, making debugging and testing a nightmare. The second way keeps ``main`` functionality in ``main``, which allows everyone working on the codebase (not just the linux developers) to understand and debug it. 
 
 .. _documentation:
 
@@ -378,7 +378,7 @@ Then go to ``docs/`` and build HTML documentation:
     cd docs
     make html
 
-Navigate to ``docs/build/html/index.html`` in your web browser to see the documentation. You will need to run ``make html`` to see your code changes reflected.
+Navigate to ``docs/build/html/index.html`` in your web browser to see the documentation. You will need to run ``make html`` each time you make a change to see it reflected.
 
 Running Tests
 =============
