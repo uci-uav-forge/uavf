@@ -11,52 +11,180 @@ Workflow
 Useful to Know
 --------------
 
-The core deveopment workflow presumes some knowledge of ``git``. We are assuming that you are using ``git`` from the command line.
-
-If you are brand new to ``git``, you may have these questions:
+The development workflow presumes some working knowledge of ``git``.  If you are brand new to ``git``, you may have these questions:
 
 * *What is git? Branches, merging, commits? How do I install git?* → `Read the git-scm guide <https://git-scm.com/book/en/v2>`_
 
 * *What is GitHub? What are issues and pull requests?* → `Read the github flow guide <https://docs.github.com/en/get-started/quickstart/github-flow>`_
 
+.. _make-contribution:
 
-How to Contribute
------------------
+How to make a Contribution
+--------------------------
 
-1. An issue, bug, or new feature is identified on the project's `issue tracker <https://github.com/uci-uav-forge/odcl/issues>`_.
+We are trying to make it so that adding contributions to the UAV Forge codebase is as easy as possible. We are also trying to use development tools that are in place across industry and academia. So: follow this guide! It's easy and well worth it.
 
-2. You create a new branch from ``dev``.
+To start, you have an idea for a new feature, or you discover a bug that needs to be fixed. 
 
-3. You implement and test your changes in that branch.
+Create a new issue. To do this, click on "issues" tab, and then go to "new issue." You can also review existing issues here.
 
-4. When you are satisfied with your changes: You make a new pull request with *base* ``dev`` and *compare* ``feature-branch``
+.. image:: _static/contr01.png
+    :width: 70%
+    :align: center
 
-    * Go to https://github.com/uci-uav-forge/odcl/pulls
+On the issues tag, go to "New issue":
 
-    * Click the green "New Pull Request" button
+.. image:: _static/contr02.png
+    :width: 70%
+    :align: center
 
-    * choose ``dev`` as the base, and your ``feature-branch`` branch as the compare
+Write as much detail about your issue as you can. Remember that things you post in issues are public, so they will help other developers understand what you are working on or what bugs you have encountered.
 
-    * You can do this in the main codebase, or in your own fork of the project.
+When you're ready to post the issue, click "Submit new issue."
 
-5. When you have created a new PR that fixes some issue in the issue tracker, you can link to the PR in the issue thread. 
+.. image:: _static/contr03.png
+    :width: 70%
+    :align: center
 
-.. note:: 
-    
-    Try to keep as much discussion as possible on the issue tracker so that the development process is well documented. Good things to include are:
+I submitted the issue and it was assigned #27. You can view it on Github:
 
-    * A summary of the changes
+`Issue #27 <https://github.com/uci-uav-forge/uavf/issues/27>`_
 
-    * Rationale for the changes
+When your issue has been created, it becomes a new "board" where you can post discussion about the issue: your progress on solving it or implementation, implementation details or questions, and so on. You can tag other users with "@" to call attention to some part of the issue.
 
-    * What other parts of the codebase do the changes impact?
+Often, you will make multiple commits on a feature branch. When making your commits, add the number of the issue in the commit message with a hastag.
+
+In this example, I might make a commit referencing the issue:
+
+.. code-block:: bash
+
+    git commit -m "#27 Added images to contribution section"
+
+When adding issue tags into commits helps link specific issues to specific commits, which helps other developers better understand how changes in the codebase are being made. I am going to commit some of the images I am adding to the branch, and tag them with the issue number I created here -- you can see that the commit I made showed up on the issue page!
+
+Linking commits to issues is especially helpful, because if you click on the commit, you can exactly reproduce the state of the code from that commit. This helps other developers work collaboratively on the issue.
+
+Let's make that commit...
+
+Now that the commit is in, I can see the precise state of the code by clicking on it. This paragraph is not visible -- because when I made the commit I hadn't written it yet!
+
+You can also link to commits easily by copying either a direct web link to the commit or a hash of the commit. In this case, the hash is:
+
+64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9
+
+If I put that into a comment on the issue, I can link to the commit. This is the case for any commit in the codebase, even those outside of this particular issue.
+
+.. image:: _static/contr07.png
+    :width: 70%
+    :align: center
+
+Now, we have made our issue. When we start working on it, we want to create a branch from the repository. Typically, we want to branch from ``dev``, rather than ``main``. ``dev`` is the "working" branch of the codebase, and ``main`` is the "production" branch.
+
+We can create branches manually with git. It's a good idea to name branches with 1-3 summary words. It's also good practice to preface the branch with the issue number.
+
+.. code-block::bash
+
+    git branch 27-example-issue
+    git checkout 27-example-issue
+
+Github also includes a handy function to make branches from issues directly. They can then be pulled into the local repository:
+
+.. image:: _static/contr04.png
+    :width: 60%
+    :align: center
+
+If you use Github's functionality to do this, remember to branch from ``dev`` and not ``main``.
+
+Then, we work on the issue. 
+
+.. warning::
+
+    Remember to commit only code to the repository! For guidelines, see :ref:`in-repository`.
+
+When we are satisfied that our issue is completed, we submit a Pull Request. In essence, what we are doing is asking to merge our branch back into ``dev`` so that it can be integrated with the project.
+
+On most open-source projects, only core maintainers can accept a pull request (sometimes abbreviated PR). It's not uncommon for pull requests to recieve lots of back-and-forth talk between core maintainers and contributors before they are accepted, and sometimes they are denied outright. Usually, though, pull requests are much appreciated!
+
+To make a pull request go back to the main screen and click "Pull requests":
+
+.. image:: _static/contr08.png
+    :width: 70%
+    :align: center
+
+When we are on the PR tab, we are going to click on "Create pull request":
+
+.. image:: _static/contr09.png
+    :width: 70%
+    :align: center
+
+The "New pull request" button pulls up a page where we can request that any two branches in the project be merged together. Remember: a PR is just a request, it does not actually merge the branches!
 
 .. note::
 
-    In general, you want to test your changes to make sure they work before merging them into ``core-dev.`` Unit tests are ideal! Remember that changes to parts of the codebase may break other parts.
+    Even if it does not have a relevant issue, a branch can still be merged via this pull request process, as long as it is pushed to the remote.
 
+The pull request shows us a summary of the changes that we are requesting to be merged. For example, when I created this branch, I ended up changing some wording in the "Useful to Know" section, and I can see it in the PR page:
 
-Try to keep new features and bug fixes contained rationally in a single branch.
+.. image:: _static/contr11.png
+    :width: 70%
+    :align: center
+
+Git is quite intelligent and uses diff to show which changes have been made across the entire branch.
+
+.. note::
+
+    Along with file size issues, this is why we don't put datasets into the repository, because they "clutter" the diff history between commits. If we add 10,000 images and submit a pull request, this page will have 10,000 images in it!
+
+Now, we can click "Create pull request."
+
+We click "Create Pull Request" again. Once we create the PR, we now have an "active" PR. This *does not* mean that things have been merged yet -- just that we are talking about doing so!
+
+This opens another discussion page, where we can discuss the changes we are requesting to be merged. On pieces of software that recieve many PRs (codebases that are being worked on by many developers simultaneously) a PR page might be a worthwhile place to discuss the specific changes being made.
+
+We don't have very many developers, so it's OK to submit blank PRs. If you name branches starting with the issue number, the PR page will automatically link back to the issue page. Very helpful!
+
+.. image:: _static/contr12.png
+    :width: 70%
+    :align: center
+
+You will see that the PR page has a "Merge pull request" button. This is where we will actually merge the PR.
+
+.. warning::
+
+    Just because there are no direct conflicts between branches, does not mean that the PR is ready to be merged! Ideally, every PR has been reviewed and tested by a core maintainer. If you are not sure, DO NOT merge!
+
+    If you have conflicts, you will need to resolve them before merging.
+
+When a PR has been merged, the branch that was used to make the PR can safely be deleted (unless it's the ``ROS`` or ``dev`` branch -- those are usually kept open). This will not delete any files, or even file history, because files are edited in the repository based on commits, NOT based on branches. So long as the commits are merged, the files and their entire history are preserved.
+
+Once the PR has been merged, you can go back to the issues page -- if you linked the pull request to the issue by following this guide, you will see a purple "Merged" button in the issue history.
+
+.. image:: _static/contr13.png
+    :width: 70%
+    :align: center
+
+Sometimes, an issue is small and will be resolved with just one branch and PR. In other cases, an issue (maybe a very complex feature, or tricky bug) may only be resolved by multiple branch/PR cycles.
+
+.. note::
+
+    Branches and PRs can be made on any branch, not just ``dev``. So I may create a ``159-complex-feature`` branch, and then make a ``160-complex-feature-bug`` branch from the ``159-complex-feature`` branch. I would follow this guide the same way, merging 159 and 160 at the end with a PR. This could happen several times on a given branch. This is why version control is so powerful and why so many large software projects use it.
+
+That's it! 
+
+Summary
+```````
+Here, I:
+
+* Created a new issue
+* Created a branch based on that issue
+* Worked on the issue in my branch
+* Made commits and linked the issue to those commits
+* Proposed to merge my branch back once I was done with a PR
+* Merged the PR, deleted the branch, and closed the issue.
+
+Once you are ready, you can practice this process by adding your name to :ref:`developers` section of this documentation. You are welcome to make a new issue to practice -- or you can do only the latter half of the guide (everything minus creating a new issue) by making a new branch, making commits, and adding a PR. For this practice issue, branch off of ``main`` directly, since docs are rebuilt when new commits are merged into ``main``.
+
+.. _in-repository:
 
 What should go into the repository?
 ===================================
@@ -96,7 +224,7 @@ Working with ROS has some requirements that make it somewhat more difficult to w
 We also keep ROS code separate because `it's good practice to do so anyway <http://www.artificialhumancompanions.com/structure-python-based-ros-package/>`_. This is for several reasons, but it mostly has to do with how ROS is integrated with Python. In a nutshell, ROS always needs to use the system Python; even though standard Python development usually uses virtual environments to manage dependencies:
 
 .. image:: https://imgs.xkcd.com/comics/python_environment_2x.png
-    :width: 60%
+    :width: 50%
     :align: center
 
 So, to avoid development hell, we put the bulk of the functionality into the ``core`` branch, install ``core`` (and all of its dependencies) onto the vehicle's system python, and then we can just import the core package and use its funcationality in our ROS scripts.
@@ -203,13 +331,14 @@ Then, call it from the piece of code in the ``ROS`` branch.:
 
 This difference is crucial to understand: the first way commingles ``core`` functionality with ROS code, making debugging and testing a nightmare. The second way keeps ``core`` functionality in ``core``, which allows everyone working on the codebase (not just the linux developers) to understand and debug it. 
 
+.. _documentation:
 
 Documentation
 =============
 
 We have attempted to make writing documentation as easy as possible -- and as close to the codebase as possible! This documentation contains documentation that people have written manually (such as this guide). This manual documentation is written in a format called reStructuredText, which is a commonly-used format for software documentation. To get started writing manual documentation with reStructuredText, read the `reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_.
 
-The second type of documentation is the auto-generated documentation. This documentation is generated from in-line comments in the codebase. You don't need to touch anything in the `docs/` folder to write this documentation -- just comment your code, and your comments are added to the API page (:py:mod:`odcl`) automatically. The API page will rebuild itself automatically whenever pushes are made to the ``odcl/core`` branch of the repository. 
+The second type of documentation is the auto-generated documentation. This documentation is generated from in-line comments in the codebase. You don't need to touch anything in the `docs/` folder to write this documentation -- just comment your code, and your comments are added to the API page (:py:mod:`odcl`) automatically. The API page will rebuild itself automatically whenever pushes are made to the ``main`` branch of the repository. 
 
 We use `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ and a tool called `Sphinx Autoapi <https://github.com/readthedocs/sphinx-autoapi>`_ to automatically generate descriptions and API documentation for any class or method with a numpy-formatted docstring. This tool automatically parses the codebase.
 
@@ -228,6 +357,8 @@ At a minimum, we try to document:
 * The purpose of the function
 * Function arguments and types
 * Function returns and types
+
+.. _build-doc:
 
 Building Documentation Locally
 ------------------------------
