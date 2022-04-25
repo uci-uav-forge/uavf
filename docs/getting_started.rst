@@ -28,10 +28,13 @@ Install via ``pip``.
 
     pip install git+https://github.com/uci-uav-forge/uavf.git
 
+Object Detection, Classification, and Localization (ODCL)
+=========================================================
+
 Downloading Input Data and Models
 ---------------------------------
 
-When you have installed all the python dependencies, you can run a test of the model pipeline by running the example script in ``pipeline.py`` in ``odcl`` module. The tflite models and example data are not included in this repository, so you will need first to download them. You can download example data by running the ``example_models.sh`` script.
+The tflite models and example data are not included in this repository, so you will need first to download them. You can download example data by running the ``example_models.sh`` script.
 
 From the root directory:
 
