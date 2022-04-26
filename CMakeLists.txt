@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(interop)
+project(uavf)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,10 +8,12 @@ project(interop)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
+  geometry_msgs
+  mavros
+  nav_msgs
   rospy
   std_msgs
-  message_generation
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,10 +84,13 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   geometry_msgs
+#   nav_msgs
+#   std_msgs
+#   visualization_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -118,8 +123,13 @@ add_message_files(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
+<<<<<<< HEAD
 #  LIBRARIES interop
   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+=======
+#  LIBRARIES uavf
+#  CATKIN_DEPENDS geometry_msgs mavros nav_msgs rospy std_msgs visualization_msgs
+>>>>>>> ROS-dev
 #  DEPENDS system_lib
 )
 
@@ -136,7 +146,11 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
+<<<<<<< HEAD
 #   src/${PROJECT_NAME}/interop.cpp
+=======
+#   src/${PROJECT_NAME}/uavf.cpp
+>>>>>>> ROS-dev
 # )
 
 ## Add cmake target dependencies of the library
@@ -147,7 +161,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+<<<<<<< HEAD
 # add_executable(${PROJECT_NAME}_node src/interop_node.cpp)
+=======
+# add_executable(${PROJECT_NAME}_node src/uavf_node.cpp)
+>>>>>>> ROS-dev
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -211,7 +229,11 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
+<<<<<<< HEAD
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_interop.cpp)
+=======
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_uavf.cpp)
+>>>>>>> ROS-dev
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
