@@ -1,3 +1,5 @@
+# /usr/bin/python3
+
 from interop_client import InteropClient
 import rospy, threading
 from geographic_msgs.msg import GeoPointStamped, GeoPoint

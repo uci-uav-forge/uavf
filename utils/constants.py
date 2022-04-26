@@ -1,7 +1,0 @@
-# SERVER INFO
-
-SERVER_IP = "127.0.0.1"
-SERVER_PORT = "8000"
-SERVER_URL = f"http://{SERVER_IP}:{SERVER_PORT}"
-USERNAME = "testadmin"
-PASSWORD = "testpass"
