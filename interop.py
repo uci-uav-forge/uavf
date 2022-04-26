@@ -42,6 +42,11 @@ TELEMETRY_TOPIC = "telemetry"
 
 
 class UAVFInteropClient(client.Client):
+    """Our implementation of the interop client. This class inherits from the auvsi client defined here:
+
+    https://github.com/auvsi-suas/interop/blob/master/client/auvsi_suas/client/client.py
+    """
+
     def __init__(self):
         super().__init__(SERVER_URL, USERNAME, PASSWORD)
 
@@ -51,7 +56,7 @@ def talker():
 
     waypoints_pub = rospy.Publisher(
         WAYPOINTS_TOPIC,
-        WayPoints,
+        Waypoints,
         queue_size=10,
     )
     flyzones_pub = rospy.Publisher(
@@ -146,7 +151,7 @@ def main():
     rospy.init_node("interop_client", anonymous=True)
 
     global client
-    interopclient = client.InteropClient(SERVER_URL, USERNAME, PASSWORD)
+    interopclient = UAVFInteropClient()
 
     listenerThread = threading.Thread(target=listener)
     listenerThread.setDaemon(True)
