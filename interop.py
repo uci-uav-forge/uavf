@@ -1,9 +1,8 @@
 # /usr/bin/python3
-
-from interop_client import InteropClient
+from auvsi_suas.client import client
 import rospy, threading
 from geographic_msgs.msg import GeoPointStamped, GeoPoint
-from interop.msg import (
+from uavf.msg import (
     Color,
     FlyZone,
     FlyZoneArray,
@@ -14,7 +13,7 @@ from interop.msg import (
     GeoCylinder,
     GeoPolygonStamped,
     GeoCylinderArrayStamped,
-    WayPoints,
+    Waypoints,
 )
 
 # AUVSI SERVER INFO
@@ -40,6 +39,11 @@ STATIONARY_OBSTACLES_TOPIC = "stationary_obstacles"
 ODLC_TOPIC = "odlc"
 MAPS_TOPIC = "map"
 TELEMETRY_TOPIC = "telemetry"
+
+
+class UAVFInteropClient(client.Client):
+    def __init__(self):
+        super().__init__(SERVER_URL, USERNAME, PASSWORD)
 
 
 def talker():
@@ -142,7 +146,7 @@ def main():
     rospy.init_node("interop_client", anonymous=True)
 
     global client
-    client = InteropClient(SERVER_URL, USERNAME, PASSWORD)
+    interopclient = client.InteropClient(SERVER_URL, USERNAME, PASSWORD)
 
     listenerThread = threading.Thread(target=listener)
     listenerThread.setDaemon(True)
