@@ -4,6 +4,10 @@ Contributing
 
 This page is a guide to making contributions to the codebase.
 
+.. note::
+
+    If you are not familair with using git to make contributions to an existing codebase, you should follow :ref:`make-contribution`, and then practice making a contribution by following this page :ref:`practice-contribution`.
+
 
 Workflow
 ========

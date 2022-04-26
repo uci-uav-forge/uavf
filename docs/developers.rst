@@ -6,6 +6,8 @@ Developers
 
 This page serves a couple purposes. First, it displays a list of the developers on the project. Second (and more importantly) it helps new developers become acquainted with the process of making changes to our project's codebase.
 
+.. _practice-contribution:
+
 Practice Making a Contribution: Add Yourself to this List!
 ==========================================================
 
