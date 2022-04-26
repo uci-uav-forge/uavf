@@ -50,11 +50,24 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   Color.msg
+   FlyZone.msg
+   FlyZoneArray.msg
+   GeoCylinder.msg
+   GeoCylinderArrayStamped.msg
+   GeoPolygon.msg
+   GeoPolygonStamped.msg
+   GeoSphere.msg
+   GeoSphereArrayStamped.msg
+   Object.msg
+   ObjectNotification.msg
+   ObjectType.msg
+   Orientation.msg
+   Shape.msg
+   Waypoints.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -73,7 +86,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   nav_msgs#   std_msgs#   visualization_msgs
+#   geometry_msgs
+#   nav_msgs
+#   std_msgs
+#   visualization_msgs
 # )
 
 ################################################
@@ -107,8 +123,13 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
+<<<<<<< HEAD
+#  LIBRARIES interop
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+=======
 #  LIBRARIES uavf
 #  CATKIN_DEPENDS geometry_msgs mavros nav_msgs rospy std_msgs visualization_msgs
+>>>>>>> ROS-dev
 #  DEPENDS system_lib
 )
 
@@ -125,7 +146,11 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
+<<<<<<< HEAD
+#   src/${PROJECT_NAME}/interop.cpp
+=======
 #   src/${PROJECT_NAME}/uavf.cpp
+>>>>>>> ROS-dev
 # )
 
 ## Add cmake target dependencies of the library
@@ -136,7 +161,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+<<<<<<< HEAD
+# add_executable(${PROJECT_NAME}_node src/interop_node.cpp)
+=======
 # add_executable(${PROJECT_NAME}_node src/uavf_node.cpp)
+>>>>>>> ROS-dev
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -200,7 +229,11 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
+<<<<<<< HEAD
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_interop.cpp)
+=======
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_uavf.cpp)
+>>>>>>> ROS-dev
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
