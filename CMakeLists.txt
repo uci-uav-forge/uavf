@@ -9,6 +9,8 @@ project(uavf)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  geographic_msgs
+  sensor_msgs
   mavros
   nav_msgs
   rospy
@@ -83,14 +85,16 @@ add_message_files(
 #   Action2.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs
-#   nav_msgs
-#   std_msgs
-#   visualization_msgs
-# )
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+  geographic_msgs
+  geometry_msgs
+  nav_msgs
+  std_msgs
+  visualization_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -122,15 +126,7 @@ add_message_files(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-<<<<<<< HEAD
-#  LIBRARIES interop
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
-=======
-#  LIBRARIES uavf
-#  CATKIN_DEPENDS geometry_msgs mavros nav_msgs rospy std_msgs visualization_msgs
->>>>>>> ROS-dev
-#  DEPENDS system_lib
+  CATKIN_DEPENDS rospy std_msgs message_runtime
 )
 
 ###########
@@ -139,18 +135,15 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
+# include_directories(
+#   include
+#   ${catkin_INCLUDE_DIRS}
+# )
 
-## Declare a C++ library
+## #  DEPENDS system_lib
+# Declare a C++ library
 # add_library(${PROJECT_NAME}
-<<<<<<< HEAD
-#   src/${PROJECT_NAME}/interop.cpp
-=======
 #   src/${PROJECT_NAME}/uavf.cpp
->>>>>>> ROS-dev
 # )
 
 ## Add cmake target dependencies of the library
@@ -161,11 +154,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-<<<<<<< HEAD
-# add_executable(${PROJECT_NAME}_node src/interop_node.cpp)
-=======
 # add_executable(${PROJECT_NAME}_node src/uavf_node.cpp)
->>>>>>> ROS-dev
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -191,10 +180,10 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  interop.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -229,11 +218,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-<<<<<<< HEAD
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_interop.cpp)
-=======
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_uavf.cpp)
->>>>>>> ROS-dev
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
