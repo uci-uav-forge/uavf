@@ -15,6 +15,10 @@ In order to develop packages on ROS, you need a PC equipped with Linux. Any desk
 
 ``uavf`` is a ROS package. To install it, you need to have ROS installed and configured. That will not be covered in this documentation; if you are brand new to ROS, I recommend that you go through the ROS tutorial [1]_ before continuing to the next section.
 
+.. note::
+        
+    In order to run Gazebo simulations, you need to have installed the "full" ROS environment. For example, with apt, you have installed ``ros-noetic-desktop-full``, not ``ros-noetic-ros-base`` or ``ros-noetic-desktop``.
+
 This release targets ROS 1 Noetic, for compatibility reasons. We are not developing for ROS 2.
 
 We assume that you have set up a catkin workspace in your home directory:
@@ -23,9 +27,57 @@ We assume that you have set up a catkin workspace in your home directory:
 
     ~/catkin_ws
 
-Installation
-````````````
+(Simulation) Install and Run PX4
+````````````````````````````````
 
+Follow this guide if you are planning to simulate a PX4 UAV mission.
+
+This guide based on the `PX4 ROS1 Interface Guide <https://docs.px4.io/master/en/simulation/ros_interface.html>`_.
+
+First, clone the PX4-SITL_gazebo repository into any directory. Make sure that you clone recursively and that you do not clone into your catkin_ws:
+
+.. code-block:: bash
+
+    cd ~/
+    git clone --recursive https://github.com/PX4/PX4-Autopilot.git
+
+Go into the ~/PX4-Autopilot folder and make the PX4 SITL gazebo environment. When it is done building, source the `~/catkin_ws/devel/setup.sh` script and source the setup_gazebo script with the source & build directory as arguments.
+
+Then append the current and Tools/sitl_gazebo directories to the $ROS_PACKAGE_PATH.
+
+.. code-block:: bash
+
+    cd ~/PX4-Autopilot
+    DONT_RUN=1 make px4_sitl_default gazebo
+    source ~/catkin_ws/devel/setup.bash 
+    source Tools/setup_gazebo.bash $(pwd) $(pwd)/build/px4_sitl_default
+    export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)
+    export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Tools/sitl_gazebo
+
+You will then see that `px4` is available to your roslaunch. Run:
+
+.. code-block:: bash
+
+    roslaunch px4 mavros_posix_sitl.launch
+
+A gazebo window showing a quadcopter will open and the simulation will start. You will see a bunch of messages appear in the console window. Make sure you keep the console window open.
+
+Inspect the rqt_graph:
+
+.. code-block:: bash 
+
+    rqt_graph
+
+You will see several new nodes:
+
+.. image:: _static/rqt_graph_gazebo_drone.png
+    :width: 70%
+    :align: center
+
+This is the simulated PX4, which can be commanded with MAVROS.
+
+Install ``uavf``
+````````````````
 .. warning::
 
     Because we are using this package from ROS, we need to ensure that we are NOT in any python virtual environment. You can verify this by typing ``which python`` into a terminal window. Make sure that the output is ``/usr/bin/python``.
@@ -44,12 +96,12 @@ Clone the git repository into ``~/catkin_ws/src`` and checkout the ``ROS`` branc
     git clone https://github.com/uci-uav-forge/uavf
     git checkout ROS
 
-Install the ``auvsi_suas`` interop client package to your system python. There is a script that will do this.
+Install the ``auvsi_suas`` interop client package and the ``uavf`` python package to your system python. There is a script that will do this.
 
 .. code-block:: bash
 
     cd ~/catkin_ws/src/uavf/
-    bash ./install_auvsi_client.sh
+    bash ./install_deps.sh
 
 .. note::
 
@@ -63,12 +115,40 @@ Run ``catkin_make`` and source your ``devel/setup.bash`` file:
     catkin_make
     source devel/setup.bash
 
-Start a ``roscore`` instance in a separate terminal window.
+Make sure you remember to start a ``roscore`` instance in a separate terminal window.
+
+Running a Mission with ``uavf``
+===============================
+
+Until we have viable hardware testing, this section deals with running a simulated mission with ``uavf``. 
+
+Run ``uavf`` Interop
+--------------------
 
 The interop client is a ros node written in Python. We start it with ``rosrun``.
 
 .. code-block::
 
-    rosrun uavf interop.py
+    rosrun uavf interop
+
+Run ``uavf`` Planner
+--------------------
+
+The navigation node is a ros service node that will generate a new path for the UAV to follow between waypoints.
+
+.. code-block:: bash
+
+    rosrun uavf planner
+
+
+Run ``uavf`` GNC
+----------------
+
+The uavf GNC node is a ros node that will take a computed plan and manage the execution of the plan on the UAV.
+
+.. code-block:: bash
+
+    rosrun uavf gnc
+
 
 .. [1] http://wiki.ros.org/ROS/Tutorials
