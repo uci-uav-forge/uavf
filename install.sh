@@ -1,4 +1,4 @@
-###  Script to install AUVSI Client
+###  Script to install package dependencies
 TEMP_DIR=./temp_install
 
 # create a temporary directory
@@ -22,4 +22,8 @@ echo "Done!"
 echo "Removing temp directory"
 cd ../../../
 rm -rf $TEMP_DIR
+echo "Done!"
+
+echo "Installing UAVF python package..."
+pip install -U git+https://github.com/uci-uav-forge/uavf.git
 echo "Done!"

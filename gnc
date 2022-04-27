@@ -1,0 +1,9 @@
+# /usr/bin/python3
+
+#######################
+#### Interop Client ###
+#######################
+
+# This rosnode coordinates communication between nodes
+# on the ROS network and the AUVSI interop server. It
+# relies on the `uavf` python package.

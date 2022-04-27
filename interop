@@ -1,4 +1,14 @@
 # /usr/bin/python3
+
+#######################
+#### Interop Client ###
+#######################
+
+# This rosnode coordinates communication between nodes
+# on the ROS network and the AUVSI interop server. It
+# relies on the `uavf` python package.
+
+
 from auvsi_suas.client import client
 import rospy, threading
 from geographic_msgs.msg import GeoPointStamped, GeoPoint
