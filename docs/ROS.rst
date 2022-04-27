@@ -41,9 +41,7 @@ First, clone the PX4-SITL_gazebo repository into any directory. Make sure that y
     cd ~/
     git clone --recursive https://github.com/PX4/PX4-Autopilot.git
 
-Go into the ~/PX4-Autopilot folder and make the PX4 SITL gazebo environment. When it is done building, source the `~/catkin_ws/devel/setup.sh` script and source the setup_gazebo script with the source & build directory as arguments.
-
-Then append the current and Tools/sitl_gazebo directories to the $ROS_PACKAGE_PATH.
+Build the autopilot and make the SITL simulation available to ROS:
 
 .. code-block:: bash
 
