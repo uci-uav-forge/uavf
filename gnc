@@ -1,12 +1,10 @@
 # /usr/bin/python3
 
 #######################
-#### Interop Client ###
+####    GNC         ###
 #######################
-
-# This rosnode coordinates communication between nodes
-# on the ROS network and the AUVSI interop server. It
-# relies on the `uavf` python package.
+# This node manages the UAV state and sends waypoint commands
+# to the UAV.
 
 import rospy, threading, pyproj, math, json, os, glob, sys
 from pymavlink import mavutil
