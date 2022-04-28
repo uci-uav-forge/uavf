@@ -2,10 +2,10 @@ import pytest, cv2
 from pathlib import Path
 from odcl import inference, color
 
-MODEL_PATH = "./fixture_setup/efficientdet_lite0_320_ptq.tflite"
-MODEL_PATH_TPU = "./fixture_setup/efficientdet_lite0_320_ptq_edgetpu.tflite"
-LABEL_PATH = "./fixture_setup/coco_labels.txt"
-IMG_PATH = "./fixture_setup/plaza.jpg"
+MODEL_PATH = "../example/efficientdet_lite0_320_ptq.tflite"
+MODEL_PATH_TPU = "../example/efficientdet_lite0_320_ptq_edgetpu.tflite"
+LABEL_PATH = "../example/coco_labels.txt"
+IMG_PATH = "../example/plaza.jpg"
 MODEL_PATH = str((Path(__file__).parent / MODEL_PATH).resolve())
 MODEL_PATH_TPU = str((Path(__file__).parent / MODEL_PATH_TPU).resolve())
 LABEL_PATH = str((Path(__file__).parent / LABEL_PATH).resolve())

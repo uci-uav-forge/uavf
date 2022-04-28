@@ -2,18 +2,18 @@
 Getting Started
 ***************
 
-This page is a guide on how get started with the ``uavf`` API.
+This page is a guide on how get started with the :py:package:`uavfpy` API.
 
 Prerequisites
 =============
 
-We have tested the API under linux and MacOS. Development of ``uavf`` is possible under Windows also.
+We have tested the API under linux and MacOS. Development of :py:package:`uavfpy` is possible under Windows also.
 
 Our release targets Python 3.8.
 
 .. note:: 
     
-    ``odcl`` uses the tflite runtime for inference. You can perform inference on the CPU, but this can be very slow. The vehicle uses the `Coral Edge TPU <https://www.coral.ai/docs/>`_ for on-board acceleration of inferencing.
+    :py:mod:`uavfpy.odcl` uses the tflite runtime for inference. You can perform inference on the CPU, but this can be very slow. The vehicle uses the `Coral Edge TPU <https://www.coral.ai/docs/>`_ for on-board acceleration of inferencing.
 
     The Coral Edge TPU is an ASIC developed by Google specifically designed for accelerating deep learning. If you do not have access to an Edge TPU, you can use the CPU for inference. 
 
@@ -28,10 +28,13 @@ Install via ``pip``.
 
     pip install git+https://github.com/uci-uav-forge/uavf.git
 
+Object Detection, Classification, and Localization (ODCL)
+=========================================================
+
 Downloading Input Data and Models
 ---------------------------------
 
-When you have installed all the python dependencies, you can run a test of the model pipeline by running the example script in ``pipeline.py`` in ``odcl`` module. The tflite models and example data are not included in this repository, so you will need first to download them. You can download example data by running the ``example_models.sh`` script.
+The tflite models and example data are not included in this repository, so you will need first to download them. You can download example data by running the ``example_models.sh`` script.
 
 From the root directory:
 
@@ -48,10 +51,10 @@ First, we import necessary modules:
 .. code-block:: python
 
     # import classes
-    from odcl.inference import TargetInterpreter, Tiler
-    from odcl.utils.drawer import TargetDrawer
-    from odcl.color import Color
-    from odcl.pipeline import Pipeline
+    from uavfpy.odcl.inference import TargetInterpreter, Tiler
+    from uavfpy.odcl.utils.drawer import TargetDrawer
+    from uavfpy.odcl.color import Color
+    from uavfpy.odcl.pipeline import Pipeline
     import logging, cv2
 
 Then, we set paths to the example data and the models we downloaded. We also want to display logs.
@@ -68,9 +71,9 @@ Then, we set paths to the example data and the models we downloaded. We also wan
         format="%(levelname)s:%(processName)s@%(module)s\t%(message)s", level=logging.INFO
     )
 
-The :py:class:`odcl.inference.TargetInterpreter` class handles inputs and outputs to the neural network for object detection. We give it paths to the model and labels, tell it whether to run on CPU or TPU, and set the threshold for detection. 
+The :py:class:`uavfpy.odcl.inference.TargetInterpreter` class handles inputs and outputs to the neural network for object detection. We give it paths to the model and labels, tell it whether to run on CPU or TPU, and set the threshold for detection. 
 
-Instantiating a :py:class:`odcl.inference.TargetInterpreter` object takes a while, so this object should be created outside of a loop if latency is at issue. 
+Instantiating a :py:class:`uavfpy.odcl.inference.TargetInterpreter` object takes a while, so this object should be created outside of a loop if latency is at issue. 
 
 .. code-block:: python
 
@@ -83,13 +86,13 @@ Instantiating a :py:class:`odcl.inference.TargetInterpreter` object takes a whil
         order_key="efficientdetd0",
     )
 
-Next, we create the :py:class:`odcl.inference.Tiler`, which handles the tiling of the input image. We are dealing with inputs that are very large compared to the inputs of the neural network; the tiler will decompose the image into overlapping tiles, feed the NN, and then parse NN outputs from the respective tiles back into the raw image.
+Next, we create the :py:class:`uavfpy.odcl.inference.Tiler`, which handles the tiling of the input image. We are dealing with inputs that are very large compared to the inputs of the neural network; the tiler will decompose the image into overlapping tiles, feed the NN, and then parse NN outputs from the respective tiles back into the raw image.
 
-:py:class:`odcl.color.Color` is a class used to extract color information from found targets. For now, it does not take any arguments. 
+:py:class:`uavfpy.odcl.color.Color` is a class used to extract color information from found targets. For now, it does not take any arguments. 
 
-:py:class:`odcl.utils.drawer.TargetDrawer` is a utility class used to draw bounding boxes. Passing it as an argument will draw bounding boxes on the raw image and store the result into the :py:class:`Pipeline`'s :py:attr:`drawn` attribute. Passing it will also open a window to display targets that were found, along with the shape color-mask. Therefore, it is useful for evaluating the performance of the pipeline in real time.
+:py:class:`uavfpy.odcl.utils.drawer.TargetDrawer` is a utility class used to draw bounding boxes. Passing it as an argument will draw bounding boxes on the raw image and store the result into the :py:class:`Pipeline`'s :py:attr:`drawn` attribute. Passing it will also open a window to display targets that were found, along with the shape color-mask. Therefore, it is useful for evaluating the performance of the pipeline in real time.
 
-If a :py:class:`TargetDrawer` is not passed to the :py:class:`odcl.pipeline.Pipeline` constructor, the :py:class:`Pipeline` will not draw bounding boxes on the image, nor will found targets be displayed.
+If a :py:class:`TargetDrawer` is not passed to the :py:class:`uavfpy.odcl.pipeline.Pipeline` constructor, the :py:class:`Pipeline` will not draw bounding boxes on the image, nor will found targets be displayed.
 
 .. code-block:: python
 
@@ -105,7 +108,7 @@ If a :py:class:`TargetDrawer` is not passed to the :py:class:`odcl.pipeline.Pipe
     # create the pipeline object
     pipeline = Pipeline(interpreter, tiler, color, drawer)
 
-The :py:meth:`odcl.pipeline.Pipeline.run` method takes an image and returns a list of found targets.
+The :py:meth:`uavfpy.odcl.pipeline.Pipeline.run` method takes an image and returns a list of found targets.
 
 .. code-block:: python
 
