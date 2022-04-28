@@ -15,13 +15,10 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 try:
-    import odcl
+    import uavfpy
 except ImportError:
-    raise ImportError("Csheck that `odcl` is available to Python.")
-try:
-    import planner
-except ImportError:
-    raise ImportError("Check that `pathplanner` is available to Python.")
+    raise ImportError("Csheck that `uavfpy` is available to Python.")
+
 
 # -- Project information -----------------------------------------------------
 

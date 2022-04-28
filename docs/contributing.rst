@@ -231,7 +231,7 @@ We also keep ROS code separate because `it's good practice to do so anyway <http
     :width: 50%
     :align: center
 
-So, to avoid development hell, we put the bulk of the functionality into the ``main`` branch, install ``main`` package (and all of its dependencies) onto the vehicle's system python, and then we can just import the ``uavf`` package and use its functionality in our ROS scripts.
+So, to avoid development hell, we put the bulk of the functionality into the ``main`` branch, install ``main`` package (and all of its dependencies) onto the vehicle's system python, and then we can just import the :py:package:`uavfpy` package and use its functionality in our ROS scripts.
 
 The Golden Rule of ROS Development
 ``````````````````````````````````
@@ -310,7 +310,7 @@ Then, call it from the piece of code in the ``ROS`` branch.:
 
 .. code-block:: python
 
-    from Pipeline import pipeline
+    from uavfpy.Pipeline import pipeline
 
     def publish_pixels(pipeline, image):
         pixels = pipeline.count_pixels(image)
@@ -342,7 +342,7 @@ Documentation
 
 We have attempted to make writing documentation as easy as possible -- and as close to the codebase as possible! This documentation contains documentation that people have written manually (such as this guide). This manual documentation is written in a format called reStructuredText, which is a commonly-used format for software documentation. To get started writing manual documentation with reStructuredText, read the `reStructuredText Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_.
 
-The second type of documentation is the auto-generated documentation. This documentation is generated from in-line comments in the codebase. You don't need to touch anything in the `docs/` folder to write this documentation -- just comment your code, and your comments are added to the API page (:py:mod:`odcl`) automatically. The API page will rebuild itself automatically whenever pushes are made to the ``main`` branch of the repository. 
+The second type of documentation is the auto-generated documentation. This documentation is generated from in-line comments in the codebase. You don't need to touch anything in the `docs/` folder to write this documentation -- just comment your code, and your comments are added to the API page (:py:package:`uavfpy`) automatically. The API page will rebuild itself automatically whenever pushes are made to the ``main`` branch of the repository. 
 
 We use `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ and a tool called `Sphinx Autoapi <https://github.com/readthedocs/sphinx-autoapi>`_ to automatically generate descriptions and API documentation for any class or method with a numpy-formatted docstring. This tool automatically parses the codebase.
 

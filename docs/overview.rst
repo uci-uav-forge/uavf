@@ -12,11 +12,11 @@ Purpose of This Software
 
 This package is a collection of tools for UCI's competition team at the `AUVSI SUAS <https://www.auvsi-suas.org/>`_. The AUVSI SUAS is a student competition in which an Autonomous Aerial System navigates through waypoints, avoids other vehicles and static obstacles, identifies and submits objects on the ground, and performs mapping tasks.
 
-This package contains python modules for:
+This :py:package:`uavfpy` contains python modules for:
 
-    * Autonomous Navigation (``planner``)
-    * Object Detection, Classification, and Localization (``odcl``)
-    * Interoperability with the AUVSI SUAS (``interop``)
+    * Autonomous Navigation (:py:mod:`uavfpy.planner`)
+    * Object Detection, Classification, and Localization (:py:mod:`uavfpy.odcl`)
+    * Interoperability with the AUVSI SUAS 
 
 This package is intended to be deployed both on the vehicle and on the ground station. To orchestrate the mission and manage communications between the vehicle and the ground, we use `ROS Noetic <http://wiki.ros.org/noetic>`_. 
 
@@ -74,7 +74,7 @@ To install the package to system python (e.g., on board the UAV or on the Ground
 
     pip install git+https://github.com/uci-uav-forge/uavf.git
 
-outside of a virtual environment. This will install the ``uavf`` package into the system python. Then, from ``catkin_ws/src``, we run:
+outside of a virtual environment. This will install the :py:package:`uavfpy` package into the system python. Then, from ``catkin_ws/src``, we run:
 
 .. code-block:: bash
 
@@ -84,4 +84,4 @@ outside of a virtual environment. This will install the ``uavf`` package into th
 
     catkin make
 
-to checkout the ROS package and build it. Inside of the ROS software, we can import ``uavf`` and use its APIs. 
+to checkout the ROS package and build it. Inside of the ROS software, we can import :py:package:`uavfpy` and use its APIs. 
