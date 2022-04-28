@@ -2,12 +2,12 @@
 Getting Started
 ***************
 
-This page is a guide on how get started with the ``uavf`` API.
+This page is a guide on how get started with the ``uavfpy`` API.
 
 Prerequisites
 =============
 
-We have tested the API under linux and MacOS. Development of ``uavf`` is possible under Windows also.
+We have tested the API under linux and MacOS. Development of ``uavfpy`` is possible under Windows also.
 
 Our release targets Python 3.8.
 

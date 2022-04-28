@@ -2,7 +2,7 @@
 The UAVF ROS Package
 ********************
 
-The ``uavf`` package in ``main`` is a python package that does not depend on ROS. We do use ROS to orchestrate the mission, so we have a ROS package as well.
+The ``uavfpy`` package in ``main`` is a python package that does not depend on ROS. We do use ROS to orchestrate the mission, so we have a ROS package as well.
 
 ``uavf`` is the name of the ROS package. Its development shares an issue tracker and repository with the main python package, but its development happens on the ``ROS`` and ``ROS-dev`` branches of the repository.
 
@@ -74,8 +74,8 @@ You will see several new nodes:
 
 This is the simulated PX4, which can be commanded with MAVROS.
 
-Install ``uavf``
-````````````````
+Install ``uavfpy``
+``````````````````
 .. warning::
 
     Because we are using this package from ROS, we need to ensure that we are NOT in any python virtual environment. You can verify this by typing ``which python`` into a terminal window. Make sure that the output is ``/usr/bin/python``.
@@ -94,7 +94,7 @@ Clone the git repository into ``~/catkin_ws/src`` and checkout the ``ROS`` branc
     git clone https://github.com/uci-uav-forge/uavf
     git checkout ROS
 
-Install the ``auvsi_suas`` interop client package and the ``uavf`` python package to your system python. There is a script that will do this.
+Install the ``auvsi_suas`` interop client package and the ``uavfpy`` python package to your system python. There is a script that will do this.
 
 .. code-block:: bash
 

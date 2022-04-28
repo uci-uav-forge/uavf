@@ -63,8 +63,8 @@ Repository Structure
 
 Therefore, there are two branches in the repository:
 
-    * ``main`` -- contains the python package
-    * ``ROS`` -- contains the ROS package
+    * ``main`` -- contains the ``uavfpy`` python package
+    * ``ROS`` -- contains the ``uavf`` ROS package
 
 The development of these two branches are kept *entirely separate*.
 
@@ -74,7 +74,7 @@ To install the package to system python (e.g., on board the UAV or on the Ground
 
     pip install git+https://github.com/uci-uav-forge/uavf.git
 
-outside of a virtual environment. This will install the ``uavf`` package into the system python. Then, from ``catkin_ws/src``, we run:
+outside of a virtual environment. This will install the ``uavfpy`` package into the system python. Then, from ``catkin_ws/src``, we run:
 
 .. code-block:: bash
 
@@ -84,4 +84,4 @@ outside of a virtual environment. This will install the ``uavf`` package into th
 
     catkin make
 
-to checkout the ROS package and build it. Inside of the ROS software, we can import the python package and use its APIs. 
+to checkout the ROS package and build it. Inside of the ROS software, we can import ``uavfpy`` and use its APIs. 
