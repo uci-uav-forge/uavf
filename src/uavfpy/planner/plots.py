@@ -52,7 +52,7 @@ def plot_surface_3d(
         enough to alter the object)
     """
     ar = X.shape[0] / X.shape[1]
-    ax.set_box_aspect((1, 1 * ar, zsquash))
+    ax.set_box_aspect(aspect=(1.0, 1 * ar, zsquash))
     ax.set_proj_type("ortho")
     # draw sheet
     if wireframe:
