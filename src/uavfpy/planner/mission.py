@@ -249,7 +249,7 @@ class Mission(object):
                 lat84 = bp["latitude"]
                 long84 = bp["longitude"]
                 # Convert to local
-                latloc, longloc = wgs2loc.transform(lat84, long84)
+                latloc, longloc = self.wgs2loc.transform(lat84, long84)
                 fzbounds.append([latloc, longloc])
             # close the loop
             fzbounds.append(fzbounds[0])
@@ -273,7 +273,7 @@ class Mission(object):
             lat84 = sgp["latitude"]
             long84 = sgp["longitude"]
             # convert to local
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             bounds.append([latloc, longloc])
         # closed loop
         bounds.append(bounds[0])
@@ -291,7 +291,7 @@ class Mission(object):
         waypoints = []
         for wp in self.mission_json["waypoints"]:
             lat84, long84, h = wp["latitude"], wp["longitude"], wp["altitude"]
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             waypoints.append([latloc, longloc, h])
         return np.array(waypoints)
 
@@ -310,7 +310,7 @@ class Mission(object):
             long84 = obs["longitude"]
             radius = obs["radius"]
             height = obs["height"]
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             obstacles.append(
                 {
                     "x": latloc,
