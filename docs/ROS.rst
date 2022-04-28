@@ -2,9 +2,9 @@
 The UAVF ROS Package
 ********************
 
-The ``uavfpy`` package in ``main`` is a python package that does not depend on ROS. We do use ROS to orchestrate the mission, so we have a ROS package as well.
+The ``uavf`` package in ``main`` is a python package that does not depend on ROS. We do use ROS to orchestrate the mission, so we have a ROS package as well.
 
-``uavf`` is the name of the ROS package. Its development shares an issue tracker and repository with the main python package, but its development happens on the ``ROS`` and ``ROS-dev`` branches of the repository.
+``rosuavf`` is the name of the ROS package. Its development shares an issue tracker and repository with the main python package, but its development happens on the ``ROS`` and ``ROS-dev`` branches of the repository.
 
 Installation
 ============
@@ -13,7 +13,7 @@ Prerequisites
 `````````````
 In order to develop packages on ROS, you need a PC equipped with Linux. Any desktop linux platform is suitable, but the easiest by far is Ubuntu. I prefer Ubuntu MATE on the desktop, but you can use a standard Ubuntu, KDE, or whichever flavor you like.
 
-``uavf`` is a ROS package. To install it, you need to have ROS installed and configured. That will not be covered in this documentation; if you are brand new to ROS, I recommend that you go through the ROS tutorial [1]_ before continuing to the next section.
+``rosuavf`` is a ROS package. To install it, you need to have ROS installed and configured. That will not be covered in this documentation; if you are brand new to ROS, I recommend that you go through the ROS tutorial [1]_ before continuing to the next section.
 
 .. note::
         
@@ -74,8 +74,8 @@ You will see several new nodes:
 
 This is the simulated PX4, which can be commanded with MAVROS.
 
-Install ``uavfpy``
-``````````````````
+Install ``uavf``
+`````````````````
 .. warning::
 
     Because we are using this package from ROS, we need to ensure that we are NOT in any python virtual environment. You can verify this by typing ``which python`` into a terminal window. Make sure that the output is ``/usr/bin/python``.
@@ -94,7 +94,7 @@ Clone the git repository into ``~/catkin_ws/src`` and checkout the ``ROS`` branc
     git clone https://github.com/uci-uav-forge/uavf
     git checkout ROS
 
-Install the ``auvsi_suas`` interop client package and the ``uavfpy`` python package to your system python. There is a script that will do this.
+Install the ``auvsi_suas`` interop client package and the ``uavf`` python package to your system python. There is a script that will do this.
 
 .. code-block:: bash
 
@@ -115,13 +115,13 @@ Run ``catkin_make`` and source your ``devel/setup.bash`` file:
 
 Make sure you remember to start a ``roscore`` instance in a separate terminal window.
 
-Running a Mission with ``uavf``
-===============================
+Running a Mission with ``rosuavf``
+==================================
 
-Until we have viable hardware testing, this section deals with running a simulated mission with ``uavf``. 
+Until we have viable hardware testing, this section deals with running a simulated mission with ``rosuavf``. 
 
-Run ``uavf`` Interop
---------------------
+Run ``rosuavf`` Interop
+-----------------------
 
 The interop client is a ros node written in Python. We start it with ``rosrun``.
 
@@ -129,8 +129,8 @@ The interop client is a ros node written in Python. We start it with ``rosrun``.
 
     rosrun uavf interop
 
-Run ``uavf`` Planner
---------------------
+Run ``rosuavf`` Planner
+-----------------------
 
 The navigation node is a ros service node that will generate a new path for the UAV to follow between waypoints.
 
@@ -139,7 +139,7 @@ The navigation node is a ros service node that will generate a new path for the 
     rosrun uavf planner
 
 
-Run ``uavf`` GNC
+Run ``rosuavf`` GNC
 ----------------
 
 The uavf GNC node is a ros node that will take a computed plan and manage the execution of the plan on the UAV.
