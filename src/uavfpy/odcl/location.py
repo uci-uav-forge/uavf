@@ -15,8 +15,6 @@ Requires:
 
 """
 import numpy as np
-import cv2
-
 
 EARTH_RADIUS = 6378137  # meters of radius of earth
 
