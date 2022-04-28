@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(uavf)
+project(uavfros)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -72,11 +72,10 @@ add_message_files(
  )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  WaypointPlan.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -183,6 +182,7 @@ catkin_package(
 catkin_install_python(PROGRAMS
   interop
   gnc
+  planner
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
