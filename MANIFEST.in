@@ -1,2 +1,2 @@
-include src/odcl/labcolors.npy
+include src/uavfpy/odcl/labcolors.npy
 global-include *.md 
