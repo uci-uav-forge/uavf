@@ -77,10 +77,6 @@ def plot_surface_3d(
         )
     # draw ground
     ax.plot_surface(X, Y, Hground, cmap=cm.get_cmap(groundcmap), zorder=1)
-
-    ax.set_box_aspect(
-        [X.max() - X.min(), Y.max() - Y.min(), Hsheet.max() - Hground.min()]
-    )
     return ax
 
 
