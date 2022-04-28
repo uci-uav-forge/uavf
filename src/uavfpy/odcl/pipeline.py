@@ -1,10 +1,12 @@
-from .inference import TargetInterpreter, Target, Tiler
-from .utils.drawer import TargetDrawer
-from .color import Color
 import logging
 import cv2, time
 import numpy as np
 from uuid import uuid4
+
+# relative imports
+from .inference import TargetInterpreter, Target, Tiler
+from .utils.drawer import TargetDrawer
+from .color import Color
 
 
 class FoundTarget(object):

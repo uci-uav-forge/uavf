@@ -1,16 +1,13 @@
-import json, pyproj
-import surface
+import json, pyproj, time, cv2, rrtplanner, logging, sys
 import numpy as np
 from typing import Tuple
 from shapely.geometry import Polygon, Point
-from scipy import ndimage
-import rrtplanner
-import logging, sys
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-import time
-import cv2
 from math import ceil
+
+# relative imports
+from . import surface
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
