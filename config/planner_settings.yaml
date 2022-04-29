@@ -1,0 +1,9 @@
+surface_dx: 1 # gain in altitude (h) per gain in x-y direction (ft/ft)
+surface_d2x: 0.05 # maximum 2nd derivative of h with respect to x-y direction (ft^2 / ft^2)
+surface_gap: 20 # minimum gap between static obstacle and vehicle (ft)
+grid_resolution: 25 # size of a square "occupancy grid" cell (ft)
+grid_buffer: 10 # size of "buffer" around the work area (ft)
+
+# when we solve the optimization problem, we scale the grid down to this shape (x,y)
+solve_shape_x: 120
+solve_shape_y: 120

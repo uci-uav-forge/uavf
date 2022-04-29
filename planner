@@ -1,0 +1,110 @@
+#!/usr/bin/python
+
+import rospy, time
+from uavf.srv import WaypointPlan, WaypointPlanResponse, WaypointPlanRequest
+from uavfpy.planner import mission, plots
+from pathlib import Path
+import multiprocessing
+import matplotlib.pyplot as plt
+
+
+class PlannerService(object):
+    def __init__(self, missionfile):
+        # read parameters
+        self.get_params()
+
+        # read JSON mission into file
+        with open(missionfile, "r") as f:
+            mission_json = f.read()
+        self.mission_json = mission_json
+
+    def compute_plan(self, req: WaypointPlanRequest):
+        rospy.loginfo("Recieved a request for waypoint plan.")
+        wgs84_waypoints = []
+        for wp in req.desired_wp:
+            wgs84_waypoints.append(wp)
+
+        print(wp)
+
+    def surfplot(self, mission_inst: mission.Mission):
+        while True:
+            """draw a plot in 2D and 3D of the computed mission."""
+            fig = plt.figure()
+            ax0 = fig.add_subplot(121)
+            ax1 = fig.add_subplot(122, projection="3d")
+
+            X, Y = mission_inst.X, mission_inst.Y
+            X -= X.min()
+            Y -= Y.min()
+
+            plots.plot_surface_2d(
+                ax=ax0,
+                X=X,
+                Y=Y,
+                Hsheet=mission_inst.Hsurf,
+                cmap="coolwarm",
+            )
+
+            plots.plot_surface_3d(
+                ax=ax1,
+                X=X,
+                Y=Y,
+                Hground=mission_inst.Hterrain,
+                Hsheet=mission_inst.Hsurf,
+            )
+
+            plt.show()
+            time.sleep(0.25)
+
+    def get_params(self):
+        self.surface_dx = rospy.get_param("surface_dx")
+        self.surface_d2x = rospy.get_param("surface_d2x")
+        self.surface_gap = rospy.get_param("surface_gap")
+        self.grid_resolution = rospy.get_param("grid_resolution")
+        self.grid_buffer = rospy.get_param("grid_buffer")
+        self.solve_shape_x = rospy.get_param("solve_shape_x")
+        self.solve_shape_y = rospy.get_param("solve_shape_y")
+
+    def plan_srv(self):
+        rospy.init_node("planner")
+        rospy.loginfo("Started planner node.")
+        # for now, we can just read mission data into JSON
+
+        # define coordinate system transforms
+        wgs2loc = mission.get_xformer_from_CRS_str("WGS84", "Irvine")
+        loc2wgs = mission.get_xformer_from_CRS_str("Irvine", "WGS84")
+
+        # create mission instance
+        mission1 = mission.Mission(
+            self.mission_json,
+            wgs2loc,
+            loc2wgs,
+            (self.grid_buffer, self.grid_buffer),
+            (500, 500),
+            (self.grid_resolution, self.grid_resolution),
+        )
+        rospy.loginfo("Computing optimal altitude...")
+        mission1.solve_Hsurf(
+            self.surface_gap,
+            self.surface_dx,
+            self.surface_d2x,
+            solve_shape=(self.solve_shape_x, self.solve_shape_y),
+        )
+
+        # plot in another process
+        multiprocessing.Process(
+            target=self.surfplot,
+            args=(mission1,),
+            daemon=True,
+        ).start()
+
+        rospy.loginfo("Completed!")
+        rospy.Service("planner", WaypointPlan, self.plan_srv)
+        rospy.spin()
+
+
+if __name__ == "__main__":
+    missionpath = (Path(__file__).parent / "mission.json").resolve()
+
+    plannerserv = PlannerService(missionpath)
+    plannerserv.plan_srv()

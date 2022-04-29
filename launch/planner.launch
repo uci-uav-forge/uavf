@@ -1,0 +1,5 @@
+<launch>
+    <node name="planner" pkg="uavfros" type="planner" output="screen">
+        <rosparam file="$(find uavfros)/config/planner_settings.yaml"/>
+    </node>
+</launch>

@@ -1,0 +1,4 @@
+Waypoints desired_wp
+nav_msgs/OccupancyGrid occupancygrid
+---
+Waypoints computed_wp
