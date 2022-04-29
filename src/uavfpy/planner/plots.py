@@ -81,6 +81,31 @@ def plot_surface_3d(
 
 
 def plot_surface_2d(ax, X, Y, Hsheet, cmap="coolwarm", levels=20):
+    """Plot contours of a 3-D surface in 2-d.
+
+    Parameters
+    ----------
+    ax : plt.Axes
+        The axis on which to draw the plot. Must be 2D.
+    X : np.ndarray
+        MxN array of grid X-points.
+    Y : np.ndarray
+        MxN array of grid Y-points.
+    Hsheet : np.ndarray
+        MxN array of grid Z-points.
+    cmap : str, optional
+        name of matplotlib colormap.
+        See: https://matplotlib.org/stable/tutorials/colors/colormaps.html,
+        by default "coolwarm"
+    levels : int, optional
+        Number of contour levels, by default 20
+
+    Returns
+    -------
+    plt.Axes
+        The plot axes object. Note: plot axes are altered in place by
+        this function, so you don't need to assign it.
+    """
     ax.contour(X, Y, Hsheet, cmap=cm.get_cmap(cmap), levels=levels, linewidths=1)
     ax.set_aspect("equal")
     return ax

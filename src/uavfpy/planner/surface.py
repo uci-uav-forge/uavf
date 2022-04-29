@@ -5,7 +5,7 @@ import logging
 
 
 def generate_xy_grid(xrange, yrange, step):
-    """[summary]
+    """Generate an x y grid over `xrange` `yrange` with grid-size `step`.
 
     Parameters
     ----------

@@ -24,6 +24,24 @@ METER2FT = 0.3048
 
 
 def get_xformer_from_CRS_str(from_str: str, to_str: str):
+    """Get pyproj transformer from string. Example strings are:
+
+    "Irvine" - Near Irvine area (feet)
+    "Maryland" - Near Maryland area (feet)
+    "WGS84" - WGS84 latitude/longitude coordinates
+
+    Parameters
+    ----------
+    from_str : str
+        Key in `CRS` corresponding to a place
+    to_str : str
+        Key in `CRS` corresponding to a place
+
+    Returns
+    -------
+    pyproj.Transformer
+        the Pyproj transformer object.
+    """
     from_crs = CRS[from_str]
     to_crs = CRS[to_str]
     return pyproj.Transformer.from_crs(from_crs, to_crs)
