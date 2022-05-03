@@ -1,1 +1,1 @@
-Flyzone[] flyzones
+FlyZone[] flyzones

@@ -61,7 +61,6 @@ add_message_files(
    GeoPolygon.msg
    GeoSphere.msg
    GeoSphereArrayStamped.msg
-   Mission.msg
    Object.msg
    ObjectNotification.msg
    ObjectType.msg
@@ -69,6 +68,7 @@ add_message_files(
    Shape.msg
    StationaryObstacles.msg
    Waypoints.msg
+   Mission.msg
  )
 
 ## Generate services in the 'srv' folder

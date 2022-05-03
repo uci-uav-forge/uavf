@@ -16,7 +16,7 @@ from std_msgs.msg import Header
 from geographic_msgs.msg import (
     GeoPoint,
 )
-from uavf.msg import (
+from uavfros.msg import (
     Mission,
     FlyZone,
     FlyZoneArray,
@@ -26,7 +26,7 @@ from uavf.msg import (
     StationaryObstacles,
 )
 
-from uavf.srv import MissionService
+from uavfros.srv import MissionService
 
 # AUVSI SERVER INFO
 SERVER_IP = "127.0.0.1"
@@ -61,107 +61,110 @@ class UAVFInteropClient(client.AsyncClient):
         mission_dict = json_format.MessageToDict(mission.result())
         return mission_dict
 
+
 def pack_mission_to_msg(mission: dict):
     msg = Mission()
 
     # header
     header = Header()
     header.stamp = rospy.get_rostime()
-    # header.frame_id = 
+    # header.frame_id =
     msg.header = header
 
     # id
-    msg.id = mission['id']
+    msg.id = mission["id"]
 
     # lostCommsPos
     lostCommsPos = GeoPoint()
-    lostCommsPos.latitude = mission['lostCommsPos']['latitude']
-    lostCommsPos.longitude = mission['lostCommsPos']['longitude']
+    lostCommsPos.latitude = mission["lostCommsPos"]["latitude"]
+    lostCommsPos.longitude = mission["lostCommsPos"]["longitude"]
     msg.lostCommsPos = lostCommsPos
 
     # flyzones
     flyzones = FlyZoneArray()
-    for zone in mission['flyZones']:
+    for zone in mission["flyZones"]:
         flyzone = FlyZone()
-        flyzone.max_alt = zone['altitudeMax']
-        flyzone.min_alt = zone['altitudeMin']
+        flyzone.max_alt = zone["altitudeMax"]
+        flyzone.min_alt = zone["altitudeMin"]
         boundaryPoints = []
-        for points in zone['boundaryPoints']:
+        for points in zone["boundaryPoints"]:
             boundaryPoint = GeoPoint()
-            boundaryPoint.latitude = points['latitude']
-            boundaryPoint.longitude = points['longitude']
+            boundaryPoint.latitude = points["latitude"]
+            boundaryPoint.longitude = points["longitude"]
             boundaryPoints.append(boundaryPoint)
         flyzone.zone = boundaryPoints
         flyzones.flyzones.append(flyzone)
     msg.flyzones = flyzones
-    
+
     # waypoints
     waypoints = []
-    for waypoint in mission['waypoints']:
+    for waypoint in mission["waypoints"]:
         temp = GeoPoint()
-        temp.latitude = waypoint['latitude']
-        temp.longitude = waypoint['longitude']
-        temp.altitude = waypoint['altitude']
+        temp.latitude = waypoint["latitude"]
+        temp.longitude = waypoint["longitude"]
+        temp.altitude = waypoint["altitude"]
         waypoints.waypoints.append(temp)
     msg.waypoints = waypoints
-    
+
     # searchGridPoints
     searchGridPoints = []
-    for point in mission['searchGridPoints']:
+    for point in mission["searchGridPoints"]:
         temp = GeoPoint()
-        temp.latitude = point['latitude']
-        temp.longitude = point['longitude']
+        temp.latitude = point["latitude"]
+        temp.longitude = point["longitude"]
         searchGridPoints.append(temp)
     msg.searchGridPoints = searchGridPoints
 
     # offAxisOdlcPos
-    msg.offAxisOdlcPos.latitude = mission['offAxisOdlcPos']['latitude']
-    msg.offAxisOdlcPos.longitude = mission['offAxisOdlcPos']['longitude']
+    msg.offAxisOdlcPos.latitude = mission["offAxisOdlcPos"]["latitude"]
+    msg.offAxisOdlcPos.longitude = mission["offAxisOdlcPos"]["longitude"]
 
     # emergentLastKnownPos
-    msg.emergentLastKnownPos.latitude = mission['emergentLastKnownPos']['latitude']
-    msg.emergentLastKnownPos.longitude = mission['emergentLastKnownPos']['longitude']
+    msg.emergentLastKnownPos.latitude = mission["emergentLastKnownPos"]["latitude"]
+    msg.emergentLastKnownPos.longitude = mission["emergentLastKnownPos"]["longitude"]
 
     # airDropBoundaryPoints
     boundaryPoints = []
-    for point in mission['airDropBoundaryPoints']:
+    for point in mission["airDropBoundaryPoints"]:
         temp = GeoPoint()
-        temp.latitude = point['latitude']
-        temp.longitude = point['longitude']
+        temp.latitude = point["latitude"]
+        temp.longitude = point["longitude"]
         boundaryPoints.append(temp)
     msg.airDropBoundaryPoints = boundaryPoints
 
     # airDropPos
-    msg.airDropPos.latitude = mission['airDropPos']['latitude']
-    msg.airDropPos.longitude = mission['airDropPos']['longitude']
+    msg.airDropPos.latitude = mission["airDropPos"]["latitude"]
+    msg.airDropPos.longitude = mission["airDropPos"]["longitude"]
 
     # ugvDropPos
-    msg.ugvDropPos.latitude = mission['ugvDropPos']['latitude']
-    msg.ugvDropPos.longitude = mission['ugvDropPos']['longitude']
+    msg.ugvDropPos.latitude = mission["ugvDropPos"]["latitude"]
+    msg.ugvDropPos.longitude = mission["ugvDropPos"]["longitude"]
 
     # stationaryObstacles
     stationaryObstacles = []
-    for obstacle in mission['stationaryObstacles']:
+    for obstacle in mission["stationaryObstacles"]:
         temp = GeoCylinder()
-        temp.center.latitude = obstacle['latitude']
-        temp.center.longitude = obstacle['longitude']
-        temp.height = obstacle['height']
-        temp.radius = obstacle['radius']
+        temp.center.latitude = obstacle["latitude"]
+        temp.center.longitude = obstacle["longitude"]
+        temp.height = obstacle["height"]
+        temp.radius = obstacle["radius"]
         stationaryObstacles.append(temp)
     msg.stationaryObstacles = stationaryObstacles
 
     # mapCenterPos
-    msg.mapCenterPos.latitude = mission['mapCenterPos']['latitude']
-    msg.mapCenterPos.longitude = mission['mapCenterPos']['longitude']
+    msg.mapCenterPos.latitude = mission["mapCenterPos"]["latitude"]
+    msg.mapCenterPos.longitude = mission["mapCenterPos"]["longitude"]
 
     # mapHeight
-    msg.mapHeight = mission['mapHeight']
+    msg.mapHeight = mission["mapHeight"]
 
     return msg
+
 
 def handle_mission(req):
     mission_data = interopclient.get_mission(MISSION_ID)
     return pack_mission_to_msg(mission_data)
+
 
 def mission_server():
     mission_serv = rospy.Service(MISSION_SERVER_TOPIC, MissionService, handle_mission)
