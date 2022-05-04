@@ -81,7 +81,7 @@ def pack_mission_to_msg(mission: dict):
     msg.lostCommsPos = lostCommsPos
 
     # flyzones
-    flyzones = FlyZoneArray()
+    flyzones = []
     for zone in mission["flyZones"]:
         flyzone = FlyZone()
         flyzone.max_alt = zone["altitudeMax"]
@@ -92,9 +92,9 @@ def pack_mission_to_msg(mission: dict):
             boundaryPoint.latitude = points["latitude"]
             boundaryPoint.longitude = points["longitude"]
             boundaryPoints.append(boundaryPoint)
-        flyzone.zone = boundaryPoints
-        flyzones.flyzones.append(flyzone)
-    msg.flyzones = flyzones
+        flyzone.zone.points = boundaryPoints
+        flyzones.append(flyzone)
+    msg.flyzones.flyzones = flyzones
 
     # waypoints
     waypoints = []
@@ -103,8 +103,8 @@ def pack_mission_to_msg(mission: dict):
         temp.latitude = waypoint["latitude"]
         temp.longitude = waypoint["longitude"]
         temp.altitude = waypoint["altitude"]
-        waypoints.waypoints.append(temp)
-    msg.waypoints = waypoints
+        waypoints.append(temp)
+    msg.waypoints.waypoints = waypoints
 
     # searchGridPoints
     searchGridPoints = []
@@ -113,7 +113,7 @@ def pack_mission_to_msg(mission: dict):
         temp.latitude = point["latitude"]
         temp.longitude = point["longitude"]
         searchGridPoints.append(temp)
-    msg.searchGridPoints = searchGridPoints
+    msg.searchGridPoints.points = searchGridPoints
 
     # offAxisOdlcPos
     msg.offAxisOdlcPos.latitude = mission["offAxisOdlcPos"]["latitude"]
@@ -130,15 +130,15 @@ def pack_mission_to_msg(mission: dict):
         temp.latitude = point["latitude"]
         temp.longitude = point["longitude"]
         boundaryPoints.append(temp)
-    msg.airDropBoundaryPoints = boundaryPoints
+    msg.airDropBoundaryPoints.points = boundaryPoints
 
     # airDropPos
     msg.airDropPos.latitude = mission["airDropPos"]["latitude"]
     msg.airDropPos.longitude = mission["airDropPos"]["longitude"]
 
     # ugvDropPos
-    msg.ugvDropPos.latitude = mission["ugvDropPos"]["latitude"]
-    msg.ugvDropPos.longitude = mission["ugvDropPos"]["longitude"]
+    msg.ugvDrivePos.latitude = mission["ugvDrivePos"]["latitude"]
+    msg.ugvDrivePos.longitude = mission["ugvDrivePos"]["longitude"]
 
     # stationaryObstacles
     stationaryObstacles = []
@@ -149,7 +149,7 @@ def pack_mission_to_msg(mission: dict):
         temp.height = obstacle["height"]
         temp.radius = obstacle["radius"]
         stationaryObstacles.append(temp)
-    msg.stationaryObstacles = stationaryObstacles
+    msg.stationaryObstacles.stationaryObstacles = stationaryObstacles
 
     # mapCenterPos
     msg.mapCenterPos.latitude = mission["mapCenterPos"]["latitude"]
