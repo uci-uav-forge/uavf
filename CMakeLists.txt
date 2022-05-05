@@ -58,9 +58,7 @@ add_message_files(
    FlyZone.msg
    FlyZoneArray.msg
    GeoCylinder.msg
-   GeoCylinderArrayStamped.msg
    GeoPolygon.msg
-   GeoPolygonStamped.msg
    GeoSphere.msg
    GeoSphereArrayStamped.msg
    Object.msg
@@ -68,13 +66,15 @@ add_message_files(
    ObjectType.msg
    Orientation.msg
    Shape.msg
+   StationaryObstacles.msg
    Waypoints.msg
+   Mission.msg
  )
 
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  WaypointPlan.srv
+  MissionService.srv
 )
 
 ## Generate actions in the 'action' folder

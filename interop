@@ -9,22 +9,24 @@
 # relies on the `uavf` python package.
 
 
+from google.protobuf import json_format
 from auvsi_suas.client import client
 import rospy, threading
-from geographic_msgs.msg import GeoPointStamped, GeoPoint
-from uavf.msg import (
-    Color,
+from std_msgs.msg import Header
+from geographic_msgs.msg import (
+    GeoPoint,
+)
+from uavfros.msg import (
+    Mission,
     FlyZone,
     FlyZoneArray,
-    Orientation,
-    Shape,
-    Object,
-    ObjectType,
+    GeoPolygon,
     GeoCylinder,
-    GeoPolygonStamped,
-    GeoCylinderArrayStamped,
     Waypoints,
+    StationaryObstacles,
 )
+
+from uavfros.srv import MissionService
 
 # AUVSI SERVER INFO
 SERVER_IP = "127.0.0.1"
@@ -32,26 +34,20 @@ SERVER_PORT = "8000"
 SERVER_URL = f"http://{SERVER_IP}:{SERVER_PORT}"
 USERNAME = "testadmin"
 PASSWORD = "testpass"
+MISSION_ID = 1
 
 # TOPICS
-WAYPOINTS_TOPIC = "waypoints"
-FLYZONES_TOPIC = "flyzones"
-SEARCH_GRID_TOPIC = "search_grid_points"
-AIR_DROP_BOUNDARY_TOPIC = "air_drop_boundary_points"
-OFF_AXIS_ODLC_TOPIC = "off_axis_odlc_pos"
-EMERGENT_LAST_KNOWN_TOPIC = "emergent_last_known_pos"
-UGV_DRIVE_TOPIC = "ugv_drive_pos"
-LOST_COMM_POS_TOPIC = "lost_comms_pos"
-AIR_DROP_POS_TOPIC = "air_drop_pos"
-MAP_CENTER_POS_TOPIC = "map_center_pos"
-STATIONARY_OBSTACLES_TOPIC = "stationary_obstacles"
+MISSION_SERVER_TOPIC = "mission"
 
 ODLC_TOPIC = "odlc"
 MAPS_TOPIC = "map"
 TELEMETRY_TOPIC = "telemetry"
 
+# MISSION DATA MEMORY
+mission_data = None
 
-class UAVFInteropClient(client.Client):
+
+class UAVFInteropClient(client.AsyncClient):
     """Our implementation of the interop client. This class inherits from the auvsi client defined here:
 
     https://github.com/auvsi-suas/interop/blob/master/client/auvsi_suas/client/client.py
@@ -60,114 +56,151 @@ class UAVFInteropClient(client.Client):
     def __init__(self):
         super().__init__(SERVER_URL, USERNAME, PASSWORD)
 
-
-def talker():
-    mission_data = client.get_mission(1)
-
-    waypoints_pub = rospy.Publisher(
-        WAYPOINTS_TOPIC,
-        Waypoints,
-        queue_size=10,
-    )
-    flyzones_pub = rospy.Publisher(
-        FLYZONES_TOPIC,
-        FlyZone,
-        queue_size=10,
-    )
-    search_grid_pub = rospy.Publisher(
-        SEARCH_GRID_TOPIC,
-        GeoPolygonStamped,
-        queue_size=10,
-    )
-    air_drop_boundary_pub = rospy.Publisher(
-        AIR_DROP_BOUNDARY_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    off_axis_odlc_pub = rospy.Publisher(
-        OFF_AXIS_ODLC_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    emergent_last_known_pub = rospy.Publisher(
-        EMERGENT_LAST_KNOWN_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    ugv_drive_pub = rospy.Publisher(
-        UGV_DRIVE_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    lost_comms_pos_pub = rospy.Publisher(
-        LOST_COMM_POS_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    air_drop_pos_pub = rospy.Publisher(
-        AIR_DROP_POS_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    map_center_pos_pub = rospy.Publisher(
-        MAP_CENTER_POS_TOPIC,
-        GeoPointStamped,
-        queue_size=10,
-    )
-    stationary_obstacles_pub = rospy.Publisher(
-        STATIONARY_OBSTACLES_TOPIC,
-        GeoCylinderArrayStamped,
-        queue_size=10,
-    )
-
-    rate = rospy.Rate(1)
-
-    while not rospy.is_shutdown():
-        waypoints_pub.publish(mission_data[WAYPOINTS_TOPIC])
-        flyzones_pub.publish(mission_data[FLYZONES_TOPIC])
-        search_grid_pub.publish(mission_data[SEARCH_GRID_TOPIC])
-        air_drop_boundary_pub.publish(mission_data[AIR_DROP_BOUNDARY_TOPIC])
-        off_axis_odlc_pub.publish(mission_data[OFF_AXIS_ODLC_TOPIC])
-        emergent_last_known_pub.publish(mission_data[EMERGENT_LAST_KNOWN_TOPIC])
-        ugv_drive_pub.publish(mission_data[UGV_DRIVE_TOPIC])
-        lost_comms_pos_pub.publish(mission_data[LOST_COMM_POS_TOPIC])
-        air_drop_pos_pub.publish(mission_data[AIR_DROP_POS_TOPIC])
-        map_center_pos_pub.publish(mission_data[MAP_CENTER_POS_TOPIC])
-        stationary_obstacles_pub.publish(mission_data[STATIONARY_OBSTACLES_TOPIC])
-
-        rate.sleep()
+    def get_mission(self, mission_id):
+        mission = super().get_mission(mission_id)
+        mission_dict = json_format.MessageToDict(mission.result())
+        return mission_dict
 
 
-def odlc_callback(data):
-    client.upload_odlc(data)
+def pack_mission_to_msg(mission: dict):
+    msg = Mission()
+
+    # header
+    header = Header()
+    header.stamp = rospy.get_rostime()
+    # header.frame_id =
+    msg.header = header
+
+    # id
+    msg.id = mission["id"]
+
+    # lostCommsPos
+    lostCommsPos = GeoPoint()
+    lostCommsPos.latitude = mission["lostCommsPos"]["latitude"]
+    lostCommsPos.longitude = mission["lostCommsPos"]["longitude"]
+    msg.lostCommsPos = lostCommsPos
+
+    # flyzones
+    flyzones = []
+    for zone in mission["flyZones"]:
+        flyzone = FlyZone()
+        flyzone.max_alt = zone["altitudeMax"]
+        flyzone.min_alt = zone["altitudeMin"]
+        boundaryPoints = []
+        for points in zone["boundaryPoints"]:
+            boundaryPoint = GeoPoint()
+            boundaryPoint.latitude = points["latitude"]
+            boundaryPoint.longitude = points["longitude"]
+            boundaryPoints.append(boundaryPoint)
+        flyzone.zone.points = boundaryPoints
+        flyzones.append(flyzone)
+    msg.flyzones.flyzones = flyzones
+
+    # waypoints
+    waypoints = []
+    for waypoint in mission["waypoints"]:
+        temp = GeoPoint()
+        temp.latitude = waypoint["latitude"]
+        temp.longitude = waypoint["longitude"]
+        temp.altitude = waypoint["altitude"]
+        waypoints.append(temp)
+    msg.waypoints.waypoints = waypoints
+
+    # searchGridPoints
+    searchGridPoints = []
+    for point in mission["searchGridPoints"]:
+        temp = GeoPoint()
+        temp.latitude = point["latitude"]
+        temp.longitude = point["longitude"]
+        searchGridPoints.append(temp)
+    msg.searchGridPoints.points = searchGridPoints
+
+    # offAxisOdlcPos
+    msg.offAxisOdlcPos.latitude = mission["offAxisOdlcPos"]["latitude"]
+    msg.offAxisOdlcPos.longitude = mission["offAxisOdlcPos"]["longitude"]
+
+    # emergentLastKnownPos
+    msg.emergentLastKnownPos.latitude = mission["emergentLastKnownPos"]["latitude"]
+    msg.emergentLastKnownPos.longitude = mission["emergentLastKnownPos"]["longitude"]
+
+    # airDropBoundaryPoints
+    boundaryPoints = []
+    for point in mission["airDropBoundaryPoints"]:
+        temp = GeoPoint()
+        temp.latitude = point["latitude"]
+        temp.longitude = point["longitude"]
+        boundaryPoints.append(temp)
+    msg.airDropBoundaryPoints.points = boundaryPoints
+
+    # airDropPos
+    msg.airDropPos.latitude = mission["airDropPos"]["latitude"]
+    msg.airDropPos.longitude = mission["airDropPos"]["longitude"]
+
+    # ugvDropPos
+    msg.ugvDrivePos.latitude = mission["ugvDrivePos"]["latitude"]
+    msg.ugvDrivePos.longitude = mission["ugvDrivePos"]["longitude"]
+
+    # stationaryObstacles
+    stationaryObstacles = []
+    for obstacle in mission["stationaryObstacles"]:
+        temp = GeoCylinder()
+        temp.center.latitude = obstacle["latitude"]
+        temp.center.longitude = obstacle["longitude"]
+        temp.height = obstacle["height"]
+        temp.radius = obstacle["radius"]
+        stationaryObstacles.append(temp)
+    msg.stationaryObstacles.stationaryObstacles = stationaryObstacles
+
+    # mapCenterPos
+    msg.mapCenterPos.latitude = mission["mapCenterPos"]["latitude"]
+    msg.mapCenterPos.longitude = mission["mapCenterPos"]["longitude"]
+
+    # mapHeight
+    msg.mapHeight = mission["mapHeight"]
+
+    return msg
 
 
-def maps_callback(data):
-    client.upload_map(1, data)
+def handle_mission(req):
+    mission_data = interopclient.get_mission(MISSION_ID)
+    return pack_mission_to_msg(mission_data)
 
 
-def telemetry_callback(data):
-    client.upload_telemetry(data)
-
-
-def listener():
-    rospy.Subscriber(ODLC_TOPIC, Odlc, odlc_callback)
-    rospy.Subscriber(MAPS_TOPIC, Map, maps_callback)
-    rospy.Subscriber(TELEMETRY_TOPIC, Telemetry, telemetry_callback)
+def mission_server():
+    mission_serv = rospy.Service(MISSION_SERVER_TOPIC, MissionService, handle_mission)
     rospy.spin()
+
+
+# def odlc_callback(data):
+#     client.upload_odlc(data)
+
+
+# def maps_callback(data):
+#     client.upload_map(1, data)
+
+
+# def telemetry_callback(data):
+#     client.upload_telemetry(data)
+
+
+# def listener():
+#     rospy.Subscriber(ODLC_TOPIC, Odlc, odlc_callback)
+#     rospy.Subscriber(MAPS_TOPIC, Map, maps_callback)
+#     rospy.Subscriber(TELEMETRY_TOPIC, Telemetry, telemetry_callback)
+#     rospy.spin()
 
 
 def main():
     rospy.init_node("interop_client", anonymous=True)
 
-    global client
+    global interopclient
     interopclient = UAVFInteropClient()
 
-    listenerThread = threading.Thread(target=listener)
-    listenerThread.setDaemon(True)
-    listenerThread.start()
+    # listenerThread = threading.Thread(target=listener)
+    # listenerThread.setDaemon(True)
+    # listenerThread.start()
 
-    talker()
+    mission_server()
 
 
 if __name__ == "__main__":

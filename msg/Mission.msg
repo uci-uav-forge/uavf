@@ -1,0 +1,16 @@
+# Message to encompass entire mission data from interop server
+
+std_msgs/Header header
+int32 id
+geographic_msgs/GeoPoint lostCommsPos
+FlyZoneArray flyzones
+Waypoints waypoints
+GeoPolygon searchGridPoints
+geographic_msgs/GeoPoint offAxisOdlcPos
+geographic_msgs/GeoPoint emergentLastKnownPos
+GeoPolygon airDropBoundaryPoints
+geographic_msgs/GeoPoint airDropPos
+geographic_msgs/GeoPoint ugvDrivePos
+StationaryObstacles stationaryObstacles
+geographic_msgs/GeoPoint mapCenterPos
+float32 mapHeight
