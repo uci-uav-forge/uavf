@@ -11,6 +11,7 @@
 
 from google.protobuf import json_format
 from auvsi_suas.client import client
+from auvsi_suas.proto import interop_api_pb2
 import rospy, threading
 from std_msgs.msg import Header
 from geographic_msgs.msg import (
@@ -61,6 +62,7 @@ class UAVFInteropClient(client.AsyncClient):
         mission_dict = json_format.MessageToDict(mission.result())
         return mission_dict
 
+""" This section handles mission related functionality """
 
 def pack_mission_to_msg(mission: dict):
     msg = Mission()
@@ -163,11 +165,26 @@ def pack_mission_to_msg(mission: dict):
 
 def handle_mission(req):
     mission_data = interopclient.get_mission(MISSION_ID)
-    return pack_mission_to_msg(mission_data)
+    if mission_data != None:
+        return mission_data
+    else:
+        return pack_mission_to_msg(mission_data)
 
 
 def mission_server():
     mission_serv = rospy.Service(MISSION_SERVER_TOPIC, MissionService, handle_mission)
+    rospy.spin()
+
+""" This section handles ODLC related functionality"""
+
+def format_odcl(odlc):
+
+
+def callback_odlc(data):
+    pass
+
+def odcl_sub():
+    odcl_sub = rospy.Subscriber(ODLC_TOPIC, ___, callback_odlc):
     rospy.spin()
 
 
