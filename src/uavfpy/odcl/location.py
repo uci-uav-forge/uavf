@@ -21,7 +21,7 @@ EARTH_RADIUS = 6378137 #meters of radius of earth
 
 class Geolocation:
     def __init__(self) -> None:
-        self.focal_matrix = np.load("matrix.npy") # Created after performing
+        self.focal_matrix = np.load("camera_intrinsics.npy") # Created after performing
         self.focal = (self.focal_matrix[0, 0], self.focal_matrix[1, 1])
         self.img_shape = (3000, 4000, 3)
 

@@ -7,7 +7,7 @@ from uuid import uuid4
 from .inference import TargetInterpreter, Target, Tiler
 from .utils.drawer import TargetDrawer
 from .color import Color
-
+from .location import Geolocation 
 
 class FoundTarget(object):
     def __init__(self, **kwargs):
@@ -15,7 +15,7 @@ class FoundTarget(object):
 
 
 class Pipeline(object):
-    def __init__(self, interpreter, tiler, color, drawer=None):
+    def __init__(self, interpreter, tiler, color, geolocator, drawer=None):
         self.interpreter = interpreter
         self.tiler = tiler
         self.img = None  # raw image
@@ -27,6 +27,7 @@ class Pipeline(object):
             self.drawn = None
         self.color = color
         self.foundtargets = {}
+        self.geolocator = geolocator
 
     def inference_over_tiles(self, raw, resize=False):
         logging.info(f"Performing inference on w={raw.shape[1]}, h={raw.shape[0]} ...")
@@ -78,6 +79,7 @@ class Pipeline(object):
                 "id": target.id,
                 "class": interpreter.labels[target.id],
                 "score": target.score,
+                "bbox_center": ((xmin+xmax)/2, (ymin+ymax)/2),
             }
 
     def process_color(self, cropped_img):
@@ -91,13 +93,30 @@ class Pipeline(object):
         rsz_mask = cv2.cvtColor(rsz_mask, cv2.COLOR_GRAY2RGB)
         return np.concatenate((rsz_img, rsz_mask), axis=1)
 
-    def run(self, raw, gps):
+    def run(self, raw, gps, altitude, pitch=0, roll=0, yaw=0):
         """Primary run method for the imaging pipeline"""
+
+        '''
+            Parameters:
+            -----------
+            raw: MxN image
+            gps: (latitude,longitude) both scalars that represent current GPS coordinate of UAV.
+            altitude: altitude of the UAV in METERS
+            pitch: scalar that represents current UAV pitch rotation.
+            roll: scalar that represents current UAV roll rotation.
+            yaw: scalar that represents current UAV yaw rotation
+
+            Returns:
+            --------
+            TBD
+        '''
         # this is the expensive method
         targets = self.inference_over_tiles(raw)
 
         for targ in self.parse_targets(raw, targets, self.interpreter):
             logging.info(f"Target: class={targ['class']},\t score={targ['score']}")
+
+            target_lat, target_lon = self.geolocator.compute(altitude,pitch,roll,yaw,gps, targ["bbox_center"])
             lmask, shape_color, letter_color = self.process_color(targ["image"])
             scolor_str = self.color.get_readable_color(shape_color)
             lcolor_str = self.color.get_readable_color(letter_color)
@@ -126,7 +145,8 @@ if __name__ == "__main__":
     tiler = Tiler(320, 50)
     drawer = TargetDrawer(interpreter.labels)
     color = Color()
-    pipeline = Pipeline(interpreter, tiler, color, drawer)
+    geolocator = Geolocation()
+    pipeline = Pipeline(interpreter, tiler, color, geolocator, drawer)
     image_raw = cv2.imread(FILE_PATH)
     pipeline.run(image_raw, None)
 
