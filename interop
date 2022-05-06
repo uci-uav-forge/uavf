@@ -170,6 +170,7 @@ def mission_server():
     mission_serv = rospy.Service(MISSION_SERVER_TOPIC, MissionService, handle_mission)
     rospy.spin()
 
+def telem_forward():
 
 # def odlc_callback(data):
 #     client.upload_odlc(data)
