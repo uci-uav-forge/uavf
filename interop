@@ -25,7 +25,7 @@ from uavfros.msg import (
     Waypoints,
     StationaryObstacles,
 )
-
+#test
 from uavfros.srv import MissionService
 
 # AUVSI SERVER INFO
