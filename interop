@@ -25,6 +25,7 @@ from uavfros.msg import (
     GeoCylinder,
     Waypoints,
     StationaryObstacles,
+    Odlc
 )
 
 from uavfros.srv import MissionService
@@ -177,14 +178,29 @@ def mission_server():
 
 """ This section handles ODLC related functionality"""
 
-def format_odcl(odlc):
+def pack_msg_to_odlc(msg):
+    odlc = interop_api_pb2.Odlc()
+    odlc.type = interop_api_pb2.Odlc.STANDARD
+    odlc.latitude = msg.pose.position.latitude
+    odlc.longitude =  msg.pose.position.longitude
+    
+    # TODO: Convert odlc orientation
+    # TODO: Convert shape and shape color
+    # TODO: Convert alphanumeric and its color
+
+    return odlc
 
 
-def callback_odlc(data):
-    pass
+def callback_odlc(msg):
+    odlc = pack_msg_to_odlc(msg)
+    odlc = interopclient.post_odlc(odlc)
+
+    # TODO: Put Odlc Image
+
+    # client.put_odlc_image(odlc.id, image_data)
 
 def odcl_sub():
-    odcl_sub = rospy.Subscriber(ODLC_TOPIC, ___, callback_odlc):
+    odcl_sub = rospy.Subscriber(ODLC_TOPIC, Odlc, callback_odlc)
     rospy.spin()
 
 
