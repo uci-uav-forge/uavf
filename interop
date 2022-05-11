@@ -10,9 +10,20 @@
 
 
 from google.protobuf import json_format
+import threading
+import json
+
 from auvsi_suas.client import client
-import rospy, threading
-from std_msgs.msg import Header
+from auvsi_suas.proto import interop_api_pb2
+
+import rospy
+import message_filters
+
+from std_msgs.msg import (
+    Header,
+    Float64
+)
+from sensor_msgs.msg import NavSatFix
 from geographic_msgs.msg import (
     GeoPoint,
 )
@@ -25,7 +36,6 @@ from uavfros.msg import (
     Waypoints,
     StationaryObstacles,
 )
-
 from uavfros.srv import MissionService
 
 # AUVSI SERVER INFO
@@ -60,6 +70,9 @@ class UAVFInteropClient(client.AsyncClient):
         mission = super().get_mission(mission_id)
         mission_dict = json_format.MessageToDict(mission.result())
         return mission_dict
+
+    def post_telemtry(self, telem):
+        self.post('/api/telemetry', data=telem)
 
 
 def pack_mission_to_msg(mission: dict):
@@ -170,6 +183,21 @@ def mission_server():
     mission_serv = rospy.Service(MISSION_SERVER_TOPIC, MissionService, handle_mission)
     rospy.spin()
 
+def telem_subscriber():
+    global_sub = message_filters.Subscriber("/mavros/global_position/global", NavSatFix)
+    hdg_sub = message_filters.Subscriber("/mavros/global_position/compass_hdg", Float64)
+    ts = message_filters.ApproximateTimeSynchronizer([global_sub, hdg_sub], 10, 0.1)
+    ts.registerCallback(send_telemetry)
+    rospy.spin()
+
+def send_telemetry(global_data, hdg_data):
+    telem_dict = {'latitude': global_data.latitude,
+                  'longitude': global_data.longitude,
+                  'altitude': global_data.altitude,
+                  'heading': hdg_data.data}
+    telem_json = json.dumps(telem_dict)
+    interopclient.post_telemtry(telem_json)
+
 
 # def odlc_callback(data):
 #     client.upload_odlc(data)
@@ -177,10 +205,6 @@ def mission_server():
 
 # def maps_callback(data):
 #     client.upload_map(1, data)
-
-
-# def telemetry_callback(data):
-#     client.upload_telemetry(data)
 
 
 # def listener():
