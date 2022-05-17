@@ -1,17 +1,35 @@
 #ROS node that reads when the drop location has been reached and then drops the UGV
 #ADD MISSION FILE PARSING
-import pyfirmata
+from pyfirmata import Arduino, util
 import rospy
 from mavros_msgs.msg import WaypointReached
 from sensor_msgs.msg import NavSatFix
+import time
+
+#wait for startup tune before running
+PORT = '/dev/ttyACM2'
+PIN_NUM = 'd:9:s'
+SPEED = 256 #doesn't run under 62 speed
+RUNTIME = 10
+
+board = Arduino(PORT)
+motor = board.get_pin(PIN_NUM)
 
 
-def waypoint_sub():
+
+def wp_sub():
     rospy.Subscriber("/mavros/mission/reached", WaypointReached, wp_motor())
     rospy.spin()
 
-#def wap_motor(drop_wp):
-#    if drop_wp.wp_eq == 2:
+def wp_motor(drop_wp):
+    if drop_wp.wp_seq == 2:
+        start = time.time()
+        current = time.time()
+        while(current - start < RUNTIME):
+            motor.write(SPEED)
+            time.sleep(0.1)
+            current = time.time()
+
 
 
 def gps_sub():
@@ -23,5 +41,5 @@ def gps_sub():
 
 if __name__ == '__main__':
     rospy.init_node('ugv-drop', anonymous=True)
-    waypoint_sub()
+    wp_sub()
     #gps_sub()
