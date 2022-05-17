@@ -9,6 +9,7 @@
 # relies on the `uavf` python package.
 
 
+import time
 from google.protobuf import json_format
 from auvsi_suas.client import client
 import rospy, threading
@@ -24,6 +25,8 @@ from uavfros.msg import (
     GeoCylinder,
     Waypoints,
     StationaryObstacles,
+    Teams,
+    TeamsArray,
 )
 #test
 from uavfros.srv import MissionService
@@ -42,10 +45,13 @@ MISSION_SERVER_TOPIC = "mission"
 ODLC_TOPIC = "odlc"
 MAPS_TOPIC = "map"
 TELEMETRY_TOPIC = "telemetry"
+OTHERTEAMS_TOPIC = "OtherTeams"
 
 # MISSION DATA MEMORY
 mission_data = None
 
+#Team status
+updated_teams = {}
 
 class UAVFInteropClient(client.AsyncClient):
     """Our implementation of the interop client. This class inherits from the auvsi client defined here:
@@ -60,6 +66,62 @@ class UAVFInteropClient(client.AsyncClient):
         mission = super().get_mission(mission_id)
         mission_dict = json_format.MessageToDict(mission.result())
         return mission_dict
+    
+    def get_teams(self):
+        teams = super().get_teams()
+        return teams.result()
+
+
+
+def pack_teams_to_msg(teams: list):
+    temp = TeamsArray()
+    for teamStatus in teams:
+        if updated_teams.has_key(teamStatus.TeamID.id):
+            if updated_teams.get(teamStatus.TeamID.id) < teamStatus.telemetry_id:
+                updated_teams[teamStatus.TeamID.id] = teamStatus.telemetry_id
+                msg = Teams()
+                msg.team_username = teamStatus.TeamID.username
+                msg.team_id = teamStatus.TeamID.id
+                msg.in_air = teamStatus.in_air
+                msg.latitude = teamStatus.telemetry.latitude
+                msg.longitude = teamStatus.telemetry.longitude
+                msg.altitude = teamStatus.telemetry.altitude
+                msg.heading = teamStatus.telemetry.heading
+                msg.telemetry_id = teamStatus.telemetry_id
+                msg.telemetry_age_sec = teamStatus.telemetry_age_sec
+                msg.telemetry_timestamp = teamStatus.telemetry_timestamp
+                temp.Teams.append(msg)
+                
+
+        else:
+            updated_teams[teamStatus.TeamID.id] = teamStatus.telemetry_id
+            msg = Teams()
+            msg.team_username = teamStatus.TeamID.username
+            msg.team_id = teamStatus.TeamID.id
+            msg.in_air = teamStatus.in_air
+            msg.latitude = teamStatus.telemetry.latitude
+            msg.longitude = teamStatus.telemetry.longitude
+            msg.altitude = teamStatus.telemetry.altitude
+            msg.heading = teamStatus.telemetry.heading
+            msg.telemetry_id = teamStatus.telemetry_id
+            msg.telemetry_age_sec = teamStatus.telemetry_age_sec
+            msg.telemetry_timestamp = teamStatus.telemetry_timestamp
+            temp.Teams.append(msg)
+    return(temp)
+
+
+
+#ropsy.publisher
+def publish_other_teams():
+    teamPublisher = rospy.Publisher(OTHERTEAMS_TOPIC,TeamsArray,queue_size=10)
+    while True:
+        time.sleep(5)
+        teamsArray = pack_teams_to_msg(interopclient.get_teams())
+        teamPublisher.publish(teamsArray)
+
+
+
+        
 
 
 def pack_mission_to_msg(mission: dict):
