@@ -11,10 +11,10 @@ PORT = '/dev/ttyACM2'
 PIN_NUM = 'd:9:s'
 SPEED = 256 #doesn't run under 62 speed
 RUNTIME = 10
+WP_INDEX = 2
 
 board = Arduino(PORT)
 motor = board.get_pin(PIN_NUM)
-
 
 
 def wp_sub():
@@ -22,15 +22,13 @@ def wp_sub():
     rospy.spin()
 
 def wp_motor(drop_wp):
-    if drop_wp.wp_seq == 2:
-        start = time.time()
+    if drop_wp.wp_seq == WP_INDEX:
         current = time.time()
+        start = time.time()
         while(current - start < RUNTIME):
             motor.write(SPEED)
             time.sleep(0.1)
             current = time.time()
-
-
 
 def gps_sub():
     rospy.Subscriber("/mavros/global_position/global", NavSatFix, gps_motor())
@@ -38,8 +36,9 @@ def gps_sub():
 
 #def gps_motor(drop_coord):
 
-
-if __name__ == '__main__':
+def main():
     rospy.init_node('ugv-drop', anonymous=True)
     wp_sub()
-    #gps_sub()
+    # gps_sub()
+if __name__ == '__main__':
+    main()
