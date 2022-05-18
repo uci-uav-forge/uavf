@@ -1,12 +1,14 @@
 # testing file download and parsing without including ROS
-import requests
-
-URL = ""
+#NEW PLAN: create a topic, parse mission file and publish
+# index to it, ugv-drop subscribes and receives index
+import rospy
 
 def wp_index():
-    file = requests.get(URL)
-    mission_list = file.readlines()
-    print(mission_list)
+
+    mission = open('TestArcMission.waypoints', 'rt')
+
+    for line in mission:
+        print(line)
 
 def main():
     wp_index()
