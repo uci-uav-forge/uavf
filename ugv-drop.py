@@ -52,6 +52,7 @@ def wp_motor(drop_wp):
 def main():
     try:
         rospy.init_node('ugv-drop', anonymous=TRUE)
+        drop_sub()
         wp_sub()
     except rospy.ROSInterruptException:
         pass
