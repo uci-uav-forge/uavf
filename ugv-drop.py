@@ -19,13 +19,13 @@ motor = board.get_pin(PIN_NUM)
 
 
 def drop_sub():
-    rospy.Subscriber('drop-waypoint', Int16, return_index())
-    rospy.spin()
+    #rospy.Subscriber('drop-waypoint', Int16, return_index())
+    WP_INDEX = rospy.wait_for_message('drop-waypoint', Int16)
 
 
-def return_index(index):
-    WP_INDEX = index
-    return WP_INDEX
+# def return_index(index):
+    # WP_INDEX = index
+    # return WP_INDEX
 
 
 def wp_sub():
@@ -50,8 +50,11 @@ def wp_motor(drop_wp):
 # def gps_motor(drop_coord):
 
 def main():
-    rospy.init_node('ugv-drop', anonymous=True)
-    wp_sub()
+    try:
+        rospy.init_node('ugv-drop', anonymous=TRUE)
+        wp_sub()
+    except rospy.ROSInterruptException:
+        pass
 
 
 if __name__ == '__main__':

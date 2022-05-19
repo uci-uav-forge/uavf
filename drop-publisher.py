@@ -8,8 +8,7 @@ from std_msgs.msg import Int16
 def wp_index():
     mission = open('TestArcMission.waypoints', 'rt')
     mission_list = mission.readlines()
-    print(mission_list)
-
+    # print(mission_list)
     for line in mission_list:
         if line.find('\t19') != -1:
             return line[0]
@@ -20,16 +19,19 @@ def drop_pub():
     pub = rospy.Publisher('drop-waypoint', Int16, queue_size=1)
     rate = rospy.Rate(10)
     while not rospy.is_shutdown():
-        drop_index = wp_index()
-        rospy.loginfo(drop_index)
-        pub.publish(drop_index)
+        connections = pub.get_num_connections()
+        if connections > 0:
+            drop_index = wp_index()
+            pub.publish(drop_index)
+            rospy.loginfo('Published')
+            break
         rate.sleep()
 
 
 def main():
     try:
-        wp_index()
         rospy.init_node('drop-publisher', anonymous=TRUE)
+        drop_pub()
     except rospy.ROSInterruptException:
         pass
 
