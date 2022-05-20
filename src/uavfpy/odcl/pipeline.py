@@ -37,6 +37,7 @@ class Pipeline(object):
         if draw:
             # get empty draw
             drawn = np.zeros_like(raw)
+
         for (hl, hu), (wl, wu), (i, j) in self.tiler.get_tiles(raw.shape):
             tiles += 1
             interpreter_input = raw[hl:hu, wl:wu, :]
@@ -93,7 +94,7 @@ class Pipeline(object):
         rsz_mask = cv2.cvtColor(rsz_mask, cv2.COLOR_GRAY2RGB)
         return np.concatenate((rsz_img, rsz_mask), axis=1)
 
-    def run(self, raw, gps, altitude, pitch=0, roll=0, yaw=0):
+    def run(self, raw, gps, altitude, quat=None):
         """Primary run method for the imaging pipeline"""
 
         '''
@@ -108,21 +109,32 @@ class Pipeline(object):
 
             Returns:
             --------
-            TBD
+            List of target data as a tuple of:
+                target_lat: Latitude of the located target on the ground,
+                target_lon: Longitude of the located target on the ground,
+                scolor_str: Name of the color of the shape on the target,
+                lcolor_str: Name of the color of the letter on the target
+            in the event that multiple targets are found in the image.
         '''
         # this is the expensive method
         targets = self.inference_over_tiles(raw)
 
+        target_data_list = list()
+
         for targ in self.parse_targets(raw, targets, self.interpreter):
             logging.info(f"Target: class={targ['class']},\t score={targ['score']}")
 
-            target_lat, target_lon = self.geolocator.compute(altitude,pitch,roll,yaw,gps, targ["bbox_center"])
+            target_lat, target_lon = self.geolocator.compute(altitude,quat,gps, targ["bbox_center"])
             lmask, shape_color, letter_color = self.process_color(targ["image"])
             scolor_str = self.color.get_readable_color(shape_color)
             lcolor_str = self.color.get_readable_color(letter_color)
             logging.info(f"\tTarget shapecolor: {scolor_str} lettercolor: {lcolor_str}")
-            cv2.imshow("Target", self._mask_compare(targ["image"], lmask))
-            cv2.waitKey(250)
+            # cv2.imshow("Target", self._mask_compare(targ["image"], lmask))
+            # cv2.waitKey(250)
+
+            target_data_list.append((target_lat, target_lon, scolor_str, lcolor_str, targ['class']))
+
+        return target_data_list
 
 
 if __name__ == "__main__":

@@ -21,45 +21,44 @@ EARTH_RADIUS = 6378137 #meters of radius of earth
 
 class Geolocation:
     def __init__(self) -> None:
-        self.focal_matrix = np.load("camera_intrinsics.npy") # Created after performing
+        self.focal_matrix = np.load("camera_intrinsic.npy") # Created after performing
         self.focal = (self.focal_matrix[0, 0], self.focal_matrix[1, 1])
         self.img_shape = (3000, 4000, 3)
 
 
-    def get_uavPerspective(self, x,y, altitude, yaw=0, pitch=0, roll=0):
+    def quaternionToRotation(self, quat=None):
+        q0,q1,q2,q3 = quat # quat = (w,x,y,z)
+        if quat is None:
+            return np.eye(3,dtype=float)
+
+        Rot = np.array([[2*(q0**2+q1**2)-1, 2*(q1*q2 - q0*q3), 2*(q1*q3 + q0*q2)],
+                        [2*(q1*q2+q0*q3), 2*(q0**2+q2**2)-1, 2*(q2*q3-q0*q1)],
+                        [2*(q1*q3-q0*q2), 2*(q2*q3+q0*q1), 2*(q0**2+q3**2)-1]])
+        
+        return Rot
+    def get_uavPerspective(self, x,y, altitude, quat=None):
         """
         Inputs:
             x, y, z = from UAV in meters.
-            altituded = from UAV in meters.
+            altitude = from UAV in meters.
             yaw, pitch, roll = from UAV
+            quat = (x,y,z,w)
         Output:
 
         """
-        yaw = yaw * np.pi / 180;
-        pitch = pitch * np.pi / 180;
-        roll = roll * np.pi / 180;
-        
-        yaw_Matrix = np.array(
-                        [[np.cos(yaw), -np.sin(yaw), 0],
-                        [np.sin(yaw), np.cos(yaw), 0],
-                        [0, 0 , 1]
-                        ],dtype=float);
-        pitch_Matrix = np.array(
-                        [[np.cos(pitch), 0, np.sin(pitch)],
-                        [0, 1, 0],
-                        [-np.sin(pitch), 0, np.cos(pitch)]
-                        ],dtype=float);
-        roll_Matrix = np.array(
-                        [[1,0,0],
-                        [0,np.cos(roll), -np.sin(roll)],
-                        [0,np.sin(roll), np.cos(roll)]
-                        ],dtype=float);    
         
         # pitch -> roll -> yaw
         target_dist_Matrix = np.array([[x,y,altitude]]).T
-        rotation_Matrix = pitch_Matrix @ roll_Matrix @ yaw_Matrix
+        rotation_Matrix = self.quaternionToRotation(quat)
         rotated_target_dist = rotation_Matrix @ target_dist_Matrix
-        z_coord = target_dist_Matrix[2,:]
+        z_coord = target_dist_Matrix[2,:][0]
+
+        # TESTING
+        print("Z-coordinate:", z_coord)
+
+        if z_coord == 0:
+            return (rotated_target_dist[0,:], rotated_target_dist[1,:], rotated_target_dist[2,:])
+
         projected = altitude / (z_coord) * rotated_target_dist # Column vector 1x3
         
         return (projected[0,:], projected[1,:], projected[2,:])
@@ -110,7 +109,7 @@ class Geolocation:
         return (y, x)
 
     
-    def compute(self, altitude, pitch, roll, yaw, gps_coord, pixel_coord):
+    def compute(self, altitude, quat, gps_coord, pixel_coord):
         """
         Inputs:
             altitude and yaw: from Mavros data
@@ -122,7 +121,7 @@ class Geolocation:
         """
 
         comp_dx, comp_dy = self.get_relDist(pixel_coord, self.img_shape, self.focal, altitude)
-        x, y, z = self.get_uavPerspective(comp_dx,comp_dy, altitude, yaw, pitch, roll)
+        x, y, z = self.get_uavPerspective(comp_dx,comp_dy, altitude, quat)
 
         lat, lon = self.meters_to_gps(x, y)
         new_lat = gps_coord[0] + lat
