@@ -25,10 +25,9 @@ from uavfros.msg import (
     GeoCylinder,
     Waypoints,
     StationaryObstacles,
-    Teams,
+    Team,
     TeamsArray,
 )
-#test
 from uavfros.srv import MissionService
 
 # AUVSI SERVER INFO
@@ -45,13 +44,16 @@ MISSION_SERVER_TOPIC = "mission"
 ODLC_TOPIC = "odlc"
 MAPS_TOPIC = "map"
 TELEMETRY_TOPIC = "telemetry"
-OTHERTEAMS_TOPIC = "OtherTeams"
+OTHER_TEAMS_TOPIC = "other_teams"
 
 # MISSION DATA MEMORY
 mission_data = None
 
-#Team status
+# TEAM STATUSES
 updated_teams = {}
+
+# GET TEAMS PERIOD
+GET_TEAM_FREQ = 1
 
 class UAVFInteropClient(client.AsyncClient):
     """Our implementation of the interop client. This class inherits from the auvsi client defined here:
@@ -74,28 +76,11 @@ class UAVFInteropClient(client.AsyncClient):
 
 
 def pack_teams_to_msg(teams: list):
-    temp = TeamsArray()
+    teamsArray = TeamsArray()
     for teamStatus in teams:
-        if updated_teams.has_key(teamStatus.TeamID.id):
-            if updated_teams.get(teamStatus.TeamID.id) < teamStatus.telemetry_id:
-                updated_teams[teamStatus.TeamID.id] = teamStatus.telemetry_id
-                msg = Teams()
-                msg.team_username = teamStatus.TeamID.username
-                msg.team_id = teamStatus.TeamID.id
-                msg.in_air = teamStatus.in_air
-                msg.latitude = teamStatus.telemetry.latitude
-                msg.longitude = teamStatus.telemetry.longitude
-                msg.altitude = teamStatus.telemetry.altitude
-                msg.heading = teamStatus.telemetry.heading
-                msg.telemetry_id = teamStatus.telemetry_id
-                msg.telemetry_age_sec = teamStatus.telemetry_age_sec
-                msg.telemetry_timestamp = teamStatus.telemetry_timestamp
-                temp.Teams.append(msg)
-                
-
-        else:
+        if (updated_teams.has_key(teamStatus.TeamID.id) and updated_teams.get(teamStatus.TeamID.id) < teamStatus.telemetry_id) or not updated_teams.has_key(teamStatus.TeamID.id):
             updated_teams[teamStatus.TeamID.id] = teamStatus.telemetry_id
-            msg = Teams()
+            msg = Team()
             msg.team_username = teamStatus.TeamID.username
             msg.team_id = teamStatus.TeamID.id
             msg.in_air = teamStatus.in_air
@@ -106,22 +91,22 @@ def pack_teams_to_msg(teams: list):
             msg.telemetry_id = teamStatus.telemetry_id
             msg.telemetry_age_sec = teamStatus.telemetry_age_sec
             msg.telemetry_timestamp = teamStatus.telemetry_timestamp
-            temp.Teams.append(msg)
-    return(temp)
+            teamsArray.teams.append(msg)
+    if len(teamsArray.teams) > 0:
+        return teamsArray
+    else:
+        return None
 
 
 
-#ropsy.publisher
-def publish_other_teams():
-    teamPublisher = rospy.Publisher(OTHERTEAMS_TOPIC,TeamsArray,queue_size=10)
+def other_teams_publisher():
+    teamPublisher = rospy.Publisher(OTHER_TEAMS_TOPIC,TeamsArray,queue_size=10)
+    rate = rospy.Rate(GET_TEAM_FREQ)
     while True:
-        time.sleep(5)
+        rate.sleep()
         teamsArray = pack_teams_to_msg(interopclient.get_teams())
-        teamPublisher.publish(teamsArray)
-
-
-
-        
+        if teamsArray:
+            teamPublisher.publish(teamsArray)        
 
 
 def pack_mission_to_msg(mission: dict):
@@ -261,6 +246,8 @@ def main():
     # listenerThread = threading.Thread(target=listener)
     # listenerThread.setDaemon(True)
     # listenerThread.start()
+
+    # other_teams_publisher()
 
     mission_server()
 

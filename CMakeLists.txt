@@ -69,6 +69,8 @@ add_message_files(
    StationaryObstacles.msg
    Waypoints.msg
    Mission.msg
+   Team.msg
+   TeamsArray.msg
  )
 
 ## Generate services in the 'srv' folder
