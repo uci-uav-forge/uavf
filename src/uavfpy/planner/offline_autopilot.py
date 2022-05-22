@@ -1,6 +1,10 @@
 # Omar Hossain
 # offline_autopilot.py
 
+import sys
+sys.path.append("./..")
+
+import mission
 
 class OfflinePlanner:
 
