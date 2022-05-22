@@ -40,10 +40,6 @@ class OfflinePlanner:
 
 
 
-
-
-
-
 if __name__ == "__main__":
     fileName = input("Input fileName: ")
     with open(fileName + ".waypoints", "x") as f:
