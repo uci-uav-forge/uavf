@@ -1,6 +1,8 @@
 # Omar Hossain
 # offline_autopilot.py
 
+# WARNING: Altitude in Mission Planner is in METERS
+
 
 try:
     from uavfpy.planner.mission import Mission, get_xformer_from_CRS_str
@@ -15,6 +17,7 @@ class OfflinePlanner:
 
     def __init__(self, fileName, interopName):
         self.f = open(fileName + ".waypoints", "x")
+        self.curIndex = 0
         with open(interopName) as f:
             mission_json = f.read()
         wgs2loc = get_xformer_from_CRS_str("WGS84", "Irvine")
@@ -32,13 +35,29 @@ class OfflinePlanner:
         )
         self.mission.compute_plan_thru_waypoints
         waypointpath = self.mission.compute_plan_thru_waypoints(self.mission.waypoints, n=400)
-        print(waypointpath)
+        S = self.mission.get_Hsurf()
+        print("Waypoints: ")
+        print(self.mission.waypoints)
+        print("# of Distinct Waypoints: ")
+        print(len(self.mission.waypoints))
         self.set_beginning()
+        self.generate_mission()
 
-    def __init__(self, fileName):
-        self.curIndex = 0
-        self.f = open(fileName + ".waypoints", "x")
-        self.set_beginning()
+    # def __init__(self, fileName):
+    #     self.curIndex = 0
+    #     self.f = open(fileName + ".waypoints", "x")
+    #     self.set_beginning()
+
+    def generate_mission(self):
+        self.addWaypoint("TAKEOFF", 0, 0, 6)
+        for i in range(len(self.mission.waypoints)):
+            self.addWaypoint("WAYPOINT", 
+                self.mission.waypoints[i][0], 
+                self.mission.waypoints[i][1],
+                self.mission.waypoints[i][2]
+            )
+        self.addWaypoint("RETURN", 0, 0, 6)
+        
 
     def set_beginning(self):
         self.f.write("QGC WPL 110\n")
@@ -76,9 +95,4 @@ class OfflinePlanner:
 if __name__ == "__main__":
     fileName = input("Input fileName: ")
 
-    op = OfflinePlanner(fileName)
-    op.addWaypoint("TAKEOFF", 0, 0, 100)
-    op.addWaypoint("WAYPOINT", 33.64272700, -117.82523900, 100)
-    op.addWaypoint("WAYPOINT", 33.64255600, -117.82468910, 100)
-    op.addWaypoint("WAYPOINT", 33.64219870, -117.82518000, 100)
-    op.addWaypoint("RETURN", 0, 0, 100)
+    op = OfflinePlanner(fileName, "InteropFiles/MarylandTest.json")
