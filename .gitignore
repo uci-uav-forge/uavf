@@ -21,6 +21,9 @@ training/ckpts
 #pyenv
 .python-version
 
+#macos
+.DS_Store
+
 ################# ROS STUFF
 
 devel/
