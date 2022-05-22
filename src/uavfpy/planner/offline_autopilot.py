@@ -1,17 +1,26 @@
 # Omar Hossain
 # offline_autopilot.py
 
-import sys
-sys.path.append("./..")
 
-import mission
+from uavfpy.planner.mission import Mission
+
 
 class OfflinePlanner:
 
-    def __init__(self, f):
+    m = None
+
+    def __init__(self, fileName, interopName):
+        self.f = open(fileName + ".waypoints", "x")
+        # self.m = Mission(open(interopName).read(), )
+        self.set_beginning()
+
+    def __init__(self, fileName):
         self.curIndex = 0
-        self.f = f
-        self.f.write("QGC WPL 110\n");
+        self.f = open(fileName + ".waypoints", "x")
+        self.set_beginning()
+
+    def set_beginning(self):
+        self.f.write("QGC WPL 110\n")
         self.f.write(self.generate_waypoint(self.curIndex, 1, 0, "BEG", 0, 0, 0, 0, 0, 0, 0, 1))
 
     # curWp should be 0 if following series of waypoints
@@ -34,22 +43,21 @@ class OfflinePlanner:
         wp = wp[:-1] + '\n'
         return wp
 
-    def addWaypoint(self, f, cmd, latt, long, altitude):
+    def addWaypoint(self, cmd, latt, long, altitude):
         self.curIndex+=1
         if(cmd == "TAKEOFF"):
             wp = self.generate_waypoint(self.curIndex, 0, 3, cmd, 0, 0, 0, 0, 0, 0, altitude, 1)
         else:
             wp = self.generate_waypoint(self.curIndex, 0, 3, cmd, 0, 0, 0, 0, latt, long, altitude, 1)
-        f.write(wp)
-
+        self.f.write(wp)
 
 
 if __name__ == "__main__":
     fileName = input("Input fileName: ")
-    with open(fileName + ".waypoints", "x") as f:
-        op = OfflinePlanner(f)
-        op.addWaypoint(f, "TAKEOFF", 0, 0, 100)
-        op.addWaypoint(f, "WAYPOINT", 33.64272700, -117.82523900, 100)
-        op.addWaypoint(f, "WAYPOINT", 33.64255600, -117.82468910, 100)
-        op.addWaypoint(f, "WAYPOINT", 33.64219870, -117.82518000, 100)
-        op.addWaypoint(f, "RETURN", 0, 0, 100)
+
+    op = OfflinePlanner(fileName)
+    op.addWaypoint("TAKEOFF", 0, 0, 100)
+    op.addWaypoint("WAYPOINT", 33.64272700, -117.82523900, 100)
+    op.addWaypoint("WAYPOINT", 33.64255600, -117.82468910, 100)
+    op.addWaypoint("WAYPOINT", 33.64219870, -117.82518000, 100)
+    op.addWaypoint("RETURN", 0, 0, 100)
