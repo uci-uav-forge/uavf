@@ -2,8 +2,10 @@
 # offline_autopilot.py
 
 
-from uavfpy.planner.mission import Mission, get_xformer_from_CRS_str
-
+try:
+    from uavfpy.planner.mission import Mission, get_xformer_from_CRS_str
+except:
+    from mission import Mission, get_xformer_from_CRS_str
 
 class OfflinePlanner:
 
@@ -29,7 +31,8 @@ class OfflinePlanner:
             buffer=10.0, max_dh=8.0, max_d2h=0.06, solve_shape=(60, 60), verbose=False
         )
         self.mission.compute_plan_thru_waypoints
-        waypointpath = self.mission.compute_plan_thru_waypoints(mission.waypoints, n=400)
+        waypointpath = self.mission.compute_plan_thru_waypoints(self.mission.waypoints, n=400)
+        print(waypointpath)
         self.set_beginning()
 
     def __init__(self, fileName):
