@@ -1,7 +1,7 @@
 # ROS node that reads when the drop location has been reached and then drops the UGV
 # ADD SECOND SUBSCRIBER
 
-#from pyfirmata import Arduino, util
+from pyfirmata import Arduino, util
 import rospy
 from mavros_msgs.msg import WaypointReached
 from std_msgs.msg import Int16
