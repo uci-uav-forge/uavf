@@ -20,8 +20,8 @@ class OfflinePlanner:
         self.curIndex = 0
         with open(interopName) as f:
             mission_json = f.read()
-        wgs2loc = get_xformer_from_CRS_str("WGS84", "Irvine")
-        loc2wgs = get_xformer_from_CRS_str("Irvine", "WGS84")
+        wgs2loc = get_xformer_from_CRS_str("WGS84", "Maryland")
+        loc2wgs = get_xformer_from_CRS_str("Maryland", "WGS84")
         self.mission = Mission(
             mission_json, 
             wgs2loc, 
@@ -36,8 +36,10 @@ class OfflinePlanner:
         self.mission.compute_plan_thru_waypoints
         waypointpath = self.mission.compute_plan_thru_waypoints(self.mission.waypoints, n=400)
         S = self.mission.get_Hsurf()
-        print("Waypoints: ")
+        print("Waypoints Before Transformation: ")
         print(self.mission.waypoints)
+        print("Waypoints After Transformation: ")
+        print(self.mission.transform_to_wgs84(self.mission.waypoints))
         print("# of Distinct Waypoints: ")
         print(len(self.mission.waypoints))
         self.set_beginning()
@@ -49,11 +51,12 @@ class OfflinePlanner:
     #     self.set_beginning()
 
     def generate_mission(self):
+        waypoints = self.mission.transform_to_wgs84(self.mission.waypoints)
         self.addWaypoint("TAKEOFF", 0, 0, 6)
         for i in range(len(self.mission.waypoints)):
             self.addWaypoint("WAYPOINT", 
-                self.mission.waypoints[i][0], 
-                self.mission.waypoints[i][1],
+                waypoints[i][0], 
+                waypoints[i][1],
                 self.mission.waypoints[i][2]
             )
         self.addWaypoint("RETURN", 0, 0, 6)
