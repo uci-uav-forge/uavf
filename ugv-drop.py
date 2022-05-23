@@ -1,7 +1,7 @@
 # ROS node that reads when the drop location has been reached and then drops the UGV
 # ADD SECOND SUBSCRIBER
 
-from pyfirmata import Arduino, util
+#from pyfirmata import Arduino, util
 import rospy
 from mavros_msgs.msg import WaypointReached
 from std_msgs.msg import Int16
@@ -21,6 +21,8 @@ motor = board.get_pin(PIN_NUM)
 def drop_sub():
     #rospy.Subscriber('drop-waypoint', Int16, return_index())
     WP_INDEX = rospy.wait_for_message('drop-waypoint', Int16)
+    print('WAYPOINT INDEX IS')
+    print(WP_INDEX)
 
 
 # def return_index(index):
@@ -29,7 +31,7 @@ def drop_sub():
 
 
 def wp_sub():
-    rospy.Subscriber("/mavros/mission/reached", WaypointReached, wp_motor())
+    rospy.Subscriber("/mavros/mission/reached", WaypointReached, wp_motor)
     rospy.spin()
 
 
@@ -51,7 +53,7 @@ def wp_motor(drop_wp):
 
 def main():
     try:
-        rospy.init_node('ugv-drop', anonymous=TRUE)
+        rospy.init_node('ugv-drop', anonymous=True)
         drop_sub()
         wp_sub()
     except rospy.ROSInterruptException:

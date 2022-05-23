@@ -22,7 +22,7 @@ def drop_pub():
         connections = pub.get_num_connections()
         if connections > 0:
             drop_index = wp_index()
-            pub.publish(drop_index)
+            pub.publish(int(drop_index))
             rospy.loginfo('Published')
             break
         rate.sleep()
@@ -30,7 +30,7 @@ def drop_pub():
 
 def main():
     try:
-        rospy.init_node('drop-publisher', anonymous=TRUE)
+        rospy.init_node('drop-publisher', anonymous=True)
         drop_pub()
     except rospy.ROSInterruptException:
         pass
