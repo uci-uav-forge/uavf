@@ -414,8 +414,8 @@ Then run
 .. code-block:: bash
     python -m pytest
 
-Running Tests with the Imaging pipeline
----------------------------------------
+Running Tests that use DNN (Deep Neural Network)
+------------------------------------------------
 
 .. note::
     By default, **no tests involving inference using .tflite models are run.** This is to avoid needing to download models, labels, and so on, which is tedious and only necessary if the DNN functionality is being tested.
@@ -434,19 +434,19 @@ Second, run the tests:
 
 .. code-block::
 
-    pytest
+    python -m pytest --dnn
 
 Tests with full resolution images can run very slowly (several minutes), because they perform inference on the CPU. These are skipped by default, but to run them, you can pass in the ``--slow`` flag to pytest:
 
 .. code-block:: bash
 
-    pytest --slow
+    pytest -m pytest --dnn --slow
 
 Tests can be run with a TPU delegate instead of on the CPU. To run the tests with a TPU, you must have a TPU installed (they will fail if no TPU is detected.) Then, pass in the ``--tpu`` flag to pytest:
 
 .. code-block:: bash
 
-    pytest --tpu
+    python -m pytest --dnn --tpu
 
 Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so slow when the TPU is used!
 
@@ -459,8 +459,8 @@ Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so 
 Flags                  Outcome
 =====================  ==================================
 ``--dnn``              If passed, run DNN tests
-``--tpu``              Runs slow tests on a TPU.
-``--slow``             Runs slow tests on CPU.
-``--tpu --slow``       Runs slow tests on a TPU and CPU.
-No Flags               Runs only fast tests, only on CPU.
+``--dnn --tpu``        Runs slow tests on a TPU.
+``--dnn --slow``       Runs slow tests on CPU.
+``--dnn --tpu --slow`` Runs slow tests on a TPU and CPU.
+No Flags               Runs only non-DNN tests.s
 =====================  ==================================
