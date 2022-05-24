@@ -1,12 +1,11 @@
 import numpy as np
 import cvxpy as cp
-import matplotlib.pyplot as plt
 from typing import Tuple
 import logging
 
 
 def generate_xy_grid(xrange, yrange, step):
-    """[summary]
+    """Generate an x y grid over `xrange` `yrange` with grid-size `step`.
 
     Parameters
     ----------

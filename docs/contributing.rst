@@ -8,6 +8,24 @@ This page is a guide to making contributions to the codebase.
 
     If you are not familair with using git to make contributions to an existing codebase, you should follow :ref:`make-contribution`, and then practice making a contribution by following this page :ref:`practice-contribution`.
 
+.. _local-install:
+
+Install `uavfpy` for development
+================================
+
+From the root of this repository, run:
+
+.. code-block:: bash
+    pip install -e .
+
+This will install symlinks to the uavfpy package into your python environment, which will allow you to make changes to the local codebase and have them immediately available to the PYTHONPATH.
+
+Doing it this way confers a number of benefits:
+
+* Dependencies will automatically be installed
+* Tests can be run on the local codebase
+* If something is broken with the install, you will know
+* This is the "right" way to develop a python package
 
 Workflow
 ========
@@ -389,6 +407,19 @@ Running Tests
 
 We use `pytest <https://docs.pytest.org/en/latest/>`_ to run our tests.
 
+To run tests, install ``uavfpy`` locally with pip (see :ref:"local-install").
+
+Then run 
+
+.. code-block:: bash
+    python -m pytest
+
+Running Tests that use DNN (Deep Neural Network)
+------------------------------------------------
+
+.. note::
+    By default, **no tests involving inference using .tflite models are run.** This is to avoid needing to download models, labels, and so on, which is tedious and only necessary if the DNN functionality is being tested.
+
 Because the pipeline uses compiled tensorflow models and takes images as input, we need to download them before running tests that touch that functionality. So running tests is a two-step process. From the root of the repository;
 
 First, download the models:
@@ -403,21 +434,23 @@ Second, run the tests:
 
 .. code-block::
 
-    pytest
+    python -m pytest --dnn
 
 Tests with full resolution images can run very slowly (several minutes), because they perform inference on the CPU. These are skipped by default, but to run them, you can pass in the ``--slow`` flag to pytest:
 
 .. code-block:: bash
 
-    pytest --slow
+    pytest -m pytest --dnn --slow
 
 Tests can be run with a TPU delegate instead of on the CPU. To run the tests with a TPU, you must have a TPU installed (they will fail if no TPU is detected.) Then, pass in the ``--tpu`` flag to pytest:
 
 .. code-block:: bash
 
-    pytest --tpu
+    python -m pytest --dnn --tpu
 
 Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so slow when the TPU is used!
+
+.. code-block:: 
 
 ``pytest`` Flag Summary:
 ------------------------
@@ -425,8 +458,9 @@ Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so 
 =====================  ==================================
 Flags                  Outcome
 =====================  ==================================
-``--tpu``              Runs slow tests on a TPU.
-``--slow``             Runs slow tests on CPU.
-``--tpu --slow``       Runs slow tests on a TPU and CPU.
-No Flags               Runs only fast tests, only on CPU.
+``--dnn``              If passed, run DNN tests
+``--dnn --tpu``        Runs slow tests on a TPU.
+``--dnn --slow``       Runs slow tests on CPU.
+``--dnn --tpu --slow`` Runs slow tests on a TPU and CPU.
+No Flags               Runs only non-DNN tests.s
 =====================  ==================================

@@ -121,7 +121,7 @@ Running a Mission with ``uavfros``
 Until we have viable hardware testing, this section deals with running a simulated mission with ``uavfros``. 
 
 Run ``uavfros`` Interop
------------------------
+```````````````````````
 
 The interop client is a ros node written in Python. We start it with ``rosrun``.
 
@@ -130,7 +130,7 @@ The interop client is a ros node written in Python. We start it with ``rosrun``.
     rosrun uavfros interop
 
 Run ``uavfros`` Planner
------------------------
+```````````````````````
 
 The navigation node is a ros service node that will generate a new path for the UAV to follow between waypoints.
 
@@ -140,7 +140,7 @@ The navigation node is a ros service node that will generate a new path for the 
 
 
 Run ``uavfros`` GNC
-----------------
+```````````````````
 
 The uavf GNC node is a ros node that will take a computed plan and manage the execution of the plan on the UAV.
 

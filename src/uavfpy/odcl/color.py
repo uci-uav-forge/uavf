@@ -1,9 +1,7 @@
 import numpy as np
 import cv2
-import logging
 from sklearn import neighbors
 from pathlib import Path
-import os
 
 COLOR_NAMES = {
     0: "white",

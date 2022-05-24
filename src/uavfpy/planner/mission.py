@@ -1,16 +1,13 @@
-import json, pyproj
-import surface
+import json, pyproj, time, cv2, rrtplanner, logging, sys
 import numpy as np
 from typing import Tuple
 from shapely.geometry import Polygon, Point
-from scipy import ndimage
-import rrtplanner
-import logging, sys
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-import time
-import cv2
 from math import ceil
+
+# relative imports
+from . import surface
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -27,6 +24,24 @@ METER2FT = 0.3048
 
 
 def get_xformer_from_CRS_str(from_str: str, to_str: str):
+    """Get pyproj transformer from string. Example strings are:
+
+    "Irvine" - Near Irvine area (feet)
+    "Maryland" - Near Maryland area (feet)
+    "WGS84" - WGS84 latitude/longitude coordinates
+
+    Parameters
+    ----------
+    from_str : str
+        Key in `CRS` corresponding to a place
+    to_str : str
+        Key in `CRS` corresponding to a place
+
+    Returns
+    -------
+    pyproj.Transformer
+        the Pyproj transformer object.
+    """
     from_crs = CRS[from_str]
     to_crs = CRS[to_str]
     return pyproj.Transformer.from_crs(from_crs, to_crs)
@@ -252,7 +267,7 @@ class Mission(object):
                 lat84 = bp["latitude"]
                 long84 = bp["longitude"]
                 # Convert to local
-                latloc, longloc = wgs2loc.transform(lat84, long84)
+                latloc, longloc = self.wgs2loc.transform(lat84, long84)
                 fzbounds.append([latloc, longloc])
             # close the loop
             fzbounds.append(fzbounds[0])
@@ -276,7 +291,7 @@ class Mission(object):
             lat84 = sgp["latitude"]
             long84 = sgp["longitude"]
             # convert to local
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             bounds.append([latloc, longloc])
         # closed loop
         bounds.append(bounds[0])
@@ -294,7 +309,7 @@ class Mission(object):
         waypoints = []
         for wp in self.mission_json["waypoints"]:
             lat84, long84, h = wp["latitude"], wp["longitude"], wp["altitude"]
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             waypoints.append([latloc, longloc, h])
         return np.array(waypoints)
 
@@ -313,7 +328,7 @@ class Mission(object):
             long84 = obs["longitude"]
             radius = obs["radius"]
             height = obs["height"]
-            latloc, longloc = wgs2loc.transform(lat84, long84)
+            latloc, longloc = self.wgs2loc.transform(lat84, long84)
             obstacles.append(
                 {
                     "x": latloc,
