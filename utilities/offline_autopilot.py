@@ -96,7 +96,7 @@ class OfflinePlanner(object):
         self.addWaypoint("RETURN", 0, 0, 6)
 
     def set_beginning(self):
-        with open(self.output_fname, "a") as f:
+        with open("offlineMissions/"+self.output_fname, "a") as f:
             f.write("QGC WPL 110\n")
             f.write(
                 self.generate_waypoint(
