@@ -8,6 +8,24 @@ This page is a guide to making contributions to the codebase.
 
     If you are not familair with using git to make contributions to an existing codebase, you should follow :ref:`make-contribution`, and then practice making a contribution by following this page :ref:`practice-contribution`.
 
+.. _local-install:
+
+Install `uavfpy` for development
+================================
+
+From the root of this repository, run:
+
+.. code-block:: bash
+    pip install -e .
+
+This will install symlinks to the uavfpy package into your python environment, which will allow you to make changes to the local codebase and have them immediately available to the PYTHONPATH.
+
+Doing it this way confers a number of benefits:
+
+* Dependencies will automatically be installed
+* Tests can be run on the local codebase
+* If something is broken with the install, you will know
+* This is the "right" way to develop a python package
 
 Workflow
 ========
@@ -389,6 +407,19 @@ Running Tests
 
 We use `pytest <https://docs.pytest.org/en/latest/>`_ to run our tests.
 
+To run tests, install ``uavfpy`` locally with pip (see :ref:"local-install").
+
+Then run 
+
+.. code-block:: bash
+    python -m pytest
+
+Running Tests with the Imaging pipeline
+---------------------------------------
+
+.. note::
+    By default, **no tests involving inference using .tflite models are run.** This is to avoid needing to download models, labels, and so on, which is tedious and only necessary if the DNN functionality is being tested.
+
 Because the pipeline uses compiled tensorflow models and takes images as input, we need to download them before running tests that touch that functionality. So running tests is a two-step process. From the root of the repository;
 
 First, download the models:
@@ -419,12 +450,15 @@ Tests can be run with a TPU delegate instead of on the CPU. To run the tests wit
 
 Running tests with the ``--tpu`` flag WILL run "slow" tests -- those are not so slow when the TPU is used!
 
+.. code-block:: 
+
 ``pytest`` Flag Summary:
 ------------------------
 
 =====================  ==================================
 Flags                  Outcome
 =====================  ==================================
+``--dnn``              If passed, run DNN tests
 ``--tpu``              Runs slow tests on a TPU.
 ``--slow``             Runs slow tests on CPU.
 ``--tpu --slow``       Runs slow tests on a TPU and CPU.

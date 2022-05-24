@@ -1,6 +1,6 @@
 import pytest, cv2
 from pathlib import Path
-from odcl import inference, color
+from uavfpy.odcl import inference, color
 
 MODEL_PATH = "../example/efficientdet_lite0_320_ptq.tflite"
 MODEL_PATH_TPU = "../example/efficientdet_lite0_320_ptq_edgetpu.tflite"
@@ -29,40 +29,54 @@ def pytest_addoption(parser):
         default=False,
         help="Pass to run tests on TPU. Will run slow tests on TPU.",
     )
+    parser.addoption(
+        "--skipdnn",
+        action="store_true",
+        default=False,
+        help="Pass to skip dnn tests. No tflite/pipeline/edgetpu tests will run with this flag passed",
+    )
 
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "slow: mark test as slow to run")
     config.addinivalue_line("markers", "tpu: mark test as running on TPU")
     config.addinivalue_line("markers", "cpu: mark test as running on CPU")
+    config.addinivalue_line("markers", "dnn: mark test as running on DNN")
 
 
 def pytest_collection_modifyitems(config, items):
     slow = config.getoption("--slow")
     tpu = config.getoption("--tpu")
-    if slow and tpu:
-        # run both cpu and tpu tests on high res
-        return
-    elif slow and not tpu:
-        # run slow tests on cpu
-        skip_tpu = pytest.mark.skip(reason="--tpu flag not passed, skipping tpu tests")
+    skipdnn = config.getoption("--skipdnn")
+    if skipdnn:
+        skip_dnn = pytest.mark.skip(reason="--skipdnn flag passed")
         for item in items:
-            if "tpu" in item.keywords:
-                item.add_marker(skip_tpu)
-    elif tpu and not slow:
-        # run slow tests on tpu
-        skip_cpu = pytest.mark.skip(reason="--tpu flag passed, skipping cpu tests")
-        for item in items:
-            if "cpu" in item.keywords:
-                item.add_marker(skip_cpu)
+            if "dnn" in item.keywords:
+                item.add_marker(skip_dnn)
     else:
-        skip_slow = pytest.mark.skip(reason="--slow flag passed, skipping slow tests")
-        skip_tpu = pytest.mark.skip(reason="--tpu flag not passed, skipping tpu tests")
-        for item in items:
-            if "slow" in item.keywords:
-                item.add_marker(skip_slow)
-            if "tpu" in item.keywords:
-                item.add_marker(skip_tpu)
+        if slow and tpu:
+            # run both cpu and tpu tests on high res
+            return
+        elif slow and not tpu:
+            # run slow tests on cpu
+            skip_tpu = pytest.mark.skip(reason="--tpu flag not passed, skipping tpu tests")
+            for item in items:
+                if "tpu" in item.keywords:
+                    item.add_marker(skip_tpu)
+        elif tpu and not slow:
+            # run slow tests on tpu
+            skip_cpu = pytest.mark.skip(reason="--tpu flag passed, skipping cpu tests")
+            for item in items:
+                if "cpu" in item.keywords:
+                    item.add_marker(skip_cpu)
+        else:
+            skip_slow = pytest.mark.skip(reason="--slow flag passed, skipping slow tests")
+            skip_tpu = pytest.mark.skip(reason="--tpu flag not passed, skipping tpu tests")
+            for item in items:
+                if "slow" in item.keywords:
+                    item.add_marker(skip_slow)
+                if "tpu" in item.keywords:
+                    item.add_marker(skip_tpu)
 
 
 ##########################################################
