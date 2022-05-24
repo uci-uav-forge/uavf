@@ -3,6 +3,12 @@ import numpy as np
 import networkx as nx
 from matplotlib import pyplot as plt
 import copy
+import enum
+
+
+class ORIENTATION(enum.Enum):
+    CCW = 1
+    CW = -1
 
 
 def beta_clusters(
@@ -41,20 +47,56 @@ def remove_close_points(points: np.ndarray, eps: float = 0.07) -> np.ndarray:
     return points
 
 
-class RandomPolygon(object):
-    def __init__(self, n, points=None, holes=2):
-        if points is not None:
-            self.points = points
-        else:
-            self.points = beta_clusters(clusters=4, ppc=n // 4)
+def reordercw(points: np.ndarray, tobe: str):
+    """return numpy view of re-ordered points"""
+    cw = 0.0
+    for i in range(points.shape[0] - 1):
+        p1, p2 = points[i], points[i + 1]
+        cw += p2[0] * p1[1] - p1[0] * p2[1]
+    if cw >= 0 and tobe == ORIENTATION.CW:
+        return points
+    elif cw < 0 and tobe == ORIENTATION.CW:
+        print("reversing")
+        return points[::-1]
+    elif cw <= 0 and tobe == ORIENTATION.CCW:
+        return points
+    elif cw > 0 and tobe == ORIENTATION.CCW:
+        print("reversing")
+        return points[::-1]
 
-        self.nholes = holes
 
-        self.G, self.dt, self.dt_orig = self.polygon(
-            self.points,
-            holes=holes,
-            removals=n // 3,
-        )
+class Polygon(object):
+    def __init__(self, boundaries: np.ndarray, holes: list):
+        if boundaries.shape[0] < 3:
+            raise ValueError("Boundaries must have at least 3 points.")
+
+        # check orientation of inputs
+        boundaries = reordercw(boundaries, ORIENTATION.CW)
+        for i, hole in enumerate(holes):
+            holes[i] = reordercw(hole, ORIENTATION.CCW)
+
+        # create digraph from list
+        self.G = nx.DiGraph()
+        node = 0
+        # add all points
+        for i in range(boundaries.shape[0] - 1):
+            self.G.add_node(node, points=boundaries[i])
+            self.G.add_edge(node, node + 1, weight=1)
+            node += 1
+        # add edge to close the loop and add last node
+        self.G.add_node(node, points=boundaries[-1])
+        self.G.add_edge(node, 0, weight=1)
+        node += 1
+        for hole in holes:
+            hole0 = node
+            for i in range(hole.shape[0] - 1):
+                self.G.add_node(node, points=hole[i])
+                self.G.add_edge(node, node + 1, weight=2)
+                node += 1
+            # add edge to close the loop and add last node
+            self.G.add_node(node, points=hole[-1])
+            self.G.add_edge(node, hole0, weight=2)
+            node += 1
 
     def removable_interiors(self, dt: spatial.Delaunay) -> tuple:
         """find indices of interior simplices that are safe to remove in dt"""
@@ -220,12 +262,12 @@ class RandomPolygon(object):
                 for (e1, e2), c in zip(M.edges, cyc):
                     outer = True
                     M[e1][e2]["weight"] = 1
-                    cw += self.addcw(H, e1, e2)
+                    cw += self.addcw_h(H, e1, e2)
             else:
                 for (e1, e2), c in zip(M.edges, cyc):
                     M[e1][e2]["weight"] = 2
                     outer = False
-                    cw += self.addcw(H, e1, e2)
+                    cw += self.addcw_h(H, e1, e2)
             cw = cw >= 0
             # categorize nodes
             # append
@@ -240,7 +282,7 @@ class RandomPolygon(object):
         out_graph = nx.compose_all(outputgraphs)
         return out_graph, dt, dt_orig
 
-    def addcw(self, H: nx.DiGraph, e1: int, e2: int) -> float:
+    def addcw_h(self, H: nx.DiGraph, e1: int, e2: int) -> float:
         """determine which way the edge is pointing
 
         e.g.
@@ -257,9 +299,11 @@ class RandomPolygon(object):
         p1, p2 = H.nodes[e1]["points"], H.nodes[e2]["points"]
         return (p2[0] - p1[0]) * (p2[1] + p1[1])
 
+    def cw(self, p1, p2) -> float:
+        return (p2[0] - p1[0]) * (p2[1] + p1[1])
+
     def plot(
         self,
-        G: nx.DiGraph,
         ax: plt.Axes,
         posattr: str = "points",
         arrows: bool = False,
@@ -273,14 +317,14 @@ class RandomPolygon(object):
         draw_nodes=True,
     ) -> plt.Axes:
         """Draw a DiGraph `G` with points stored in `posattr` onto `ax`"""
-        pos = nx.get_node_attributes(G, posattr)
+        pos = nx.get_node_attributes(self.G, posattr)
         if not ecolor:
             try:
-                ecolor = [G[u][v][ecolorattr] for u, v in G.edges()]
+                ecolor = [self.G[u][v][ecolorattr] for u, v in self.G.edges()]
             except:
-                ecolor = [5 for _ in G.edges()]
+                ecolor = [5 for _ in self.G.edges()]
         nx.draw_networkx_edges(
-            G,
+            self.G,
             pos,
             ax=ax,
             node_size=4,
@@ -291,7 +335,7 @@ class RandomPolygon(object):
         )
         if draw_nodes:
             nx.draw_networkx_nodes(
-                G,
+                self.G,
                 pos,
                 ax=ax,
                 node_shape=m,
@@ -299,10 +343,24 @@ class RandomPolygon(object):
                 node_size=30,
             )
         if node_text:
-            for n in G.nodes:
+            for n in self.G.nodes:
                 ax.text(pos[n][0], pos[n][1], s=str(n))
         ax.autoscale(tight=False)
         return ax
+
+
+class RandomPolygon(Polygon):
+    def __init__(self, n, points=None, holes=2):
+        if points is not None:
+            self.points = points
+        else:
+            self.points = beta_clusters(clusters=4, ppc=n // 4)
+        self.nholes = holes
+        self.G, self.dt, self.dt_orig = self.polygon(
+            self.points,
+            holes=holes,
+            removals=n // 3,
+        )
 
 
 def stupid_spiky_polygon(

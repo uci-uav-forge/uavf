@@ -1,4 +1,3 @@
-from polyskel import polyskel
 import networkx as nx
 import numpy as np
 import copy, enum
@@ -46,7 +45,6 @@ def degree2rad(deg):
         angle in radians
     """
     return deg * np.pi / 180
-
 
 def discretize_entire(J: nx.DiGraph, R: nx.Graph, gridsz: float):
     pts = get_points_array(J)
