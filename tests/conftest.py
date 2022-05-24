@@ -30,10 +30,10 @@ def pytest_addoption(parser):
         help="Pass to run tests on TPU. Will run slow tests on TPU.",
     )
     parser.addoption(
-        "--skipdnn",
+        "--dnn",
         action="store_true",
         default=False,
-        help="Pass to skip dnn tests. No tflite/pipeline/edgetpu tests will run with this flag passed",
+        help="Pass to run dnn tests. No tflite/pipeline/edgetpu tests will run if this flag is not passed.",
     )
 
 
@@ -47,8 +47,8 @@ def pytest_configure(config):
 def pytest_collection_modifyitems(config, items):
     slow = config.getoption("--slow")
     tpu = config.getoption("--tpu")
-    skipdnn = config.getoption("--skipdnn")
-    if skipdnn:
+    dnn = config.getoption("--dnn")
+    if not dnn:
         skip_dnn = pytest.mark.skip(reason="--skipdnn flag passed")
         for item in items:
             if "dnn" in item.keywords:
