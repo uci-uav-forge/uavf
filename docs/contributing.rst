@@ -16,9 +16,10 @@ Install `uavfpy` for development
 From the root of this repository, run:
 
 .. code-block:: bash
+
     pip install -e .
 
-This will install symlinks to the uavfpy package into your python environment, which will allow you to make changes to the local codebase and have them immediately available to the PYTHONPATH.
+This runs installation using setup.cfg from the root of the repository. The ``-e`` flag given to pip puts symlinks to the uavfpy package into your python environment, which will allow you to make changes to the local codebase and have them immediately available to the PYTHONPATH.
 
 Doing it this way confers a number of benefits:
 
@@ -26,6 +27,26 @@ Doing it this way confers a number of benefits:
 * Tests can be run on the local codebase
 * If something is broken with the install, you will know
 * This is the "right" way to develop a python package
+
+If you have installed uavfpy this way, running 
+
+.. code-block:: bash
+
+    pip list
+
+will yield 
+
+.. code-block:: 
+
+    ...
+    typing-extensions             4.2.0
+    uavfpy                        0.1.0       /home/ms/prg/uavf/src
+    Unidecode                     1.3.4
+    ...
+
+Here, ``typing-extensions`` is a library we downloaded from the internet, whereas ``uavfpy`` is a local package we have installed. If we make changes in the directory ``/home/ms/prg/uavf/src``, they will be reflected immediately.
+
+Even if we ``import uavfpy`` from some other directory, those changes are still reflected.
 
 Workflow
 ========
@@ -407,11 +428,12 @@ Running Tests
 
 We use `pytest <https://docs.pytest.org/en/latest/>`_ to run our tests.
 
-To run tests, install ``uavfpy`` locally with pip (see :ref:"local-install").
+To run tests, install ``uavfpy`` locally with pip (see :ref:`local-install`).
 
 Then run 
 
 .. code-block:: bash
+
     python -m pytest
 
 Running Tests that use DNN (Deep Neural Network)
