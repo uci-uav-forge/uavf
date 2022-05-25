@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Developers" href="developers.html" />
+    <link rel="prev" title="The UAVF ROS Package" href="ROS.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ROS.html">ROS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-uavfpy-for-development">Install <cite>uavfpy</cite> for development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#useful-to-know">Useful to Know</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-make-a-contribution">How to make a Contribution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#what-should-go-into-the-repository">What should go into the repository?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-structure">Software Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ros">ROS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-golden-rule-of-ros-development">The Golden Rule of ROS Development</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#an-example-of-what-not-to-do">An Example of What Not To Do</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#do-this-instead">Do This Instead</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-documentation-locally">Building Documentation Locally</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests-that-use-dnn-deep-neural-network">Running Tests that use DNN (Deep Neural Network)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pytest-flag-summary"><code class="docutils literal notranslate"><span class="pre">pytest</span></code> Flag Summary:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h1>
+<p>This page is a guide to making contributions to the codebase.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are not familair with using git to make contributions to an existing codebase, you should follow <a class="reference internal" href="#make-contribution"><span class="std std-ref">How to make a Contribution</span></a>, and then practice making a contribution by following this page <a class="reference internal" href="developers.html#practice-contribution"><span class="std std-ref">Practice Making a Contribution: Add Yourself to this List!</span></a>.</p>
+</div>
+<div class="section" id="install-uavfpy-for-development">
+<span id="local-install"></span><h2>Install <cite>uavfpy</cite> for development<a class="headerlink" href="#install-uavfpy-for-development" title="Permalink to this headline"></a></h2>
+<p>From the root of this repository, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e .
+</pre></div>
+</div>
+<p>This runs installation using setup.cfg from the root of the repository. The <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag given to pip puts symlinks to the uavfpy package into your python environment, which will allow you to make changes to the local codebase and have them immediately available to the PYTHONPATH.</p>
+<p>Doing it this way confers a number of benefits:</p>
+<ul class="simple">
+<li><p>Dependencies will automatically be installed</p></li>
+<li><p>Tests can be run on the local codebase</p></li>
+<li><p>If something is broken with the install, you will know</p></li>
+<li><p>This is the “right” way to develop a python package</p></li>
+</ul>
+<p>If you have installed uavfpy this way, running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip list
+</pre></div>
+</div>
+<p>will yield</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">typing</span><span class="o">-</span><span class="n">extensions</span>             <span class="mf">4.2</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">uavfpy</span>                        <span class="mf">0.1</span><span class="o">.</span><span class="mi">0</span>       <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ms</span><span class="o">/</span><span class="n">prg</span><span class="o">/</span><span class="n">uavf</span><span class="o">/</span><span class="n">src</span>
+<span class="n">Unidecode</span>                     <span class="mf">1.3</span><span class="o">.</span><span class="mi">4</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">typing-extensions</span></code> is a library we downloaded from the internet, whereas <code class="docutils literal notranslate"><span class="pre">uavfpy</span></code> is a local package we have installed. If we make changes in the directory <code class="docutils literal notranslate"><span class="pre">/home/ms/prg/uavf/src</span></code>, they will be reflected immediately.</p>
+<p>Even if we <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">uavfpy</span></code> from some other directory, those changes are still reflected.</p>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline"></a></h2>
+<div class="section" id="useful-to-know">
+<h3>Useful to Know<a class="headerlink" href="#useful-to-know" title="Permalink to this headline"></a></h3>
+<p>The development workflow presumes some working knowledge of <code class="docutils literal notranslate"><span class="pre">git</span></code>.  If you are brand new to <code class="docutils literal notranslate"><span class="pre">git</span></code>, you may have these questions:</p>
+<ul class="simple">
+<li><p><em>What is git? Branches, merging, commits? How do I install git?</em> → <a class="reference external" href="https://git-scm.com/book/en/v2">Read the git-scm guide</a></p></li>
+<li><p><em>What is GitHub? What are issues and pull requests?</em> → <a class="reference external" href="https://docs.github.com/en/get-started/quickstart/github-flow">Read the github flow guide</a></p></li>
+</ul>
+</div>
+<div class="section" id="how-to-make-a-contribution">
+<span id="make-contribution"></span><h3>How to make a Contribution<a class="headerlink" href="#how-to-make-a-contribution" title="Permalink to this headline"></a></h3>
+<p>We are trying to make it so that adding contributions to the UAV Forge codebase is as easy as possible. We are also trying to use development tools that are in place across industry and academia. So: follow this guide! It’s easy and well worth it.</p>
+<p>To start, you have an idea for a new feature, or you discover a bug that needs to be fixed.</p>
+<p>Create a new issue. To do this, click on “issues” tab, and then go to “new issue.” You can also review existing issues here.</p>
+<a class="reference internal image-reference" href="_images/contr01.png"><img alt="_images/contr01.png" class="align-center" src="_images/contr01.png" style="width: 70%;" /></a>
+<p>On the issues tag, go to “New issue”:</p>
+<a class="reference internal image-reference" href="_images/contr02.png"><img alt="_images/contr02.png" class="align-center" src="_images/contr02.png" style="width: 70%;" /></a>
+<p>Write as much detail about your issue as you can. Remember that things you post in issues are public, so they will help other developers understand what you are working on or what bugs you have encountered.</p>
+<p>When you’re ready to post the issue, click “Submit new issue.”</p>
+<a class="reference internal image-reference" href="_images/contr03.png"><img alt="_images/contr03.png" class="align-center" src="_images/contr03.png" style="width: 70%;" /></a>
+<p>I submitted the issue and it was assigned #27. You can view it on Github:</p>
+<p><a class="reference external" href="https://github.com/uci-uav-forge/uavf/issues/27">Issue #27</a></p>
+<p>When your issue has been created, it becomes a new “board” where you can post discussion about the issue: your progress on solving it or implementation, implementation details or questions, and so on. You can tag other users with “&#64;” to call attention to some part of the issue.</p>
+<p>Often, you will make multiple commits on a feature branch. When making your commits, add the number of the issue in the commit message with a hastag.</p>
+<p>In this example, I might make a commit referencing the issue:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit -m <span class="s2">&quot;#27 Added images to contribution section&quot;</span>
+</pre></div>
+</div>
+<p>Adding issue tags into commits helps link specific issues to specific commits, which helps other developers better understand how changes in the codebase are being made. I am going to commit some of the images I am adding to the branch, and tag them with the issue number I created here – you can see that the commit I made showed up on the issue page!</p>
+<p>Linking commits to issues is especially helpful, because if you click on the commit, you can exactly reproduce the state of the code from that commit. This helps other developers work collaboratively on the issue.</p>
+<p>Let’s make that commit…</p>
+<p>Now that the commit is in, I can see the precise state of the code by clicking on the commit from in the issues page (If you’re lazy to go there, <a class="reference external" href="https://github.com/uci-uav-forge/uavf/commit/64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9">click here</a>). This paragraph is not visible – because when I made the commit I hadn’t written it yet!</p>
+<p>You can also link to commits easily by copying either a direct web link to the commit or a hash of the commit. In this case, the hash is:</p>
+<p>64bfa36d02d6b5867dcc67d6ab2b701a06f24dc9</p>
+<p>If I put that into a comment on the issue, I can link to the commit. This is the case for any commit in the codebase, even those outside of this particular issue. Feel free to try this out in issue #27.</p>
+<a class="reference internal image-reference" href="_images/contr07.png"><img alt="_images/contr07.png" class="align-center" src="_images/contr07.png" style="width: 70%;" /></a>
+<p>Now, we have made our issue. When we start working on it, we want to create a branch from the repository. Typically, we want to branch from <code class="docutils literal notranslate"><span class="pre">dev</span></code>, rather than <code class="docutils literal notranslate"><span class="pre">main</span></code>. <code class="docutils literal notranslate"><span class="pre">dev</span></code> is the “working” branch of the codebase, and <code class="docutils literal notranslate"><span class="pre">main</span></code> is the “production” branch. Changes are usually made and integrated in the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch, and then when they really are ready, they go to <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p>
+<p>We can create branches manually with git. It’s a good idea to name branches with 1-3 summary words. It’s also good practice to preface the branch with the issue number.</p>
+<p>Github also includes a handy function to make branches from issues directly. They can then be pulled into the local repository:</p>
+<a class="reference internal image-reference" href="_images/contr04.png"><img alt="_images/contr04.png" class="align-center" src="_images/contr04.png" style="width: 60%;" /></a>
+<p>If you use Github’s functionality to do this, remember to branch from <code class="docutils literal notranslate"><span class="pre">dev</span></code> and not <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p>
+<p>Then, we work on the issue.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Remember to commit only code to the repository! For guidelines, see <a class="reference internal" href="#in-repository"><span class="std std-ref">What should go into the repository?</span></a>.</p>
+</div>
+<p>When we are satisfied that our issue is completed, we submit a Pull Request. In essence, what we are doing is asking to merge our branch back into <code class="docutils literal notranslate"><span class="pre">dev</span></code> so that it can be integrated with the project.</p>
+<p>On most open-source projects, only core maintainers can accept a pull request (sometimes abbreviated PR). It’s not uncommon for pull requests to recieve lots of back-and-forth talk between core maintainers and contributors before they are accepted, and sometimes they are denied outright. Usually, though, pull requests are much appreciated!</p>
+<p>To make a pull request go back to the main screen and click “Pull requests”:</p>
+<a class="reference internal image-reference" href="_images/contr08.png"><img alt="_images/contr08.png" class="align-center" src="_images/contr08.png" style="width: 70%;" /></a>
+<p>When we are on the PR tab, we are going to click on “Create pull request”:</p>
+<a class="reference internal image-reference" href="_images/contr09.png"><img alt="_images/contr09.png" class="align-center" src="_images/contr09.png" style="width: 70%;" /></a>
+<p>The “New pull request” button pulls up a page where we can request that any two branches in the project be merged together. Remember: a PR is just a request, it does not actually merge the branches!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even if it does not have a relevant issue, a branch can still be merged via this pull request process, as long as it is pushed to the remote.</p>
+</div>
+<p>The pull request shows us a summary of the changes that we are requesting to be merged. For example, when I created this branch, I ended up changing some wording in the “Useful to Know” section, and I can see it in the PR page:</p>
+<a class="reference internal image-reference" href="_images/contr11.png"><img alt="_images/contr11.png" class="align-center" src="_images/contr11.png" style="width: 70%;" /></a>
+<p>Git is quite intelligent and uses diff to show which changes have been made across the entire branch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Along with file size issues, this is why we don’t put datasets into the repository, because they “clutter” the diff history between commits. If we add 10,000 images and submit a pull request, this page will have 10,000 images in it!</p>
+</div>
+<p>Now, we can click “Create pull request.”</p>
+<p>We click “Create Pull Request” again. Once we create the PR, we now have an “active” PR. This <em>does not</em> mean that things have been merged yet – just that we are talking about doing so!</p>
+<p>This opens another discussion page, where we can discuss the changes we are requesting to be merged. On pieces of software that recieve many PRs (codebases that are being worked on by many developers simultaneously) a PR page might be a worthwhile place to discuss the specific changes being made.</p>
+<p>We don’t have very many developers, so it’s OK to submit blank PRs. If you name branches starting with the issue number, the PR page will automatically link back to the issue page. Very helpful!</p>
+<a class="reference internal image-reference" href="_images/contr12.png"><img alt="_images/contr12.png" class="align-center" src="_images/contr12.png" style="width: 70%;" /></a>
+<p>You will see that the PR page has a “Merge pull request” button. This is where we will actually merge the PR.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Just because there are no direct conflicts between branches, does not mean that the PR is ready to be merged! Ideally, every PR has been reviewed and tested by a core maintainer. If you are not sure, DO NOT merge!</p>
+<p>If you have conflicts, you will need to resolve them before merging.</p>
+</div>
+<p>When a PR has been merged, the branch that was used to make the PR can safely be deleted (unless it’s the <code class="docutils literal notranslate"><span class="pre">ROS</span></code> or <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch – those are usually kept open). This will not delete any files, or even file history, because files are edited in the repository based on commits, NOT based on branches. So long as the commits are merged, the files and their entire history are preserved.</p>
+<p>Once the PR has been merged, you can go back to the issues page – if you linked the pull request to the issue by following this guide, you will see a purple “Merged” button in the issue history.</p>
+<a class="reference internal image-reference" href="_images/contr13.png"><img alt="_images/contr13.png" class="align-center" src="_images/contr13.png" style="width: 70%;" /></a>
+<p>Sometimes, an issue is small and will be resolved with just one branch and PR. In other cases, an issue (maybe a very complex feature, or tricky bug) may only be resolved by multiple branch/PR cycles.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Branches and PRs can be made on any branch, not just <code class="docutils literal notranslate"><span class="pre">dev</span></code>. So I may create a <code class="docutils literal notranslate"><span class="pre">159-complex-feature</span></code> branch, and then make a <code class="docutils literal notranslate"><span class="pre">160-complex-feature-bug</span></code> branch from the <code class="docutils literal notranslate"><span class="pre">159-complex-feature</span></code> branch. I would follow this guide the same way, merging 159 and 160 at the end with a PR. This could happen several times on a given branch. This is why version control is so powerful and why so many large software projects use it.</p>
+</div>
+<p>That’s it!</p>
+<div class="section" id="summary">
+<h4>Summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h4>
+<p>Here, I:</p>
+<ul class="simple">
+<li><p>Created a new issue</p></li>
+<li><p>Created a branch based on that issue</p></li>
+<li><p>Worked on the issue in my branch</p></li>
+<li><p>Made commits and linked the issue to those commits</p></li>
+<li><p>Proposed to merge my branch back once I was done with a PR</p></li>
+<li><p>Merged the PR, deleted the branch, and closed the issue.</p></li>
+</ul>
+<p>Once you are ready, you can practice this process by adding your name to <a class="reference internal" href="developers.html#developers"><span class="std std-ref">Developers</span></a> section of this documentation. You are welcome to make a new issue to practice – or you can do only the latter half of the guide (everything minus creating a new issue) by making a new branch, making commits, and adding a PR. For this practice issue, branch off of <code class="docutils literal notranslate"><span class="pre">main</span></code> directly, since docs are rebuilt when new commits are merged into <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="what-should-go-into-the-repository">
+<span id="in-repository"></span><h2>What should go into the repository?<a class="headerlink" href="#what-should-go-into-the-repository" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Code (<code class="docutils literal notranslate"><span class="pre">.py</span></code>)</p></li>
+<li><p>Scripts (<code class="docutils literal notranslate"><span class="pre">.py</span></code>, <code class="docutils literal notranslate"><span class="pre">.sh</span></code>)</p></li>
+<li><p>documentation (<code class="docutils literal notranslate"><span class="pre">.rst</span></code>, <code class="docutils literal notranslate"><span class="pre">.md</span></code>)</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>What should <em>not</em> go into the repository?</p>
+<ul class="simple">
+<li><p>Models (<code class="docutils literal notranslate"><span class="pre">.tflite</span></code>, <code class="docutils literal notranslate"><span class="pre">.pb</span></code>, etc.)</p></li>
+<li><p>Data (<code class="docutils literal notranslate"><span class="pre">.tfrecord</span></code>, <code class="docutils literal notranslate"><span class="pre">.jpg</span></code>, etc.)</p></li>
+<li><p>Example Files (<code class="docutils literal notranslate"><span class="pre">.jpg</span></code>, <code class="docutils literal notranslate"><span class="pre">.mp4</span></code>, etc.)</p></li>
+<li><p>Scripts that don’t work</p></li>
+<li><p>Failed Experiments</p></li>
+</ul>
+</div>
+<p>Rather than dumping non-code files into the repository, instruct the user how to acquire them. A good way to do this is to put the file in a publically-accessible link and include a script to download it. For example, I can upload a model to <code class="docutils literal notranslate"><span class="pre">https://drive.google.com/some-public-link</span></code>, and then make a script called <code class="docutils literal notranslate"><span class="pre">download-model.sh</span></code> that has</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://drive.google.com/some-public-link
+</pre></div>
+</div>
+<p>Somewhere inside.</p>
+<p>We want to do this for any file that isn’t code, like binary files, images, models, and so on. This ensures that the repository is as clean and readable as possible, which helps new maintaners understand the codebase.</p>
+</div>
+<div class="section" id="software-structure">
+<h2>Software Structure<a class="headerlink" href="#software-structure" title="Permalink to this headline"></a></h2>
+<div class="section" id="ros">
+<h3>ROS<a class="headerlink" href="#ros" title="Permalink to this headline"></a></h3>
+<p>Working with ROS has some requirements that make it somewhat more difficult to work with than you may be used to. In particular, using ROS <em>requires</em> a Linux operating system. We have a few laptops with linux installed already, but we expect that most people aren’t using linux natively and may not be used to working with the OS. So rather than making the entire piece of software dependent on linux to even run, we have separated the ROS-dependent code and the standard <code class="docutils literal notranslate"><span class="pre">main</span></code> code.</p>
+<p>We also keep ROS code separate because <a class="reference external" href="http://www.artificialhumancompanions.com/structure-python-based-ros-package/">it’s good practice to do so anyway</a>. This is for several reasons, but it mostly has to do with how ROS is integrated with Python. In a nutshell, ROS always needs to use the system Python; even though standard Python development usually uses virtual environments to manage dependencies:</p>
+<a class="reference internal image-reference" href="https://imgs.xkcd.com/comics/python_environment_2x.png"><img alt="https://imgs.xkcd.com/comics/python_environment_2x.png" class="align-center" src="https://imgs.xkcd.com/comics/python_environment_2x.png" style="width: 50%;" /></a>
+<p>So, to avoid development hell, we put the bulk of the functionality into the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, install <code class="docutils literal notranslate"><span class="pre">main</span></code> package (and all of its dependencies) onto the vehicle’s system python, and then we can just import the <a href="#id1"><span class="problematic" id="id2">:py:package:`uavfpy`</span></a> package and use its functionality in our ROS scripts.</p>
+<div class="section" id="the-golden-rule-of-ros-development">
+<h4>The Golden Rule of ROS Development<a class="headerlink" href="#the-golden-rule-of-ros-development" title="Permalink to this headline"></a></h4>
+<p>So we have a golden rule about ROS development:</p>
+<p>⚠️⚠️⚠️ ENCAPSULATE ⚠️⚠️⚠️</p>
+<p>Always Always Always Encapsulate!</p>
+<p>What do we mean?</p>
+</div>
+<div class="section" id="an-example-of-what-not-to-do">
+<h4>An Example of What Not To Do<a class="headerlink" href="#an-example-of-what-not-to-do" title="Permalink to this headline"></a></h4>
+<p>Let’s say I want to add some feature to the imaging pipeline. It’s something simple: it just reports the number of pixels in the image. I want to publish this data to a special ROS topic, so I’ll do something easy, just put the function into the ros node:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">from</span> <span class="nn">std_msgs.msg</span> <span class="kn">import</span> <span class="n">Int32</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">count_pixels</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">publish_pixels</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">pixels</span> <span class="o">=</span> <span class="n">count_pixels</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+    <span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+<span class="o">...</span>
+
+    <span class="n">rospy</span><span class="o">.</span><span class="n">init_node</span><span class="p">(</span><span class="s1">&#39;pixels_counter&#39;</span><span class="p">)</span>
+    <span class="n">pub</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Publisher</span><span class="p">(</span><span class="s1">&#39;pixels&#39;</span><span class="p">,</span> <span class="n">Int32</span><span class="p">,</span> <span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">publish_pixels</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">spin</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Great! Let’s just push to the <code class="docutils literal notranslate"><span class="pre">ROS</span></code> branch and commit. Sounds good, right?</p>
+<p>⚠️⚠️⚠️ DO NOT DO THIS! ⚠️⚠️⚠️</p>
+<p>Why not?</p>
+<ul class="simple">
+<li><p>Nobody can run, debug, or test this code if they don’t have access to a ROS system.</p></li>
+<li><p>These changes will not be included in <code class="docutils literal notranslate"><span class="pre">main</span></code>, so documentation will not be automatically generated for this method</p></li>
+<li><p>Someone working on <code class="docutils literal notranslate"><span class="pre">main</span></code> might never see this piece of code, so they might write their own <code class="docutils literal notranslate"><span class="pre">count_pixels</span></code> function</p></li>
+<li><p>Someone running <code class="docutils literal notranslate"><span class="pre">pytest</span></code> on the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch will not be able to run the tests for this piece of code (if they are written)</p></li>
+</ul>
+</div>
+<div class="section" id="do-this-instead">
+<h4>Do This Instead<a class="headerlink" href="#do-this-instead" title="Permalink to this headline"></a></h4>
+<p>Put this method somewhere in <code class="docutils literal notranslate"><span class="pre">main</span></code>. Let’s say in <code class="xref py py-mod docutils literal notranslate"><span class="pre">pipeline</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Pipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">count_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Count the pixels of an image&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, call it from the piece of code in the <code class="docutils literal notranslate"><span class="pre">ROS</span></code> branch.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">uavfpy.Pipeline</span> <span class="kn">import</span> <span class="n">pipeline</span>
+
+<span class="k">def</span> <span class="nf">publish_pixels</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+    <span class="n">pixels</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">count_pixels</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+    <span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">interpreter</span><span class="p">,</span> <span class="o">.....</span><span class="p">)</span>
+
+    <span class="n">rospy</span><span class="o">.</span><span class="n">init_node</span><span class="p">(</span><span class="s1">&#39;pixels_counter&#39;</span><span class="p">)</span>
+    <span class="n">pub</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Publisher</span><span class="p">(</span><span class="s1">&#39;pixels&#39;</span><span class="p">,</span> <span class="n">Int32</span><span class="p">,</span> <span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="o">...</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+        <span class="o">...</span>
+        <span class="p">[</span><span class="n">pipeline</span> <span class="n">stuff</span><span class="p">]</span>
+        <span class="o">...</span>
+
+        <span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">count_pixels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This difference is crucial to understand: the first way commingles <code class="docutils literal notranslate"><span class="pre">main</span></code> functionality with ROS code, making debugging and testing a nightmare. The second way keeps <code class="docutils literal notranslate"><span class="pre">main</span></code> functionality in <code class="docutils literal notranslate"><span class="pre">main</span></code>, which allows everyone working on the codebase (not just the linux developers) to understand and debug it.</p>
+</div>
+</div>
+</div>
+<div class="section" id="documentation">
+<span id="id3"></span><h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
+<p>We have attempted to make writing documentation as easy as possible – and as close to the codebase as possible! This documentation contains documentation that people have written manually (such as this guide). This manual documentation is written in a format called reStructuredText, which is a commonly-used format for software documentation. To get started writing manual documentation with reStructuredText, read the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html">reStructuredText Primer</a>.</p>
+<p>The second type of documentation is the auto-generated documentation. This documentation is generated from in-line comments in the codebase. You don’t need to touch anything in the <cite>docs/</cite> folder to write this documentation – just comment your code, and your comments are added to the API page (<a href="#id4"><span class="problematic" id="id5">:py:package:`uavfpy`</span></a>) automatically. The API page will rebuild itself automatically whenever pushes are made to the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of the repository.</p>
+<p>We use <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> and a tool called <a class="reference external" href="https://github.com/readthedocs/sphinx-autoapi">Sphinx Autoapi</a> to automatically generate descriptions and API documentation for any class or method with a numpy-formatted docstring. This tool automatically parses the codebase.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The sphinx autodoc can only parse documentation if it is formatted with a <code class="docutils literal notranslate"><span class="pre">numpydoc</span></code> style:</p>
+<p><a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">https://numpydoc.readthedocs.io/en/latest/format.html</a></p>
+<p>For an example of an (excessively) well documented function, see this example:</p>
+<p><a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/example.html#example">https://numpydoc.readthedocs.io/en/latest/example.html#example</a></p>
+</div>
+<p>At a minimum, we try to document:</p>
+<ul class="simple">
+<li><p>The purpose of the function</p></li>
+<li><p>Function arguments and types</p></li>
+<li><p>Function returns and types</p></li>
+</ul>
+<div class="section" id="building-documentation-locally">
+<span id="build-doc"></span><h3>Building Documentation Locally<a class="headerlink" href="#building-documentation-locally" title="Permalink to this headline"></a></h3>
+<p>You can build a local copy of this documentation without making commits. That way, you can make changes and test locally before committing.</p>
+<p>It requires a couple extra dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install sphinx-rtd-theme sphinx-autoapi numpydoc
+</pre></div>
+</div>
+<p>Then go to <code class="docutils literal notranslate"><span class="pre">docs/</span></code> and build HTML documentation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs
+make html
+</pre></div>
+</div>
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">docs/build/html/index.html</span></code> in your web browser to see the documentation. You will need to run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> each time you make a change to see it reflected.</p>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline"></a></h2>
+<p>We use <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a> to run our tests.</p>
+<p>To run tests, install <code class="docutils literal notranslate"><span class="pre">uavfpy</span></code> locally with pip (see <a class="reference internal" href="#local-install"><span class="std std-ref">Install uavfpy for development</span></a>).</p>
+<p>Then run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pytest
+</pre></div>
+</div>
+<div class="section" id="running-tests-that-use-dnn-deep-neural-network">
+<h3>Running Tests that use DNN (Deep Neural Network)<a class="headerlink" href="#running-tests-that-use-dnn-deep-neural-network" title="Permalink to this headline"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, <strong>no tests involving inference using .tflite models are run.</strong> This is to avoid needing to download models, labels, and so on, which is tedious and only necessary if the DNN functionality is being tested.</p>
+</div>
+<p>Because the pipeline uses compiled tensorflow models and takes images as input, we need to download them before running tests that touch that functionality. So running tests is a two-step process. From the root of the repository;</p>
+<p>First, download the models:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash ./prepare_tests.sh
+</pre></div>
+</div>
+<p>This will download models and test images to <code class="docutils literal notranslate"><span class="pre">tests/fixture_setup</span></code>.</p>
+<p>Second, run the tests:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pytest</span> <span class="o">--</span><span class="n">dnn</span>
+</pre></div>
+</div>
+<p>Tests with full resolution images can run very slowly (several minutes), because they perform inference on the CPU. These are skipped by default, but to run them, you can pass in the <code class="docutils literal notranslate"><span class="pre">--slow</span></code> flag to pytest:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest -m pytest --dnn --slow
+</pre></div>
+</div>
+<p>Tests can be run with a TPU delegate instead of on the CPU. To run the tests with a TPU, you must have a TPU installed (they will fail if no TPU is detected.) Then, pass in the <code class="docutils literal notranslate"><span class="pre">--tpu</span></code> flag to pytest:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pytest --dnn --tpu
+</pre></div>
+</div>
+<p>Running tests with the <code class="docutils literal notranslate"><span class="pre">--tpu</span></code> flag WILL run “slow” tests – those are not so slow when the TPU is used!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pytest-flag-summary">
+<h3><code class="docutils literal notranslate"><span class="pre">pytest</span></code> Flag Summary:<a class="headerlink" href="#pytest-flag-summary" title="Permalink to this headline"></a></h3>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ROS.html" class="btn btn-neutral float-left" title="The UAVF ROS Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="developers.html" class="btn btn-neutral float-right" title="Developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

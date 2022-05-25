@@ -1,0 +1,116 @@
+:py:mod:`uavfpy.planner.coverage.path`
+======================================
+
+.. py:module:: uavfpy.planner.coverage.path
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.path.get_cell_closed
+   uavfpy.planner.coverage.path.make_grid
+   uavfpy.planner.coverage.path.sweep_cell
+   uavfpy.planner.coverage.path.make_path
+
+
+
+.. py:function:: get_cell_closed(G: networkx.DiGraph, cell)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: make_grid(C: networkx.DiGraph, gridstep=0.1)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: sweep_cell(G: networkx.DiGraph, cell)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: make_path(G: networkx.DiGraph, S: networkx.DiGraph)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uavfpy.planner.surface &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.surface</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/uavfpy/planner/surface/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-uavfpy.planner.surface">
+<span id="uavfpy-planner-surface"></span><h1><a class="reference internal" href="#module-uavfpy.planner.surface" title="uavfpy.planner.surface"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.surface</span></code></a><a class="headerlink" href="#module-uavfpy.planner.surface" title="Permalink to this headline"></a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.surface.generate_xy_grid" title="uavfpy.planner.surface.generate_xy_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_xy_grid</span></code></a>(xrange, yrange, step)</p></td>
+<td><p>Generate an x y grid over <cite>xrange</cite> <cite>yrange</cite> with grid-size <cite>step</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.surface.generate_random_obstacles" title="uavfpy.planner.surface.generate_random_obstacles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_random_obstacles</span></code></a>(n, xrange: Tuple[float, float], yrange: Tuple[float, float], radrange: Tuple[float, float], height_range: Tuple[float, float]) → dict</p></td>
+<td><p>Generate list of <cite>n</cite> random obstacles within the x, y space.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.surface.place_obstacles" title="uavfpy.planner.surface.place_obstacles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">place_obstacles</span></code></a>(X, Y, obstacles)</p></td>
+<td><p>Make a new grid, with the same dimensions as <cite>X</cite>, <cite>Y</cite>, containing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.surface.get_optimal_grid" title="uavfpy.planner.surface.get_optimal_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_optimal_grid</span></code></a>(X, Y, H, buffer, max_dh, max_d2h, min_h, step: Tuple[float, float], waypoints=None, waypointcost=100000.0, verbose=True, solver='ECOS')</p></td>
+<td><p>Get an optimal height grid corresponding to a surface above the ground from an</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.surface.generate_xy_grid">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.surface.</span></span><span class="sig-name descname"><span class="pre">generate_xy_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xrange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yrange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.surface.generate_xy_grid" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an x y grid over <cite>xrange</cite> <cite>yrange</cite> with grid-size <cite>step</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>xrange</strong><span class="classifier">tuple of float</span></dt><dd><p>x_lower, x_upper</p>
+</dd>
+<dt><strong>yrange</strong><span class="classifier">tuple of float</span></dt><dd><p>x_lower, x_upper</p>
+</dd>
+<dt><strong>step</strong><span class="classifier">float</span></dt><dd><p>step size of the grid.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple of np.ndarray</dt><dd><p>outputs are given as a tuple of (X, Y) grids, each corresponding
+to the X and Y values. The index of the grid corresponds to the
+relationship between points in the grid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.surface.generate_random_obstacles">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.surface.</span></span><span class="sig-name descname"><span class="pre">generate_random_obstacles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="headerlink" href="#uavfpy.planner.surface.generate_random_obstacles" title="Permalink to this definition"></a></dt>
+<dd><p>Generate list of <cite>n</cite> random obstacles within the x, y space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>no of obstacles to generate</p>
+</dd>
+<dt><strong>xrange</strong><span class="classifier">tuple of float</span></dt><dd><p>upper and lower x coordinates of the obstacles</p>
+</dd>
+<dt><strong>yrange</strong><span class="classifier">tuple of float</span></dt><dd><p>upper and lower y coordinates of the obstacles</p>
+</dd>
+<dt><strong>radrange</strong><span class="classifier">tuple of float</span></dt><dd><p>upper and lower range of obstacle radius</p>
+</dd>
+<dt><strong>height_range</strong><span class="classifier">tuple of float</span></dt><dd><p>upper and lower range of obstacle height</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>list of dict</dt><dd><p>dict with keys “x”, “y”, “r”, “h”</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.surface.place_obstacles">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.surface.</span></span><span class="sig-name descname"><span class="pre">place_obstacles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obstacles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.surface.place_obstacles" title="Permalink to this definition"></a></dt>
+<dd><p>Make a new grid, with the same dimensions as <cite>X</cite>, <cite>Y</cite>, containing
+the obstacles contained in <cite>obstacles.</cite></p>
+<p>The obstacles will overlap each other by the order they are given in
+the list. So if an O1 overlaps O2, but has a height less than O2, the
+portion that overlaps will be overwritten with O1’s height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN array of x values.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN array of y values.</p>
+</dd>
+<dt><strong>obstacles</strong><span class="classifier">list of dict</span></dt><dd><p>eahc obstacle is dict with fields “x”, “y”, “r”, “h”</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>MxN array of H values corresponding to the “ground” as if obstacles
+have been placed there.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.surface.get_optimal_grid">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.surface.</span></span><span class="sig-name descname"><span class="pre">get_optimal_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_d2h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypointcost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ECOS'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.surface.get_optimal_grid" title="Permalink to this definition"></a></dt>
+<dd><p>Get an optimal height grid corresponding to a surface above the ground from an
+obstacle height grid <cite>H</cite>. The height grid has a minimum dh/dx, d2h/d2x, min h,
+and buffer between tall obstacles and the surface. The input grid <cite>H</cite> is structured
+like an MxN array of h values. The x, y positions are given by separate <cite>X</cite> and <cite>Y</cite>
+grids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">np.ndarray</span></dt><dd><p>height grid</p>
+</dd>
+<dt><strong>buffer</strong><span class="classifier">float</span></dt><dd><p>minimum distance to obstacle or ground</p>
+</dd>
+<dt><strong>max_dh</strong><span class="classifier">float</span></dt><dd><p>maximum dh/dx that the vehicle can climb. Corresponds to the “slope” of the
+sheet, or the max climb angle of the vehicle</p>
+</dd>
+<dt><strong>max_d2h</strong><span class="classifier">float</span></dt><dd><p>maximum d2h/dx2 that the vehicle can accelerate to climb. smaller
+values correspond to a “smoother” sheet.</p>
+</dd>
+<dt><strong>min_h</strong><span class="classifier">float</span></dt><dd><p>minimum altitude of the sheet <cite>h</cite>, irrespective of obstacles</p>
+</dd>
+<dt><strong>step</strong><span class="classifier">step</span></dt><dd><p>grid step</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, optional</span></dt><dd><p>whether to print verbose solver information, by default True</p>
+</dd>
+<dt><strong>solver</strong><span class="classifier">str, optional</span></dt><dd><p>the solver to use. The solver must be accessible to <cite>cvxpy</cite>, by default “ECOS”</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>an array with the same dimensions as <cite>H</cite>, corresponding to the sheet above <cite>H</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

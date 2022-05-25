@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The UAVF ROS Package &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Generating Missions for use with qGroundControl" href="generating-missions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ROS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-install-and-run-px4">(Simulation) Install and Run PX4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-uavf">Install <code class="docutils literal notranslate"><span class="pre">uavf</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-mission-with-uavfros">Running a Mission with <code class="docutils literal notranslate"><span class="pre">uavfros</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#run-uavfros-interop">Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> Interop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-uavfros-planner">Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> Planner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-uavfros-gnc">Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> GNC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>The UAVF ROS Package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ROS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="the-uavf-ros-package">
+<h1>The UAVF ROS Package<a class="headerlink" href="#the-uavf-ros-package" title="Permalink to this headline"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">uavfpy</span></code> package in <code class="docutils literal notranslate"><span class="pre">main</span></code> is a python package that does not depend on ROS. We do use ROS to orchestrate the mission, so we have a ROS package as well.</p>
+<p><code class="docutils literal notranslate"><span class="pre">uavfros</span></code> is the name of the ROS package. Its development shares an issue tracker and repository with the main python package, but its development happens on the <code class="docutils literal notranslate"><span class="pre">ROS</span></code> and <code class="docutils literal notranslate"><span class="pre">ROS-dev</span></code> branches of the repository.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h3>
+<p>In order to develop packages on ROS, you need a PC equipped with Linux. Any desktop linux platform is suitable, but the easiest by far is Ubuntu. I prefer Ubuntu MATE on the desktop, but you can use a standard Ubuntu, KDE, or whichever flavor you like.</p>
+<p><code class="docutils literal notranslate"><span class="pre">uavfros</span></code> is a ROS package. To install it, you need to have ROS installed and configured. That will not be covered in this documentation; if you are brand new to ROS, I recommend that you go through the ROS tutorial <a class="footnote-reference brackets" href="#id2" id="id1">1</a> before continuing to the next section.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In order to run Gazebo simulations, you need to have installed the “full” ROS environment. For example, with apt, you have installed <code class="docutils literal notranslate"><span class="pre">ros-noetic-desktop-full</span></code>, not <code class="docutils literal notranslate"><span class="pre">ros-noetic-ros-base</span></code> or <code class="docutils literal notranslate"><span class="pre">ros-noetic-desktop</span></code>.</p>
+</div>
+<p>This release targets ROS 1 Noetic, for compatibility reasons. We are not developing for ROS 2.</p>
+<p>We assume that you have set up a catkin workspace in your home directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">catkin_ws</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simulation-install-and-run-px4">
+<h3>(Simulation) Install and Run PX4<a class="headerlink" href="#simulation-install-and-run-px4" title="Permalink to this headline"></a></h3>
+<p>Follow this guide if you are planning to simulate a PX4 UAV mission.</p>
+<p>This guide based on the <a class="reference external" href="https://docs.px4.io/master/en/simulation/ros_interface.html">PX4 ROS1 Interface Guide</a>.</p>
+<p>First, clone the PX4-SITL_gazebo repository into any directory. Make sure that you clone recursively and that you do not clone into your catkin_ws:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/
+git clone --recursive https://github.com/PX4/PX4-Autopilot.git
+</pre></div>
+</div>
+<p>Build the autopilot and make the SITL simulation available to ROS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/PX4-Autopilot
+<span class="nv">DONT_RUN</span><span class="o">=</span><span class="m">1</span> make px4_sitl_default gazebo
+<span class="nb">source</span> ~/catkin_ws/devel/setup.bash
+<span class="nb">source</span> Tools/setup_gazebo.bash <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span> <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/build/px4_sitl_default
+<span class="nb">export</span> <span class="nv">ROS_PACKAGE_PATH</span><span class="o">=</span><span class="nv">$ROS_PACKAGE_PATH</span>:<span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nb">export</span> <span class="nv">ROS_PACKAGE_PATH</span><span class="o">=</span><span class="nv">$ROS_PACKAGE_PATH</span>:<span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/Tools/sitl_gazebo
+</pre></div>
+</div>
+<p>You will then see that <cite>px4</cite> is available to your roslaunch. Run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch px4 mavros_posix_sitl.launch
+</pre></div>
+</div>
+<p>A gazebo window showing a quadcopter will open and the simulation will start. You will see a bunch of messages appear in the console window. Make sure you keep the console window open.</p>
+<p>Inspect the rqt_graph:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rqt_graph
+</pre></div>
+</div>
+<p>You will see several new nodes:</p>
+<a class="reference internal image-reference" href="_images/rqt_graph_gazebo_drone.png"><img alt="_images/rqt_graph_gazebo_drone.png" class="align-center" src="_images/rqt_graph_gazebo_drone.png" style="width: 70%;" /></a>
+<p>This is the simulated PX4, which can be commanded with MAVROS.</p>
+</div>
+<div class="section" id="install-uavf">
+<h3>Install <code class="docutils literal notranslate"><span class="pre">uavf</span></code><a class="headerlink" href="#install-uavf" title="Permalink to this headline"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Because we are using this package from ROS, we need to ensure that we are NOT in any python virtual environment. You can verify this by typing <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python</span></code> into a terminal window. Make sure that the output is <code class="docutils literal notranslate"><span class="pre">/usr/bin/python</span></code>.</p>
+</div>
+<p>Set up ROS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /opt/ros/noetic/setup.bash
+</pre></div>
+</div>
+<p>Clone the git repository into <code class="docutils literal notranslate"><span class="pre">~/catkin_ws/src</span></code> and checkout the <code class="docutils literal notranslate"><span class="pre">ROS</span></code> branch. If you are developing ROS functionality, checkout <code class="docutils literal notranslate"><span class="pre">ROS-dev</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/catkin_ws/src
+git clone https://github.com/uci-uav-forge/uavf
+git checkout ROS
+</pre></div>
+</div>
+<p>Install the <code class="docutils literal notranslate"><span class="pre">auvsi_suas</span></code> interop client package and the <code class="docutils literal notranslate"><span class="pre">uavf</span></code> python package to your system python. There is a script that will do this.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/catkin_ws/src/uavf/
+bash ./install_deps.sh
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If, for some reason, you need to uninstall auvsi_suas from your system python, you can do so by running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">auvsi_suas</span></code>.</p>
+</div>
+<p>Run <code class="docutils literal notranslate"><span class="pre">catkin_make</span></code> and source your <code class="docutils literal notranslate"><span class="pre">devel/setup.bash</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/catkin_ws
+catkin_make
+<span class="nb">source</span> devel/setup.bash
+</pre></div>
+</div>
+<p>Make sure you remember to start a <code class="docutils literal notranslate"><span class="pre">roscore</span></code> instance in a separate terminal window.</p>
+</div>
+</div>
+<div class="section" id="running-a-mission-with-uavfros">
+<h2>Running a Mission with <code class="docutils literal notranslate"><span class="pre">uavfros</span></code><a class="headerlink" href="#running-a-mission-with-uavfros" title="Permalink to this headline"></a></h2>
+<p>Until we have viable hardware testing, this section deals with running a simulated mission with <code class="docutils literal notranslate"><span class="pre">uavfros</span></code>.</p>
+<div class="section" id="run-uavfros-interop">
+<h3>Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> Interop<a class="headerlink" href="#run-uavfros-interop" title="Permalink to this headline"></a></h3>
+<p>The interop client is a ros node written in Python. We start it with <code class="docutils literal notranslate"><span class="pre">rosrun</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rosrun</span> <span class="n">uavfros</span> <span class="n">interop</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-uavfros-planner">
+<h3>Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> Planner<a class="headerlink" href="#run-uavfros-planner" title="Permalink to this headline"></a></h3>
+<p>The navigation node is a ros service node that will generate a new path for the UAV to follow between waypoints.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rosrun uavfros planner
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-uavfros-gnc">
+<h3>Run <code class="docutils literal notranslate"><span class="pre">uavfros</span></code> GNC<a class="headerlink" href="#run-uavfros-gnc" title="Permalink to this headline"></a></h3>
+<p>The uavf GNC node is a ros node that will take a computed plan and manage the execution of the plan on the UAV.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rosrun uavfros gnc
+</pre></div>
+</div>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><a class="reference external" href="http://wiki.ros.org/ROS/Tutorials">http://wiki.ros.org/ROS/Tutorials</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generating-missions.html" class="btn btn-neutral float-left" title="Generating Missions for use with qGroundControl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

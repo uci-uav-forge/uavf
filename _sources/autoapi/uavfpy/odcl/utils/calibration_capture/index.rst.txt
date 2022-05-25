@@ -1,0 +1,39 @@
+:py:mod:`uavfpy.odcl.utils.calibration_capture`
+===============================================
+
+.. py:module:: uavfpy.odcl.utils.calibration_capture
+
+.. autoapi-nested-parse::
+
+   capture an image for calibration.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+.. py:data:: arg
+   
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

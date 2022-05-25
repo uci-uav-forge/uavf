@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Overview &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="UAV Forge Software Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-goals">Development Goals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose-of-this-software">Purpose of This Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-ethos">Development Ethos</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#software-architecture">Software Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-do-we-have-to-do-this">Why Do We Have to Do This?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#repository-structure">Repository Structure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Project Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="project-overview">
+<h1>Project Overview<a class="headerlink" href="#project-overview" title="Permalink to this headline"></a></h1>
+<p>This page is a summary of the project’s goals and how it is structured to meet those goals.</p>
+<div class="section" id="development-goals">
+<h2>Development Goals<a class="headerlink" href="#development-goals" title="Permalink to this headline"></a></h2>
+<div class="section" id="purpose-of-this-software">
+<h3>Purpose of This Software<a class="headerlink" href="#purpose-of-this-software" title="Permalink to this headline"></a></h3>
+<p>This package is a collection of tools for UCI’s competition team at the <a class="reference external" href="https://www.auvsi-suas.org/">AUVSI SUAS</a>. The AUVSI SUAS is a student competition in which an Autonomous Aerial System navigates through waypoints, avoids other vehicles and static obstacles, identifies and submits objects on the ground, and performs mapping tasks.</p>
+<p>This <a href="#id1"><span class="problematic" id="id2">:py:package:`uavfpy`</span></a> contains python modules for:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Autonomous Navigation (<a class="reference internal" href="autoapi/uavfpy/planner/index.html#module-uavfpy.planner" title="uavfpy.planner"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner</span></code></a>)</p></li>
+<li><p>Object Detection, Classification, and Localization (<a class="reference internal" href="autoapi/uavfpy/odcl/index.html#module-uavfpy.odcl" title="uavfpy.odcl"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.odcl</span></code></a>)</p></li>
+<li><p>Interoperability with the AUVSI SUAS</p></li>
+</ul>
+</div></blockquote>
+<p>This package is intended to be deployed both on the vehicle and on the ground station. To orchestrate the mission and manage communications between the vehicle and the ground, we use <a class="reference external" href="http://wiki.ros.org/noetic">ROS Noetic</a>.</p>
+<p>For more about how we manage simultaneous development of the package and the ROS components, see <a class="reference internal" href="#software-architecture"><span class="std std-ref">Software Architecture</span></a>.</p>
+</div>
+<div class="section" id="development-ethos">
+<h3>Development Ethos<a class="headerlink" href="#development-ethos" title="Permalink to this headline"></a></h3>
+<p>Because this software has some unique deployment characteristics, development workflow is a little bit unusual when compared to typical software. We have developed the architecture with the following goals:</p>
+<ul class="simple">
+<li><p><em>Make it easy for new developers to work on the software</em>. Because we have a lot of novice programmers making contributions, we want to make it as easy as possible to get started. The entire pipeline has weird dependencies (for training, there’s CUDA stuff; for inference, there’s TPU stuff; for system integration, there’s ROS… and so on). So we want to divide the software as much as possible so that small parts can be developed and tested independently, but the whole can still be integrated.</p></li>
+<li><p><em>Make it easy to test</em> It’s difficult to test a computer vision system on an aerial vehicle – can’t debug while flying in the air!</p></li>
+<li><p><em>Make it easy to deploy</em> When we are in the field, we are probably have the sun glaring on our computer screens. We’d like to avoid dealing with dependencies and complex build/integration steps in the field. So we aim for a 0-to-functional deployment in just a couple of minutes.</p></li>
+<li><p><em>Make it easy to manage development</em> We want to keep development and documentation of the software as simple as possible, so that new issues can be identified, assigned, and completed with minimal friction.</p></li>
+</ul>
+<p>With these goals in mind, we can talk about how the software is structured.</p>
+</div>
+</div>
+<div class="section" id="software-architecture">
+<span id="id3"></span><h2>Software Architecture<a class="headerlink" href="#software-architecture" title="Permalink to this headline"></a></h2>
+<div class="section" id="why-do-we-have-to-do-this">
+<h3>Why Do We Have to Do This?<a class="headerlink" href="#why-do-we-have-to-do-this" title="Permalink to this headline"></a></h3>
+<p>Running Python programs with ROS requires making them available to system python. There are several ways to do this:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Configure python files in the catkin workspace to be available to system python.</p></li>
+<li><p>Install python packages into the system python.</p></li>
+</ol>
+</div></blockquote>
+<p>For dependencies (such as <code class="docutils literal notranslate"><span class="pre">numpy</span></code> or <code class="docutils literal notranslate"><span class="pre">scipy</span></code>), developers usually opt for (2). For simple ROS programs or small scripts, (1) is fine. But developing complex software the (1) strategy introduces significant development overhead: modules and submodules need to be manually marked in catkin; when they are used by ROS, they are not imported from the workspace, but rather copied to system python and imported from there.</p>
+<p>To get around these issues with catkin, and for some other reasons, we are opting for (2): we release the python software as a standalone package, manage its deployment with <code class="docutils literal notranslate"><span class="pre">pip</span></code> instead of ROS, and call its APIs from within ROS program, as we would any other package, like <code class="docutils literal notranslate"><span class="pre">numpy</span></code> or <code class="docutils literal notranslate"><span class="pre">scipy</span></code>.</p>
+</div>
+<div class="section" id="repository-structure">
+<h3>Repository Structure<a class="headerlink" href="#repository-structure" title="Permalink to this headline"></a></h3>
+<p>Therefore, there are two branches in the repository:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">main</span></code> – contains the <code class="docutils literal notranslate"><span class="pre">uavf</span></code> python package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROS</span></code> – contains the <code class="docutils literal notranslate"><span class="pre">rosuavf</span></code> ROS package</p></li>
+</ul>
+</div></blockquote>
+<p>The development of these two branches are kept <em>entirely separate</em>.</p>
+<p>To install the package to system python (e.g., on board the UAV or on the Ground Station), we run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/uci-uav-forge/uavf.git
+</pre></div>
+</div>
+<p>outside of a virtual environment. This will install the <a href="#id4"><span class="problematic" id="id5">:py:package:`uavfpy`</span></a> package into the system python. Then, from <code class="docutils literal notranslate"><span class="pre">catkin_ws/src</span></code>, we run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/uci-uav-forge/uavf.git
+
+git checkout ROS
+
+catkin make
+</pre></div>
+</div>
+<p>to checkout the ROS package and build it. Inside of the ROS software, we can import <a href="#id6"><span class="problematic" id="id7">:py:package:`uavfpy`</span></a> and use its APIs.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="UAV Forge Software Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

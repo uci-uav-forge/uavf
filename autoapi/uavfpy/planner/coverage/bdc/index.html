@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uavfpy.planner.coverage.bdc &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.coverage.bdc</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/uavfpy/planner/coverage/bdc/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-uavfpy.planner.coverage.bdc">
+<span id="uavfpy-planner-coverage-bdc"></span><h1><a class="reference internal" href="#module-uavfpy.planner.coverage.bdc" title="uavfpy.planner.coverage.bdc"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.coverage.bdc</span></code></a><a class="headerlink" href="#module-uavfpy.planner.coverage.bdc" title="Permalink to this headline"></a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.Event" title="uavfpy.planner.coverage.bdc.Event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Event</span></code></a></p></td>
+<td><p>Generic enumeration.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.rad2degree" title="uavfpy.planner.coverage.bdc.rad2degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rad2degree</span></code></a>(rad)</p></td>
+<td><p>Convert angle from radians to degrees</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.degree2rad" title="uavfpy.planner.coverage.bdc.degree2rad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">degree2rad</span></code></a>(deg)</p></td>
+<td><p>Convert angle from degrees to radians</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.discretize_entire" title="uavfpy.planner.coverage.bdc.discretize_entire"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretize_entire</span></code></a>(J: networkx.DiGraph, R: networkx.Graph, gridsz: float)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.add_discretized_cells" title="uavfpy.planner.coverage.bdc.add_discretized_cells"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_discretized_cells</span></code></a>(J: networkx.DiGraph, R: networkx.Graph, theta, gridsz) → None</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.discretize_cell" title="uavfpy.planner.coverage.bdc.discretize_cell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretize_cell</span></code></a>(J: networkx.DiGraph, c, theta, gridsz, diags=True)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.iscw" title="uavfpy.planner.coverage.bdc.iscw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iscw</span></code></a>(points: numpy.ndarray) → bool</p></td>
+<td><p>Determine orientation of a set of points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.line_sweep" title="uavfpy.planner.coverage.bdc.line_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line_sweep</span></code></a>(G: networkx.DiGraph, theta: float = 0, posattr: str = 'points') → tuple</p></td>
+<td><p>Perform a boustrophedon line sweep over a world graph G.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.rg_centroid" title="uavfpy.planner.coverage.bdc.rg_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rg_centroid</span></code></a>(H: networkx.DiGraph, cell: set) → numpy.ndarray</p></td>
+<td><p>Get centroid of a cell <cite>cell</cite> made up of nodes in <cite>H</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.build_reebgraph" title="uavfpy.planner.coverage.bdc.build_reebgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_reebgraph</span></code></a>(H: networkx.DiGraph, cells: list) → networkx.Graph</p></td>
+<td><p>Build the reebgraph on <cite>H</cite> using the cell information contained in 'cells'</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.create_skelgraph" title="uavfpy.planner.coverage.bdc.create_skelgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_skelgraph</span></code></a>(R: networkx.Graph, H: networkx.DiGraph) → networkx.Graph</p></td>
+<td><p>Create a &quot;skelgraph&quot; from a bdc world <cite>H</cite> and its reeb graph, <cite>R</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.get_closest_on_skel" title="uavfpy.planner.coverage.bdc.get_closest_on_skel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_closest_on_skel</span></code></a>(R: networkx.graph, rnode: int, midp: numpy.array) → numpy.array</p></td>
+<td><p>Get the closest point of a skel graph stored in the <cite>rnode</cite> of <cite>R</cite> to the midpoint <cite>midp</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.fix_polyskel" title="uavfpy.planner.coverage.bdc.fix_polyskel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fix_polyskel</span></code></a>(skel: list)</p></td>
+<td><p>this is a helper function for casting the results of <cite>polyskel</cite> to</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.traverse_polyskel" title="uavfpy.planner.coverage.bdc.traverse_polyskel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">traverse_polyskel</span></code></a>(R: networkx.Graph, rn: int, skel: list) → networkx.Graph</p></td>
+<td><p>This is a helper function for casting the list returned by <cite>polyskel</cite> to</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.get_points_array" title="uavfpy.planner.coverage.bdc.get_points_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_points_array</span></code></a>(H: networkx.Graph, nlist: list = None, posattr: str = 'points') → numpy.ndarray</p></td>
+<td><p>Get an array of points from <cite>H</cite> which stores points in <cite>posattr</cite> from indices in <cite>nlist</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.get_midpoint_shared" title="uavfpy.planner.coverage.bdc.get_midpoint_shared"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_midpoint_shared</span></code></a>(H: networkx.DiGraph, R: networkx.Graph, e1: int, e2: int) → numpy.ndarray</p></td>
+<td><p>Get the midpoint of the line which joins two cells, e1 and e2.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.dotself" title="uavfpy.planner.coverage.bdc.dotself"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dotself</span></code></a>(x: numpy.ndarray) → float</p></td>
+<td><p>dot a vector x with itself to produce a scalar</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.remap_nodes_unique" title="uavfpy.planner.coverage.bdc.remap_nodes_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_nodes_unique</span></code></a>(new_node: int, T: networkx.Graph) → int</p></td>
+<td><p>Alters T in place, replacing its non-unique nodes by iterating on <cite>new_node</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.make_skelgraph" title="uavfpy.planner.coverage.bdc.make_skelgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_skelgraph</span></code></a>(H: networkx.DiGraph, R: networkx.Graph)</p></td>
+<td><p>Make the &quot;straight skeleton graph&quot; over the world <cite>H</cite> with</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.cul_de_sac_check" title="uavfpy.planner.coverage.bdc.cul_de_sac_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cul_de_sac_check</span></code></a>(S: networkx.Graph, n)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.rcross" title="uavfpy.planner.coverage.bdc.rcross"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rcross</span></code></a>(H: networkx.DiGraph, u: int, v: int, w: int) → float</p></td>
+<td><p>compute the vector cross product of edges <cite>u</cite>,`v` and <cite>v</cite>,`w` on <cite>H</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.append_cell" title="uavfpy.planner.coverage.bdc.append_cell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append_cell</span></code></a>(H: networkx.DiGraph, v: int, cells: dict) → list</p></td>
+<td><p>[summary]</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.splitmerge_points" title="uavfpy.planner.coverage.bdc.splitmerge_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splitmerge_points</span></code></a>(H: networkx.DiGraph, v: int) → None</p></td>
+<td><p>Alters H in place to produce split/merge points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.get_intersects" title="uavfpy.planner.coverage.bdc.get_intersects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_intersects</span></code></a>(H: networkx.DiGraph, v: int) → tuple</p></td>
+<td><p>Check for intersects a vertical line passing through v on the graph H.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.intersect_vertical_line" title="uavfpy.planner.coverage.bdc.intersect_vertical_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersect_vertical_line</span></code></a>(p1: numpy.ndarray, p2: numpy.ndarray, pv: numpy.ndarray) → numpy.ndarray</p></td>
+<td><p>Get line intersect on the line formed by [p1, p2] for the point at <cite>pv</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.check_edge" title="uavfpy.planner.coverage.bdc.check_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_edge</span></code></a>(H: networkx.DiGraph, v: int, edge: tuple) → bool</p></td>
+<td><p>Check whether an edge [edge=(e1, e2)] on H intersects with a straight vertical line</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.check_lu" title="uavfpy.planner.coverage.bdc.check_lu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_lu</span></code></a>(H: networkx.DiGraph, v: int) → int</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.lower_upper" title="uavfpy.planner.coverage.bdc.lower_upper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lower_upper</span></code></a>(H: networkx.DiGraph, v: int)</p></td>
+<td><p>Check the neighbors of <cite>v</cite> to determine which is the lower neighbor</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.qcross" title="uavfpy.planner.coverage.bdc.qcross"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qcross</span></code></a>(H, vA, v, vB)</p></td>
+<td><p>Compute cross product on ordered nodes <cite>vA</cite>, <cite>v</cite>, <cite>vB</cite> of graph <cite>H</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.rotate_graph" title="uavfpy.planner.coverage.bdc.rotate_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_graph</span></code></a>(G: networkx.DiGraph, theta: float, posattr: str = 'points') → networkx.DiGraph</p></td>
+<td><p>Rotate a graph <cite>G</cite>. This makes a copy of <cite>G</cite> and returns it, leaving <cite>G</cite> untouched.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.coverage.bdc.make_rot_matrix" title="uavfpy.planner.coverage.bdc.make_rot_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_rot_matrix</span></code></a>(theta: float) → numpy.ndarray</p></td>
+<td><p>Create a rotation matrix</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></a></p>
+<p>Generic enumeration.</p>
+<p>Derive from this class to define new enumerations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.CLOSE">
+<span class="sig-name descname"><span class="pre">CLOSE</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.CLOSE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.OPEN">
+<span class="sig-name descname"><span class="pre">OPEN</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.OPEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.SPLIT">
+<span class="sig-name descname"><span class="pre">SPLIT</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.SPLIT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.MERGE">
+<span class="sig-name descname"><span class="pre">MERGE</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.MERGE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.INFLECTION">
+<span class="sig-name descname"><span class="pre">INFLECTION</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.INFLECTION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.Event.INTERSECT">
+<span class="sig-name descname"><span class="pre">INTERSECT</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#uavfpy.planner.coverage.bdc.Event.INTERSECT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.rad2degree">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">rad2degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.rad2degree" title="Permalink to this definition"></a></dt>
+<dd><p>Convert angle from radians to degrees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>rad</strong><span class="classifier">int or float</span></dt><dd><p>Angle in radians</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>angle in degrees</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.degree2rad">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">degree2rad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.degree2rad" title="Permalink to this definition"></a></dt>
+<dd><p>Convert angle from degrees to radians</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deg</strong><span class="classifier">int or float</span></dt><dd><p>angle in degrees</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>angle in radians</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.discretize_entire">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">discretize_entire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.discretize_entire" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.add_discretized_cells">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">add_discretized_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsz</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.add_discretized_cells" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.discretize_cell">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">discretize_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.discretize_cell" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.iscw">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">iscw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.iscw" title="Permalink to this definition"></a></dt>
+<dd><p>Determine orientation of a set of points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>points</strong><span class="classifier">np.ndarray</span></dt><dd><p>An ordered set of points</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>True if clockwise, False if not clockwise</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.line_sweep">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">line_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">posattr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'points'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><span class="pre">tuple</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.line_sweep" title="Permalink to this definition"></a></dt>
+<dd><p>Perform a boustrophedon line sweep over a world graph G.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>G</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>World graph. Contains an outer boundary, which is made up of a clockwise ordering of edges
+with weight=1, and optionally contains holes, which are counterclockwise orderings of edges
+with weight=2. Worlds must be non-degenerate planar graphs!</p>
+</dd>
+<dt><strong>theta</strong><span class="classifier">float, optional</span></dt><dd><p>Angle of the line sweep from x-axis, by default 0</p>
+</dd>
+<dt><strong>posattr</strong><span class="classifier">str, optional</span></dt><dd><p>attribute of points in <cite>G</cite>, by default ‘points’</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>H, which is a graph of the new bdc-composed world rotated to <cite>theta</cite>
+J, which is the graph of the new bdc-compoased world rotated back to its original orientation
+R, which is the reeb graph containing connectvitity information between each cell
+S, which is the skel graph containing connected straight skeletons of each cell in <cite>R</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.rg_centroid">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">rg_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><span class="pre">set</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.rg_centroid" title="Permalink to this definition"></a></dt>
+<dd><p>Get centroid of a cell <cite>cell</cite> made up of nodes in <cite>H</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>The world graph</p>
+</dd>
+<dt><strong>cell</strong><span class="classifier">set</span></dt><dd><p>An ordered or unordered list of nodes in <cite>H</cite></p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>the centroid as an xy point.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.build_reebgraph">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">build_reebgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.build_reebgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Build the reebgraph on <cite>H</cite> using the cell information contained in ‘cells’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>The bdc composed world</p>
+</dd>
+<dt><strong>cells</strong><span class="classifier">list</span></dt><dd><p>each entry in cells is a list of nodes in <cite>H</cite> which form a closed cell in the bdc composition</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>nx.Graph</dt><dd><p>Graph, <cite>R</cite> which represents connectivity of each cell in <cite>H</cite></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.create_skelgraph">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">create_skelgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.create_skelgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Create a “skelgraph” from a bdc world <cite>H</cite> and its reeb graph, <cite>R</cite>.
+A skelgraph is a graph of the straight skeletons of each cell of a world <cite>H</cite>,
+joined by the midpoints of each cell wall on <cite>H</cite>.</p>
+<p>Traversing the skelgraph of <cite>H</cite> means visiting each cell the boustrophedon
+decomposition of <cite>H</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>R</strong><span class="classifier">nx.Graph</span></dt><dd><p>The reeb graph of the world</p>
+</dd>
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>The BDC of the world</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>nx.Graph</dt><dd><p>An undirected graph joining the straight skeleton of each cell.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.get_closest_on_skel">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">get_closest_on_skel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">networkx.graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">midp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.get_closest_on_skel" title="Permalink to this definition"></a></dt>
+<dd><p>Get the closest point of a skel graph stored in the <cite>rnode</cite> of <cite>R</cite> to the midpoint <cite>midp</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>R</strong><span class="classifier">nx.graph</span></dt><dd><p>Reeb graph containing straight skeleton in key ‘skel_graph’</p>
+</dd>
+<dt><strong>rnode</strong><span class="classifier">int</span></dt><dd><p>node on that reeb graph</p>
+</dd>
+<dt><strong>midp</strong><span class="classifier">np.array</span></dt><dd><p>the point to test</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>a node on skel_graph which is closest to <cite>midp</cite></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.fix_polyskel">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">fix_polyskel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.fix_polyskel" title="Permalink to this definition"></a></dt>
+<dd><p>this is a helper function for casting the results of <cite>polyskel</cite> to
+numpy arrays, rather than Euler3 points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>skel</strong><span class="classifier">list</span></dt><dd><p>results of <cite>polyskel</cite> function call</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>each element of this list contains origin, height, and leafs.
+see polyskel documentation for more</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.traverse_polyskel">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">traverse_polyskel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">skel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.traverse_polyskel" title="Permalink to this definition"></a></dt>
+<dd><p>This is a helper function for casting the list returned by <cite>polyskel</cite> to
+a networkx Graph.</p>
+<p>This function also adds the list from <cite>skel</cite> to a reebgraph stored in <cite>R</cite> at node <cite>rn</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>R</strong><span class="classifier">nx.Graph</span></dt><dd><p>Reeb Graph</p>
+</dd>
+<dt><strong>rn</strong><span class="classifier">int</span></dt><dd><p>node on the reeb graph</p>
+</dd>
+<dt><strong>skel</strong><span class="classifier">list</span></dt><dd><p>list returned by polyskel</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>nx.Graph</dt><dd><p>the straight skel graph</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.get_points_array">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">get_points_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">posattr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'points'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.get_points_array" title="Permalink to this definition"></a></dt>
+<dd><p>Get an array of points from <cite>H</cite> which stores points in <cite>posattr</cite> from indices in <cite>nlist</cite></p>
+<p>Returns all points in H by default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.Graph</span></dt><dd><p>world graph</p>
+</dd>
+<dt><strong>nlist</strong><span class="classifier">list, optional</span></dt><dd><p>subset of nodes on H to get points from, by default None</p>
+</dd>
+<dt><strong>posattr</strong><span class="classifier">str, optional</span></dt><dd><p>attribute that the points are stored under, by default ‘points’</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>Mx2 array for M points</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.get_midpoint_shared">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">get_midpoint_shared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">e1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">e2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.get_midpoint_shared" title="Permalink to this definition"></a></dt>
+<dd><p>Get the midpoint of the line which joins two cells, e1 and e2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>the world graph</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">nx.Graph</span></dt><dd><p>the reeb graph of the world <cite>H</cite></p>
+</dd>
+<dt><strong>e1</strong><span class="classifier">int</span></dt><dd><p>first shared edge. Node of <cite>R</cite></p>
+</dd>
+<dt><strong>e2</strong><span class="classifier">int</span></dt><dd><p>second shared edge. Node of <cite>R</cite></p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>the midpoint</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.dotself">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">dotself</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.dotself" title="Permalink to this definition"></a></dt>
+<dd><p>dot a vector x with itself to produce a scalar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">np.ndarray</span></dt><dd><p>the vector</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>scalar value <a href="#id1"><span class="problematic" id="id2">|</span></a>x|^2</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.remap_nodes_unique">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">remap_nodes_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.remap_nodes_unique" title="Permalink to this definition"></a></dt>
+<dd><p>Alters T in place, replacing its non-unique nodes by iterating on <cite>new_node</cite>.
+we can run this function on several graphs, thus guaranteeing that their nodes
+do not collide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>new_node</strong><span class="classifier">int</span></dt><dd><p>starting value for new nodes</p>
+</dd>
+<dt><strong>T</strong><span class="classifier">nx.Graph</span></dt><dd><p>A graph with integer nodes</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>ending value for new nodes</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.make_skelgraph">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">make_skelgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.make_skelgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Make the “straight skeleton graph” over the world <cite>H</cite> with
+its reeb-graph <cite>R</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>The world. Must already be BDC decomposed.</p>
+</dd>
+<dt><strong>R</strong><span class="classifier">nx.Graph</span></dt><dd><p>Reeb graph of the world.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>nx.Graph</dt><dd><p>the “skeleton” graph. This undirected graph is made up of the straight skeleton
+of each cell, connected by the midpoints of the dividing lines between cells.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.cul_de_sac_check">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">cul_de_sac_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.Graph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.cul_de_sac_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.rcross">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">rcross</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.rcross" title="Permalink to this definition"></a></dt>
+<dd><p>compute the vector cross product of edges <cite>u</cite>,`v` and <cite>v</cite>,`w` on <cite>H</cite>.
+This one is more expensive than qcross but returns a numerical value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>Graph</p>
+</dd>
+<dt><strong>u</strong><span class="classifier">int</span></dt><dd><p>idx of node</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>idx of node</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">int</span></dt><dd><p>idx of node</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>cross product</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.append_cell">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">append_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.append_cell" title="Permalink to this definition"></a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>graph on which to append cells</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>vertex from which to start</p>
+</dd>
+<dt><strong>cells</strong><span class="classifier">list</span></dt><dd><p>list of cells.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>new list of cells</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.splitmerge_points">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">splitmerge_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.splitmerge_points" title="Permalink to this definition"></a></dt>
+<dd><p>Alters H in place to produce split/merge points
+from an event on node <cite>v</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>Shape graph</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>index of the event vertex</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.get_intersects">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">get_intersects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><span class="pre">tuple</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.get_intersects" title="Permalink to this definition"></a></dt>
+<dd><p>Check for intersects a vertical line passing through v on the graph H.
+Think of it like this: We basically draw a line upwards from v until we
+reach a line on H; then we register a collision, which contains the origin
+vertex of the collision in ‘vx’, the point of the collision in ‘pt’, the edge
+with which the line collided in ‘edge’, and the weight of that edge in ‘weight’.</p>
+<p>This function returns a maximum of two collisions, one above and one below,
+which correspond to the closest edge with which the line starting at <cite>v</cite>
+collided. If there is no such edge, it returns <cite>None</cite>, otherwise returns a
+dict with information about the collision specified above.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>graph</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>event idx</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>collisions above or/and below v on edges of H</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.intersect_vertical_line">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">intersect_vertical_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.intersect_vertical_line" title="Permalink to this definition"></a></dt>
+<dd><p>Get line intersect on the line formed by [p1, p2] for the point at <cite>pv</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p1</strong><span class="classifier">np.ndarray</span></dt><dd><p>end point of line</p>
+</dd>
+<dt><strong>p2</strong><span class="classifier">np.ndarray</span></dt><dd><p>end point of line</p>
+</dd>
+<dt><strong>pv</strong><span class="classifier">np.ndarray</span></dt><dd><p>point of intersect</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>line from <cite>pv</cite> to the point of intersection</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.check_edge">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">check_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><span class="pre">tuple</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.check_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether an edge [edge=(e1, e2)] on H intersects with a straight vertical line
+at <cite>v</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>graph</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>vertex idx</p>
+</dd>
+<dt><strong>edge</strong><span class="classifier">tuple of (int, int)</span></dt><dd><p>edge idxs</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>bool</dt><dd><p>Whether the x coordinates of the point <cite>v</cite> are beteen the edge x-coords</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.check_lu">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">check_lu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.check_lu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.lower_upper">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">lower_upper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.lower_upper" title="Permalink to this definition"></a></dt>
+<dd><p>Check the neighbors of <cite>v</cite> to determine which is the lower neighbor
+and which is the upper neighbor. If the predecessor is the upper neighbor,
+also returns True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>must contain ‘weight’ as a key.</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>The vertex to check</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple of (int, int, bool)</dt><dd><p>lower vertex, upper vertex, above</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.qcross">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">qcross</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vB</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.qcross" title="Permalink to this definition"></a></dt>
+<dd><p>Compute cross product on ordered nodes <cite>vA</cite>, <cite>v</cite>, <cite>vB</cite> of graph <cite>H</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>The graph for which <cite>vA</cite>, <cite>v</cite>, <cite>vB</cite> are nodes.</p>
+</dd>
+<dt><strong>vA</strong><span class="classifier">int</span></dt><dd><p>Node of H.</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">int</span></dt><dd><p>Node of H</p>
+</dd>
+<dt><strong>vB</strong><span class="classifier">int</span></dt><dd><p>Node of H</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.rotate_graph">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">rotate_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">posattr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'points'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/digraph.html#networkx.DiGraph" title="(in NetworkX v2.8.2)"><span class="pre">networkx.DiGraph</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.rotate_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Rotate a graph <cite>G</cite>. This makes a copy of <cite>G</cite> and returns it, leaving <cite>G</cite> untouched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>G</strong><span class="classifier">nx.DiGraph</span></dt><dd><p>input Graph</p>
+</dd>
+<dt><strong>theta</strong><span class="classifier">float</span></dt><dd><p>rotation angle, radians</p>
+</dd>
+<dt><strong>posattr</strong><span class="classifier">str, optional</span></dt><dd><p>which key the points are stored under, by default ‘points’</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>nx.DiGraph</dt><dd><p>the new rotated graph</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.coverage.bdc.make_rot_matrix">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.coverage.bdc.</span></span><span class="sig-name descname"><span class="pre">make_rot_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.coverage.bdc.make_rot_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Create a rotation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>theta</strong><span class="classifier">float</span></dt><dd><p>Angle</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>2x2 Rotation Matrix created from Angle.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

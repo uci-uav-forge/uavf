@@ -1,0 +1,329 @@
+:py:mod:`uavfpy.planner.coverage.polygon`
+=========================================
+
+.. py:module:: uavfpy.planner.coverage.polygon
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.polygon.RandomPolygon
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.polygon.beta_clusters
+   uavfpy.planner.coverage.polygon.remove_close_points
+   uavfpy.planner.coverage.polygon.stupid_spiky_polygon
+
+
+
+.. py:function:: beta_clusters(clusters: int = 3, ppc: int = 20, alpha: float = 4.0, beta: float = 4.0) -> numpy.ndarray
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: remove_close_points(points: numpy.ndarray, eps: float = 0.07) -> numpy.ndarray
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: RandomPolygon(n, points=None, holes=2)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: removable_interiors(self, dt: scipy.spatial.Delaunay) -> tuple
+
+      
+      find indices of interior simplices that are safe to remove in dt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: removable_exteriors(self, dt: scipy.spatial.Delaunay, points: numpy.ndarray, ax: matplotlib.pyplot.Axes = None) -> tuple
+
+      
+      find indices to safe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: del_tri(self, dt: scipy.spatial.Delaunay, rm: int) -> scipy.spatial.Delaunay
+
+      
+      Alters dt in place to remove tri at `rm`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: _dotself(self, x: numpy.ndarray) -> numpy.ndarray
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: ar(self, M: numpy.ndarray) -> numpy.float64
+
+      
+      aspect ratio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: polygon(self, points: numpy.ndarray, holes: int = 0, removals: int = 30) -> nx.DiGraph()
+
+      
+      Create a non-convex polygon from points. This algorithm works by first creating a convex
+      Delaunay triangulation over the points, and then removing triangles to form a non-convex
+      polygon. Thus, the general shape of the initial point distribution will infrom the subsequent
+      non-convex polygon.
+
+      This algorithm is slow for large numbers of points.
+
+      :Parameters:
+
+          **points** : np.ndarray, holes, optional
+              The number of interior holes in the polygon, default 0
+
+      :Returns:
+
+          nx.Digraph
+              Graph containing the polygon.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: addcw(self, H: networkx.DiGraph, e1: int, e2: int) -> float
+
+      
+      determine which way the edge is pointing
+
+      e.g.
+
+      Q2  │  Q1
+      ─────┼─────
+      Q3  │  Q4
+
+      A "positive" cw value goes from Q2 to Q4. A "negative"
+      cw value means the edge goes from Q4 to Q2. It's relative
+      so we only look at directions not absolute positions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: plot(self, G: networkx.DiGraph, ax: matplotlib.pyplot.Axes, posattr: str = 'points', arrows: bool = False, nodecolor: str = 'k', ecolor: str = None, ecolorattr: str = 'weight', ecmap='tab10', node_text: bool = True, style: str = '-', m: str = '.', draw_nodes=True) -> matplotlib.pyplot.Axes
+
+      
+      Draw a DiGraph `G` with points stored in `posattr` onto `ax`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:function:: stupid_spiky_polygon(R_inner: int, R_outer: int, n=10)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

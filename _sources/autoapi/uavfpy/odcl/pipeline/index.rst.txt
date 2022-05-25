@@ -1,0 +1,217 @@
+:py:mod:`uavfpy.odcl.pipeline`
+==============================
+
+.. py:module:: uavfpy.odcl.pipeline
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.pipeline.FoundTarget
+   uavfpy.odcl.pipeline.Pipeline
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.pipeline.MODEL_PATH
+
+
+.. py:class:: FoundTarget(**kwargs)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Pipeline(interpreter, tiler, color, geolocator, drawer=None)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: inference_over_tiles(self, raw, resize=False)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: parse_targets(self, raw, targets, interpreter)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: process_color(self, cropped_img)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: _mask_compare(self, img, mask, sz=(400, 400))
+
+      
+      utility to compare the extracted letter mask to the image side-by-side
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: run(self, raw, gps, altitude, quat=None)
+
+      
+      Primary run method for the imaging pipeline
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:data:: MODEL_PATH
+   :annotation: = ./models/efficientdet_lite0_320_ptq_edgetpu.tflite
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

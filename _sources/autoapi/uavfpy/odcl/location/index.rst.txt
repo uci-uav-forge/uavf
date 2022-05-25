@@ -1,0 +1,221 @@
+:py:mod:`uavfpy.odcl.location`
+==============================
+
+.. py:module:: uavfpy.odcl.location
+
+.. autoapi-nested-parse::
+
+   GeoLocation Library
+   --------------------
+
+   Should include:
+       - trig calculations
+       - lidar or any form of depth estimation needec
+       - any additional calculations to estimate relative distance
+
+   Requires:
+       - pixel -> relative distance REQUIRES -> camera to be calibrated in vsutils.py
+       - rotating x,y translations to absolute REQUIRES -> heading from UAV
+       - getting depth REQUIRES -> altitude from UAV
+       - doing any rotation w/ altitude REQUIRES -> rotation angles of gimbal
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.location.Geolocation
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.location.EARTH_RADIUS
+
+
+.. py:data:: EARTH_RADIUS
+   :annotation: = 6378137
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Geolocation
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: quaternionToRotation(self, quat=None)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_uavPerspective(self, x, y, altitude, quat=None)
+
+      
+      Inputs:
+          x, y, z = from UAV in meters.
+          altitude = from UAV in meters.
+          yaw, pitch, roll = from UAV
+          quat = (x,y,z,w)
+      Output:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_relDist(self, pixel_coord, img_shape, focal, depth)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: meters_to_gps(self, dx, dy)
+
+      
+      Input:
+          dx: distance in x (in meters)
+          dy: distance in y (in meters)
+      Output:
+          latitude: degrees
+          longitude: degrees
+
+      converts distances from meters to gps coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: compute(self, altitude, quat, gps_coord, pixel_coord)
+
+      
+      Inputs:
+          altitude and yaw: from Mavros data
+          gps_coord: (lat, lon)
+          pixel_coord: (x,y) of the pixel -- center of box relative to drawing on ground
+
+      Output:
+          New GPS coordinate in format (lat, lon) type tuple
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

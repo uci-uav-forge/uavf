@@ -1,0 +1,48 @@
+:py:mod:`uavfpy.planner`
+========================
+
+.. py:module:: uavfpy.planner
+
+.. autoapi-nested-parse::
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   coverage/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   mission/index.rst
+   plots/index.rst
+   surface/index.rst
+
+

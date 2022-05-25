@@ -1,0 +1,551 @@
+:py:mod:`uavfpy.odcl.inference`
+===============================
+
+.. py:module:: uavfpy.odcl.inference
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.inference.BBox
+   uavfpy.odcl.inference.Target
+   uavfpy.odcl.inference.TargetInterpreter
+   uavfpy.odcl.inference.Tiler
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.inference._EDGETPU_SHARED_LIB
+   uavfpy.odcl.inference.TENSOR_ORDERS
+
+
+.. py:data:: _EDGETPU_SHARED_LIB
+   
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:data:: TENSOR_ORDERS
+   
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: BBox(xmin, ymin, xmax, ymax)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: overlap(self, other)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Target(id, score, bbox)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: TargetInterpreter(model_path, label_path, cpu, thresh, order_key='mobilenet')
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_labels(self, label_path)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: make_interpreter(self, model_path_or_content, device=None, delegate=None)
+
+      
+      Make new TPU interpreter instance given a model path
+
+
+      :Parameters:
+
+          **model_path_or_content** : str
+              filepath to model. recommended to use absolute path in ROS scripts
+
+          **device** : str, optional
+              None -> use any TPU
+              ":<n>" -> use nth TPU
+              "usb" -> use USB TPU
+              "usb:<n> -> use nth USB TPU
+              "pci" -> use PCI TPU
+              "pci:<n> -> use nth PCI TPU
+
+          **delegate** : loaded TPU Delegate object, optional
+              supercedes "device" flag
+
+      :Returns:
+
+          tflite.Interpreter
+              the interpreter
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: load_edgetpu_delegate(self, options=None)
+
+      
+      load edgetpu delegate from _EDGETPU_SHARED_LIB with options
+
+
+      :Parameters:
+
+          **options** : dict, optional
+              TPU options, by default None
+
+      :Returns:
+
+          loaded Delegate object
+              the TPU
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: input_tensor(self)
+
+      
+      get input tensor
+
+
+
+      :Returns:
+
+          tensor
+              the input tensor
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_input_tensor(self, image, resize=False)
+
+      
+      set the input tensor from (cv2) image array of size (h, w c)
+
+
+      :Parameters:
+
+          **image** : np.array
+              h, w, c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: output_tensor(self, i)
+
+      
+      Return output tensor regardless of quantization parameters
+
+
+      :Parameters:
+
+          **i** : int
+              which output tensor to grab
+
+      :Returns:
+
+          tensor
+              output tensor
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: input_image_size(self)
+
+      
+      Get interpreter input size
+
+
+
+      :Returns:
+
+          tuple of int
+              (height, width, colors)
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: interpret(self, img, resize=True)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_output(self, score_threshold)
+
+      
+      Return list of detected objects
+
+
+      :Parameters:
+
+          **score_threshold** : float
+              number from 0-1 indicating thresh percentage
+
+      :Returns:
+
+          list of Target
+              list of namedtuples containing target info
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Tiler(size: int, offset: int)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_tiles(self, raw_shape)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: tile2board(self, tbbox: BBox, wl, hl)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: merge_overlapping(self, targets: list)
+
+      
+      probably can optimize this
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: parse_localTarget(self, target, wl: int, hl: int)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

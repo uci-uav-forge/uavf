@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uavfpy.planner.plots &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.plots</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/uavfpy/planner/plots/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-uavfpy.planner.plots">
+<span id="uavfpy-planner-plots"></span><h1><a class="reference internal" href="#module-uavfpy.planner.plots" title="uavfpy.planner.plots"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.plots</span></code></a><a class="headerlink" href="#module-uavfpy.planner.plots" title="Permalink to this headline"></a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.plots.plot_surface_3d" title="uavfpy.planner.plots.plot_surface_3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_surface_3d</span></code></a>(ax: mpl_toolkits.mplot3d.axes3d.Axes3D, X, Y, Hground, Hsheet, zsquash=0.5, sheetcmap='gist_earth', groundcmap='bone', sheet_alpha=0.4, wireframe=False, wirecount=20)</p></td>
+<td><p>Put surfaces from <cite>Hground</cite> (the &quot;ground&quot;) and <cite>Hsheet</cite> (the &quot;sheet&quot;) onto an <cite>ax.</cite> <cite>ax</cite> must</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.plots.plot_surface_2d" title="uavfpy.planner.plots.plot_surface_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_surface_2d</span></code></a>(ax, X, Y, Hsheet, cmap='coolwarm', levels=20)</p></td>
+<td><p>Plot contours of a 3-D surface in 2-d.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.plots.plot_surface_3d">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.plots.</span></span><span class="sig-name descname"><span class="pre">plot_surface_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html#mpl_toolkits.mplot3d.axes3d.Axes3D" title="(in Matplotlib v3.5.2)"><span class="pre">mpl_toolkits.mplot3d.axes3d.Axes3D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hground</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hsheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zsquash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetcmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gist_earth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groundcmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bone'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wireframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wirecount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.plots.plot_surface_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Put surfaces from <cite>Hground</cite> (the “ground”) and <cite>Hsheet</cite> (the “sheet”) onto an <cite>ax.</cite> <cite>ax</cite> must
+be a 3d axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">Axes3D</span></dt><dd><p>the axis on which to place the surfaces.</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN x coordinate information of the grid</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN y coordinate information of the grid</p>
+</dd>
+<dt><strong>Hground</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN “ground” height.</p>
+</dd>
+<dt><strong>Hsheet</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN “sheet” height</p>
+</dd>
+<dt><strong>zsquash</strong><span class="classifier">float, optional</span></dt><dd><p>by default, the 3d projection will render a cube. But this can make obstacles
+appear very tall. So we can squish the grid a bit to make it more like a 3d map and
+less like a cube., by default 0.5</p>
+</dd>
+<dt><strong>sheetcmap</strong><span class="classifier">str, optional</span></dt><dd><p>colormap of the sheet, by default “ocean”</p>
+</dd>
+<dt><strong>groundcmap</strong><span class="classifier">str, optional</span></dt><dd><p>colormap of the ground, by default “copper”</p>
+</dd>
+<dt><strong>sheet_alpha</strong><span class="classifier">float, optional</span></dt><dd><p>alpha of the sheet. 1.0 is completely opaque, 0.0 is not visible, by default 0.4</p>
+</dd>
+<dt><strong>wireframe</strong><span class="classifier">bool, optional</span></dt><dd><p>whether to draw wireframe or surface</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Axes3D</dt><dd><p>ax containing the new plots the <cite>ax</cite> object passed in is altered in place, so
+you don’t necessarily need to do anything with this (just calling the function on <cite>ax</cite> is
+enough to alter the object)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.plots.plot_surface_2d">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.plots.</span></span><span class="sig-name descname"><span class="pre">plot_surface_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hsheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coolwarm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.plots.plot_surface_2d" title="Permalink to this definition"></a></dt>
+<dd><p>Plot contours of a 3-D surface in 2-d.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ax</strong><span class="classifier">plt.Axes</span></dt><dd><p>The axis on which to draw the plot. Must be 2D.</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN array of grid X-points.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN array of grid Y-points.</p>
+</dd>
+<dt><strong>Hsheet</strong><span class="classifier">np.ndarray</span></dt><dd><p>MxN array of grid Z-points.</p>
+</dd>
+<dt><strong>cmap</strong><span class="classifier">str, optional</span></dt><dd><p>name of matplotlib colormap.
+See: <a class="reference external" href="https://matplotlib.org/stable/tutorials/colors/colormaps.html">https://matplotlib.org/stable/tutorials/colors/colormaps.html</a>,
+by default “coolwarm”</p>
+</dd>
+<dt><strong>levels</strong><span class="classifier">int, optional</span></dt><dd><p>Number of contour levels, by default 20</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>plt.Axes</dt><dd><p>The plot axes object. Note: plot axes are altered in place by
+this function, so you don’t need to assign it.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

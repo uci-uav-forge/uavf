@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating Missions for use with qGroundControl" href="generating-missions.html" />
+    <link rel="prev" title="Project Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#object-detection-classification-and-localization-odcl">Object Detection, Classification, and Localization (ODCL)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#downloading-input-data-and-models">Downloading Input Data and Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
+<p>This page is a guide on how get started with the <a href="#id1"><span class="problematic" id="id2">:py:package:`uavfpy`</span></a> API.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h2>
+<p>We have tested the API under linux and MacOS. Development of <a href="#id3"><span class="problematic" id="id4">:py:package:`uavfpy`</span></a> is possible under Windows also.</p>
+<p>Our release targets Python 3.8.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="autoapi/uavfpy/odcl/index.html#module-uavfpy.odcl" title="uavfpy.odcl"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.odcl</span></code></a> uses the tflite runtime for inference. You can perform inference on the CPU, but this can be very slow. The vehicle uses the <a class="reference external" href="https://www.coral.ai/docs/">Coral Edge TPU</a> for on-board acceleration of inferencing.</p>
+<p>The Coral Edge TPU is an ASIC developed by Google specifically designed for accelerating deep learning. If you do not have access to an Edge TPU, you can use the CPU for inference.</p>
+<p>To use the Coral Edge TPU, you need to first install the <a class="reference external" href="https://coral.ai/docs/accelerator/get-started/#1-install-the-edge-tpu-runtime">Edge TPU Runtime.</a> Then, you can continue these steps.</p>
+</div>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h3>
+<p>Install via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/uci-uav-forge/uavf.git
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="object-detection-classification-and-localization-odcl">
+<h2>Object Detection, Classification, and Localization (ODCL)<a class="headerlink" href="#object-detection-classification-and-localization-odcl" title="Permalink to this headline"></a></h2>
+<div class="section" id="downloading-input-data-and-models">
+<h3>Downloading Input Data and Models<a class="headerlink" href="#downloading-input-data-and-models" title="Permalink to this headline"></a></h3>
+<p>The tflite models and example data are not included in this repository, so you will need first to download them. You can download example data by running the <code class="docutils literal notranslate"><span class="pre">example_models.sh</span></code> script.</p>
+<p>From the root directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash ./example_models.sh
+</pre></div>
+</div>
+<p>This will make a directory called “examples” and download a couple of high-resolution example images and pre-trained TPU and CPU models into it.</p>
+<p>Once we have the example data, we are ready to create a pipeline and run inference.</p>
+<p>First, we import necessary modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import classes</span>
+<span class="kn">from</span> <span class="nn">uavfpy.odcl.inference</span> <span class="kn">import</span> <span class="n">TargetInterpreter</span><span class="p">,</span> <span class="n">Tiler</span>
+<span class="kn">from</span> <span class="nn">uavfpy.odcl.utils.drawer</span> <span class="kn">import</span> <span class="n">TargetDrawer</span>
+<span class="kn">from</span> <span class="nn">uavfpy.odcl.color</span> <span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">from</span> <span class="nn">uavfpy.odcl.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">cv2</span>
+</pre></div>
+</div>
+<p>Then, we set paths to the example data and the models we downloaded. We also want to display logs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set model directory</span>
+<span class="n">MODEL_PATH</span> <span class="o">=</span> <span class="s2">&quot;./example/efficientdet_lite0_320_ptq.tflite&quot;</span>
+<span class="n">LABEL_PATH</span> <span class="o">=</span> <span class="s2">&quot;./example/coco_labels.txt&quot;</span>
+<span class="n">IMG_PATH</span> <span class="o">=</span> <span class="s2">&quot;./example/plaza.jpg&quot;</span>
+
+<span class="c1"># set logger to print info</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(levelname)s</span><span class="s2">:</span><span class="si">%(processName)s</span><span class="s2">@</span><span class="si">%(module)s</span><span class="se">\t</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="autoapi/uavfpy/odcl/inference/index.html#uavfpy.odcl.inference.TargetInterpreter" title="uavfpy.odcl.inference.TargetInterpreter"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.inference.TargetInterpreter</span></code></a> class handles inputs and outputs to the neural network for object detection. We give it paths to the model and labels, tell it whether to run on CPU or TPU, and set the threshold for detection.</p>
+<p>Instantiating a <a class="reference internal" href="autoapi/uavfpy/odcl/inference/index.html#uavfpy.odcl.inference.TargetInterpreter" title="uavfpy.odcl.inference.TargetInterpreter"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.inference.TargetInterpreter</span></code></a> object takes a while, so this object should be created outside of a loop if latency is at issue.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the interpreter</span>
+<span class="n">interpreter</span> <span class="o">=</span> <span class="n">TargetInterpreter</span><span class="p">(</span>
+    <span class="n">MODEL_PATH</span><span class="p">,</span>
+    <span class="n">LABEL_PATH</span><span class="p">,</span>
+    <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">thresh</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">order_key</span><span class="o">=</span><span class="s2">&quot;efficientdetd0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we create the <a class="reference internal" href="autoapi/uavfpy/odcl/inference/index.html#uavfpy.odcl.inference.Tiler" title="uavfpy.odcl.inference.Tiler"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.inference.Tiler</span></code></a>, which handles the tiling of the input image. We are dealing with inputs that are very large compared to the inputs of the neural network; the tiler will decompose the image into overlapping tiles, feed the NN, and then parse NN outputs from the respective tiles back into the raw image.</p>
+<p><a class="reference internal" href="autoapi/uavfpy/odcl/color/index.html#uavfpy.odcl.color.Color" title="uavfpy.odcl.color.Color"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.color.Color</span></code></a> is a class used to extract color information from found targets. For now, it does not take any arguments.</p>
+<p><a class="reference internal" href="autoapi/uavfpy/odcl/utils/drawer/index.html#uavfpy.odcl.utils.drawer.TargetDrawer" title="uavfpy.odcl.utils.drawer.TargetDrawer"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.utils.drawer.TargetDrawer</span></code></a> is a utility class used to draw bounding boxes. Passing it as an argument will draw bounding boxes on the raw image and store the result into the <code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>’s <code class="xref py py-attr docutils literal notranslate"><span class="pre">drawn</span></code> attribute. Passing it will also open a window to display targets that were found, along with the shape color-mask. Therefore, it is useful for evaluating the performance of the pipeline in real time.</p>
+<p>If a <code class="xref py py-class docutils literal notranslate"><span class="pre">TargetDrawer</span></code> is not passed to the <a class="reference internal" href="autoapi/uavfpy/odcl/pipeline/index.html#uavfpy.odcl.pipeline.Pipeline" title="uavfpy.odcl.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">uavfpy.odcl.pipeline.Pipeline</span></code></a> constructor, the <code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code> will not draw bounding boxes on the image, nor will found targets be displayed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the tiler</span>
+<span class="n">tiler</span> <span class="o">=</span> <span class="n">Tiler</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># create a drawer</span>
+<span class="n">drawer</span> <span class="o">=</span> <span class="n">TargetDrawer</span><span class="p">(</span><span class="n">interpreter</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="c1"># color</span>
+<span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="p">()</span>
+
+<span class="c1"># create the pipeline object</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">tiler</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">drawer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="autoapi/uavfpy/odcl/pipeline/index.html#uavfpy.odcl.pipeline.Pipeline.run" title="uavfpy.odcl.pipeline.Pipeline.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">uavfpy.odcl.pipeline.Pipeline.run()</span></code></a> method takes an image and returns a list of found targets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># parse the raw image</span>
+<span class="n">image_raw</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">IMG_PATH</span><span class="p">)</span>
+
+<span class="c1"># run the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">image_raw</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The full script in this example is shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import classes</span>
+<span class="kn">from</span> <span class="nn">odcl.inference</span> <span class="kn">import</span> <span class="n">TargetInterpreter</span><span class="p">,</span> <span class="n">Tiler</span>
+<span class="kn">from</span> <span class="nn">odcl.utils.drawer</span> <span class="kn">import</span> <span class="n">TargetDrawer</span>
+<span class="kn">from</span> <span class="nn">odcl.color</span> <span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">from</span> <span class="nn">odcl.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">cv2</span>
+
+<span class="c1"># set model directory</span>
+<span class="n">MODEL_PATH</span> <span class="o">=</span> <span class="s2">&quot;../example/efficientdet_lite0_320_ptq.tflite&quot;</span>
+<span class="n">LABEL_PATH</span> <span class="o">=</span> <span class="s2">&quot;../example/coco_labels.txt&quot;</span>
+<span class="n">IMG_PATH</span> <span class="o">=</span> <span class="s2">&quot;../example/plaza.jpg&quot;</span>
+
+<span class="c1"># set logger to print info</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(levelname)s</span><span class="s2">:</span><span class="si">%(processName)s</span><span class="s2">@</span><span class="si">%(module)s</span><span class="se">\t</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+<span class="p">)</span>
+
+<span class="c1"># create the interpreter</span>
+<span class="n">interpreter</span> <span class="o">=</span> <span class="n">TargetInterpreter</span><span class="p">(</span>
+    <span class="n">MODEL_PATH</span><span class="p">,</span>
+    <span class="n">LABEL_PATH</span><span class="p">,</span>
+    <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">thresh</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">order_key</span><span class="o">=</span><span class="s2">&quot;efficientdetd0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># create the tiler</span>
+<span class="n">tiler</span> <span class="o">=</span> <span class="n">Tiler</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># create a drawer</span>
+<span class="n">drawer</span> <span class="o">=</span> <span class="n">TargetDrawer</span><span class="p">(</span><span class="n">interpreter</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="c1"># color</span>
+<span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="p">()</span>
+
+<span class="c1"># create the pipeline object</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">interpreter</span><span class="p">,</span> <span class="n">tiler</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">drawer</span><span class="p">)</span>
+
+<span class="c1"># parse the raw image</span>
+<span class="n">image_raw</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">IMG_PATH</span><span class="p">)</span>
+
+<span class="c1"># run the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">image_raw</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Project Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generating-missions.html" class="btn btn-neutral float-right" title="Generating Missions for use with qGroundControl" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

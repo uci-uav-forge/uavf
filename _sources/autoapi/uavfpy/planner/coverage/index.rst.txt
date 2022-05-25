@@ -1,0 +1,40 @@
+:py:mod:`uavfpy.planner.coverage`
+=================================
+
+.. py:module:: uavfpy.planner.coverage
+
+.. autoapi-nested-parse::
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   bdc/index.rst
+   lawnmower/index.rst
+   path/index.rst
+   polygon/index.rst
+
+

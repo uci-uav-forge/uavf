@@ -1,0 +1,95 @@
+:py:mod:`uavfpy.planner.coverage.lawnmower`
+===========================================
+
+.. py:module:: uavfpy.planner.coverage.lawnmower
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.lawnmower.contract_cell
+   uavfpy.planner.coverage.lawnmower.get_cells
+   uavfpy.planner.coverage.lawnmower.shrink_or_swell_shapely_polygon
+
+
+
+.. py:function:: contract_cell(cell: numpy.ndarray, ax)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_cells(R: networkx.DiGraph, J: networkx.DiGraph)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: shrink_or_swell_shapely_polygon(my_polygon, ax, factor=0.1, swell=False)
+
+   
+   returns the shapely polygon which is smaller or bigger by passed factor.
+   If swell = True , then it returns bigger polygon, else smaller
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

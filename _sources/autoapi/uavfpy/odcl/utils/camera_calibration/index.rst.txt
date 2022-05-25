@@ -1,0 +1,78 @@
+:py:mod:`uavfpy.odcl.utils.camera_calibration`
+==============================================
+
+.. py:module:: uavfpy.odcl.utils.camera_calibration
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.utils.camera_calibration.chessboardProcess
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.utils.camera_calibration.arg
+
+
+.. py:function:: chessboardProcess(checkerPath: str, outfile=None, show_check=False, dim=(7, 9))
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:data:: arg
+   
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

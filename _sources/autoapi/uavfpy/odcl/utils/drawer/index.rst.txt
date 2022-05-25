@@ -1,0 +1,175 @@
+:py:mod:`uavfpy.odcl.utils.drawer`
+==================================
+
+.. py:module:: uavfpy.odcl.utils.drawer
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.odcl.utils.drawer.TargetDrawer
+
+
+
+
+.. py:class:: TargetDrawer(labels)
+
+   Bases: :py:obj:`object`
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_rand_color()
+      :staticmethod:
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: draw_tile_frame(self, img, alpha=0.9)
+
+      
+      draw a frame around the input. Useful for visualizing tiles.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: draw_target_bbox(self, img, target, color=None)
+
+      
+      Draw a bbox, class label, and confidence score around a target onto image
+
+      updated image with target drawn onto it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: draw_all(self, img, targets, color=None)
+
+      
+      Draw all current targets onto img
+
+
+      :Parameters:
+
+          **img** : cv2 Image
+              (H, W, 3) 8-bit
+
+          **targets: list of Target**
+              targets to draw
+
+      :Returns:
+
+          (H, W, 3) 8-bit image
+              Image with targets drawn
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: make_target_bbox_img_opencv(self, img, targets)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

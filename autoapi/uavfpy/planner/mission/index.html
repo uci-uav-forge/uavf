@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uavfpy.planner.mission &mdash; UAV Forge  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> UAV Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../generating-missions.html">Generating qGroundControl Missions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ROS.html">ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/uci-uav-forge/uavf">Git Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers.html">Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">UAV Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.mission</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/uavfpy/planner/mission/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-uavfpy.planner.mission">
+<span id="uavfpy-planner-mission"></span><h1><a class="reference internal" href="#module-uavfpy.planner.mission" title="uavfpy.planner.mission"><code class="xref py py-mod docutils literal notranslate"><span class="pre">uavfpy.planner.mission</span></code></a><a class="headerlink" href="#module-uavfpy.planner.mission" title="Permalink to this headline"></a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.mission.Mission" title="uavfpy.planner.mission.Mission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mission</span></code></a></p></td>
+<td><p>Object representing a mission.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.mission.get_xformer_from_CRS_str" title="uavfpy.planner.mission.get_xformer_from_CRS_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_xformer_from_CRS_str</span></code></a>(from_str: str, to_str: str)</p></td>
+<td><p>Get pyproj transformer from string. Example strings are:</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.mission.CRS" title="uavfpy.planner.mission.CRS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CRS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.mission.FT2METER" title="uavfpy.planner.mission.FT2METER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FT2METER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uavfpy.planner.mission.METER2FT" title="uavfpy.planner.mission.METER2FT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">METER2FT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uavfpy.planner.mission.mission_json" title="uavfpy.planner.mission.mission_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mission_json</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.CRS">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">CRS</span></span><a class="headerlink" href="#uavfpy.planner.mission.CRS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.FT2METER">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">FT2METER</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">3.28084</span></em><a class="headerlink" href="#uavfpy.planner.mission.FT2METER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.METER2FT">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">METER2FT</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">0.3048</span></em><a class="headerlink" href="#uavfpy.planner.mission.METER2FT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.get_xformer_from_CRS_str">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">get_xformer_from_CRS_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.get_xformer_from_CRS_str" title="Permalink to this definition"></a></dt>
+<dd><p>Get pyproj transformer from string. Example strings are:</p>
+<p>“Irvine” - Near Irvine area (feet)
+“Maryland” - Near Maryland area (feet)
+“WGS84” - WGS84 latitude/longitude coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>from_str</strong><span class="classifier">str</span></dt><dd><p>Key in <cite>CRS</cite> corresponding to a place</p>
+</dd>
+<dt><strong>to_str</strong><span class="classifier">str</span></dt><dd><p>Key in <cite>CRS</cite> corresponding to a place</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>pyproj.Transformer</dt><dd><p>the Pyproj transformer object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">Mission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">wgs2loc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyproj.Transformer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc2wgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyproj.Transformer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_max_npoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_stepxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.Mission" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Object representing a mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mission_json</strong><span class="classifier">str</span></dt><dd><p>Json string containing the mission. You can obtain this from the interop
+server.</p>
+</dd>
+<dt><strong>wgs2loc</strong><span class="classifier">pyproj.Transformer</span></dt><dd><p>transform projection from WGS84 to local coordinate system</p>
+</dd>
+<dt><strong>loc2wgs</strong><span class="classifier">pyproj.Transformer</span></dt><dd><p>transform projection from local coordinate system to WGS84</p>
+</dd>
+<dt><strong>grid_buffer</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>the buffer to add around the outside boundaries of the misssion when
+creating the occupancygrid, in feet</p>
+</dd>
+<dt><strong>grid_max_npoints</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>maximum number of points in the x,y direction to use when creating the
+occupancygrid. Set this to be the largest grid you want to process/plan
+over.</p>
+</dd>
+<dt><strong>grid_stepxy</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>desired step size in the x,y direction when creating the occupancygrid. This
+step size is used only when the resulting grid size is under
+<cite>grid_max_npoints</cite> in the x or y direction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.get_occupancygrid">
+<span class="sig-name descname"><span class="pre">get_occupancygrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hterrain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.get_occupancygrid" title="Permalink to this definition"></a></dt>
+<dd><p>Get the occupancy grid for the mission. The occupancy grid is a grid where 0 is
+the allowable space and 1 is the forbidden space. The vehicle cannot fly outside
+of the mission bounds, or at any x,y location where the obstacle is higher than
+the maximum altitude. However, x,y positions where the obstacle is shorter than
+the maximum altitude can be flown by the vehicle. The surface planner will route
+the vehicle over those obstacles – therefore, their x,y position is marked
+valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>boundaries</strong><span class="classifier">np.ndarray</span></dt><dd><p>ordered boundary points</p>
+</dd>
+<dt><strong>Hterrain</strong><span class="classifier">np.ndarray</span></dt><dd><p>Height of the “terrain.” This is the array containing a static obstacle
+height for each space in x,y. z=0 where there is no static obstacle,
+z=obs_height where there is a static obstacle.</p>
+</dd>
+<dt><strong>alt_max</strong><span class="classifier">float</span></dt><dd><p>max altitude for this region</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>MxN array of 0s and 1s, where 1 is the forbidden space and 0 is the allowed
+space. So, for an i,j grid point corresponding to some X[ij], Y[ij] pair, we
+can query the occupancygrid returned by this function to determine if the
+vehicle is allowed there.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.cover_grid">
+<span class="sig-name descname"><span class="pre">cover_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_npoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.Mission.cover_grid" title="Permalink to this definition"></a></dt>
+<dd><p>get a grid of points which cover a polygon. Polygon is an ordered list of
+boundary points in the local coordinate system. buffer is the buffer around the
+polygon. max_npoints is the maximum points in both x and y direcitons. stepxy is
+the desired size of a grid cell in the x and y directions. this method will
+return a grid covering the polygon (plus the buffer) with either the desired
+step size or the maximum number of points, whichever is smaller.</p>
+<p>For example: if my polygon covers a region of 90m x 90m, and my grid buffer is
+(5m, 5m), the grid will be (100m x 100m). If I then specify a max number of
+points of (100 x 100), the grid (with the max number of points!) is a (100x100)
+grid with each cell being 1m x 1m. If I specify a step size of (5m x 5m),
+though, I will get a grid that is (20 x 20).</p>
+<p>It is recommended to create a grid with sufficient resolution to produce
+accurate paths (i.e., a grid with a cell size of 100m x 100m is useless if I
+want to plan paths to within 3m x 3m!). But not with resolution that is so large
+that computing paths will take a crazy amount of time to plan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>poly</strong><span class="classifier">np.ndarray</span></dt><dd><p>Polygon to cover, as (M x 2) ndarray in local coordinate system.</p>
+</dd>
+<dt><strong>buffer</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>Buffer in x and y direction.</p>
+</dd>
+<dt><strong>max_npoints</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>Max number of grid points to produce in (x,y) direction.</p>
+</dd>
+<dt><strong>stepxy</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>Desired cell dimensions in x and y direction.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Tuple[np.ndarray, np.ndarray, tuple]</dt><dd><p>X coordinates of the grid, Y coordinates of the grid, and a single cell’s size.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.get_nearest_grid_idx">
+<span class="sig-name descname"><span class="pre">get_nearest_grid_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.Mission.get_nearest_grid_idx" title="Permalink to this definition"></a></dt>
+<dd><p>Get index of the nearest grid point in (X, Y) to a point (x, y)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">float</span></dt><dd><p>point x</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">float</span></dt><dd><p>point y</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">np.ndarray</span></dt><dd><p>array of grid points X</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">np.ndarray</span></dt><dd><p>array of grid points Y</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.json_get_boundaries">
+<span class="sig-name descname"><span class="pre">json_get_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.json_get_boundaries" title="Permalink to this definition"></a></dt>
+<dd><p>get mission boundaries. missions can, according to the schema, have multiple
+areas. Each of these areas would have a list of boundaries and a max/min height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Tuple[list, list, list]</dt><dd><p>mission boundaries. The first is a list-of-lists containing boundaries in
+local coordinates, the second is a list of max altitudes, and the third is a
+list of min altitudes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.json_get_search_boundaries">
+<span class="sig-name descname"><span class="pre">json_get_search_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.json_get_search_boundaries" title="Permalink to this definition"></a></dt>
+<dd><p>get search boundaries in local coordinates as ordered ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>search boundaries</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.json_get_ordered_waypoints">
+<span class="sig-name descname"><span class="pre">json_get_ordered_waypoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.json_get_ordered_waypoints" title="Permalink to this definition"></a></dt>
+<dd><p>get the ordered waypoints in local coordinate frame as ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>ordered waypoints in local coordinate system</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.json_get_obstacles">
+<span class="sig-name descname"><span class="pre">json_get_obstacles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.json_get_obstacles" title="Permalink to this definition"></a></dt>
+<dd><p>get obstacles from the mission json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list</dt><dd><p>list of obstacles as list of dict with keys x, y, r, h</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.get_Hsurf">
+<span class="sig-name descname"><span class="pre">get_Hsurf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.get_Hsurf" title="Permalink to this definition"></a></dt>
+<dd><p>Get the optimal surface height for each grid point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>The surface height for each grid point</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt>ValueError</dt><dd><p>If solve_Hsurf() has not been called</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.solve_Hsurf">
+<span class="sig-name descname"><span class="pre">solve_Hsurf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_d2h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">solve_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><span class="pre">tuple</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(100,</span> <span class="pre">100)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.Mission.solve_Hsurf" title="Permalink to this definition"></a></dt>
+<dd><p>Solve the surface given mission parameters. This method may take some time to
+run, and may fail to run if a convergent solution cannot be found. The method
+downsamples the terrain object to size <cite>solve_shape</cite>, solves a convex
+optimization problem over that downscaled terrain to produce the optimal
+surface, then upscales the surface to the original terrain (and hence, occupancy
+grid) size. small values of <cite>solve_shape</cite> will result in faster convergence, but
+may produce quantization artifacts.</p>
+<p>buffer, max_dh, and max_d2h are parameters of the optimization problem; in
+general, small values of max_dh and max_d2h will cause the surface to be
+“smoother” but may also result in an infeasible problem. In particular, if
+waypoints are at different altitudes, but placed very close to one another,
+max_dh and max_d2h must be set large enough to produce a feasible path between
+the two waypoints.</p>
+<p>It is recommended that you experiment with these parameters for your particular
+mission to avoid solver errors.</p>
+<p>This method calls the method <cite>surface.get_optimal_grid()</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>buffer</strong><span class="classifier">float</span></dt><dd><p>vertical safety buffer between the solved sheet and the surface of objects.</p>
+</dd>
+<dt><strong>max_dh</strong><span class="classifier">float</span></dt><dd><p>maximum dh/dxy allowed for the vehicle. A dh/dxy of 1 means that the vehicle
+can climb or descend at most 1 meter for every meter of horizontal distance
+travelled.</p>
+</dd>
+<dt><strong>max_d2h</strong><span class="classifier">float</span></dt><dd><p>maximum d2h/dxy^2 allowed for the vehicle. Setting this smaller means that
+the vehicle can pitch up or down slower.</p>
+</dd>
+<dt><strong>solve_shape</strong><span class="classifier">tuple, optional</span></dt><dd><p>shape of the grid over which the optimization problem is solved. Larger
+values for this grid will be more accurate, but will take longer and may
+introduce solver errors, by default (100, 100)</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, optional</span></dt><dd><p>whether to print verbose solver information, by default True</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.compute_plan_thru_waypoints">
+<span class="sig-name descname"><span class="pre">compute_plan_thru_waypoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_rewire</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#uavfpy.planner.mission.Mission.compute_plan_thru_waypoints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.transform_to_wgs84">
+<span class="sig-name descname"><span class="pre">transform_to_wgs84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.transform_to_wgs84" title="Permalink to this definition"></a></dt>
+<dd><p>Method to transform an (Mx2) array to WGS84 coordinates. (M x 3) arrays can be passed in but only the first two columns are touched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>array</strong><span class="classifier">np.ndarray</span></dt><dd><p>(M x 2+) array of M points in local coordinate system</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>(M x 2) array of transformed points in WGS84 coordinates</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.Mission.transform_from_wgs84">
+<span class="sig-name descname"><span class="pre">transform_from_wgs84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><span class="pre">numpy.ndarray</span></a></span></span><a class="headerlink" href="#uavfpy.planner.mission.Mission.transform_from_wgs84" title="Permalink to this definition"></a></dt>
+<dd><p>Method to transform an (Mx2) array from WGS84 coordinates to local coordinates. (M x 3) arrays can be passed in but only the first two columns are touched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>array</strong><span class="classifier">np.ndarray</span></dt><dd><p>(M x 2+) array of M points in WGS84 coordinates</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>(M x 2) array of M points in local coordinates</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="uavfpy.planner.mission.mission_json">
+<span class="sig-prename descclassname"><span class="pre">uavfpy.planner.mission.</span></span><span class="sig-name descname"><span class="pre">mission_json</span></span><a class="headerlink" href="#uavfpy.planner.mission.mission_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

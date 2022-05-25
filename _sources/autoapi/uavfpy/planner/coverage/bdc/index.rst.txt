@@ -1,0 +1,1233 @@
+:py:mod:`uavfpy.planner.coverage.bdc`
+=====================================
+
+.. py:module:: uavfpy.planner.coverage.bdc
+
+.. autoapi-nested-parse::
+
+   
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.bdc.Event
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   uavfpy.planner.coverage.bdc.rad2degree
+   uavfpy.planner.coverage.bdc.degree2rad
+   uavfpy.planner.coverage.bdc.discretize_entire
+   uavfpy.planner.coverage.bdc.add_discretized_cells
+   uavfpy.planner.coverage.bdc.discretize_cell
+   uavfpy.planner.coverage.bdc.iscw
+   uavfpy.planner.coverage.bdc.line_sweep
+   uavfpy.planner.coverage.bdc.rg_centroid
+   uavfpy.planner.coverage.bdc.build_reebgraph
+   uavfpy.planner.coverage.bdc.create_skelgraph
+   uavfpy.planner.coverage.bdc.get_closest_on_skel
+   uavfpy.planner.coverage.bdc.fix_polyskel
+   uavfpy.planner.coverage.bdc.traverse_polyskel
+   uavfpy.planner.coverage.bdc.get_points_array
+   uavfpy.planner.coverage.bdc.get_midpoint_shared
+   uavfpy.planner.coverage.bdc.dotself
+   uavfpy.planner.coverage.bdc.remap_nodes_unique
+   uavfpy.planner.coverage.bdc.make_skelgraph
+   uavfpy.planner.coverage.bdc.cul_de_sac_check
+   uavfpy.planner.coverage.bdc.rcross
+   uavfpy.planner.coverage.bdc.append_cell
+   uavfpy.planner.coverage.bdc.splitmerge_points
+   uavfpy.planner.coverage.bdc.get_intersects
+   uavfpy.planner.coverage.bdc.intersect_vertical_line
+   uavfpy.planner.coverage.bdc.check_edge
+   uavfpy.planner.coverage.bdc.check_lu
+   uavfpy.planner.coverage.bdc.lower_upper
+   uavfpy.planner.coverage.bdc.qcross
+   uavfpy.planner.coverage.bdc.rotate_graph
+   uavfpy.planner.coverage.bdc.make_rot_matrix
+
+
+
+.. py:class:: Event
+
+   Bases: :py:obj:`enum.Enum`
+
+   
+   Generic enumeration.
+
+   Derive from this class to define new enumerations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:attribute:: CLOSE
+      :annotation: = 1
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:attribute:: OPEN
+      :annotation: = 2
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:attribute:: SPLIT
+      :annotation: = 3
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:attribute:: MERGE
+      :annotation: = 4
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:attribute:: INFLECTION
+      :annotation: = 5
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:attribute:: INTERSECT
+      :annotation: = 6
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:function:: rad2degree(rad)
+
+   
+   Convert angle from radians to degrees
+
+
+   :Parameters:
+
+       **rad** : int or float
+           Angle in radians
+
+   :Returns:
+
+       float
+           angle in degrees
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: degree2rad(deg)
+
+   
+   Convert angle from degrees to radians
+
+
+   :Parameters:
+
+       **deg** : int or float
+           angle in degrees
+
+   :Returns:
+
+       float
+           angle in radians
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: discretize_entire(J: networkx.DiGraph, R: networkx.Graph, gridsz: float)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: add_discretized_cells(J: networkx.DiGraph, R: networkx.Graph, theta, gridsz) -> None
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: discretize_cell(J: networkx.DiGraph, c, theta, gridsz, diags=True)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: iscw(points: numpy.ndarray) -> bool
+
+   
+   Determine orientation of a set of points
+
+
+   :Parameters:
+
+       **points** : np.ndarray
+           An ordered set of points
+
+   :Returns:
+
+       bool
+           True if clockwise, False if not clockwise
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: line_sweep(G: networkx.DiGraph, theta: float = 0, posattr: str = 'points') -> tuple
+
+   
+   Perform a boustrophedon line sweep over a world graph G.
+
+
+   :Parameters:
+
+       **G** : nx.DiGraph
+           World graph. Contains an outer boundary, which is made up of a clockwise ordering of edges
+           with weight=1, and optionally contains holes, which are counterclockwise orderings of edges
+           with weight=2. Worlds must be non-degenerate planar graphs!
+
+       **theta** : float, optional
+           Angle of the line sweep from x-axis, by default 0
+
+       **posattr** : str, optional
+           attribute of points in `G`, by default 'points'
+
+   :Returns:
+
+       tuple
+           H, which is a graph of the new bdc-composed world rotated to `theta`
+           J, which is the graph of the new bdc-compoased world rotated back to its original orientation
+           R, which is the reeb graph containing connectvitity information between each cell
+           S, which is the skel graph containing connected straight skeletons of each cell in `R`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: rg_centroid(H: networkx.DiGraph, cell: set) -> numpy.ndarray
+
+   
+   Get centroid of a cell `cell` made up of nodes in `H`
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           The world graph
+
+       **cell** : set
+           An ordered or unordered list of nodes in `H`
+
+   :Returns:
+
+       np.ndarray
+           the centroid as an xy point.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: build_reebgraph(H: networkx.DiGraph, cells: list) -> networkx.Graph
+
+   
+   Build the reebgraph on `H` using the cell information contained in 'cells'
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           The bdc composed world
+
+       **cells** : list
+           each entry in cells is a list of nodes in `H` which form a closed cell in the bdc composition
+
+   :Returns:
+
+       nx.Graph
+           Graph, `R` which represents connectivity of each cell in `H`
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: create_skelgraph(R: networkx.Graph, H: networkx.DiGraph) -> networkx.Graph
+
+   
+   Create a "skelgraph" from a bdc world `H` and its reeb graph, `R`.
+   A skelgraph is a graph of the straight skeletons of each cell of a world `H`,
+   joined by the midpoints of each cell wall on `H`.
+
+   Traversing the skelgraph of `H` means visiting each cell the boustrophedon
+   decomposition of `H`.
+
+   :Parameters:
+
+       **R** : nx.Graph
+           The reeb graph of the world
+
+       **H** : nx.DiGraph
+           The BDC of the world
+
+   :Returns:
+
+       nx.Graph
+           An undirected graph joining the straight skeleton of each cell.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_closest_on_skel(R: networkx.graph, rnode: int, midp: numpy.array) -> numpy.array
+
+   
+   Get the closest point of a skel graph stored in the `rnode` of `R` to the midpoint `midp`.
+
+
+   :Parameters:
+
+       **R** : nx.graph
+           Reeb graph containing straight skeleton in key 'skel_graph'
+
+       **rnode** : int
+           node on that reeb graph
+
+       **midp** : np.array
+           the point to test
+
+   :Returns:
+
+       int
+           a node on skel_graph which is closest to `midp`
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: fix_polyskel(skel: list)
+
+   
+   this is a helper function for casting the results of `polyskel` to
+   numpy arrays, rather than Euler3 points
+
+
+   :Parameters:
+
+       **skel** : list
+           results of `polyskel` function call
+
+   :Returns:
+
+       list
+           each element of this list contains origin, height, and leafs.
+           see polyskel documentation for more
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: traverse_polyskel(R: networkx.Graph, rn: int, skel: list) -> networkx.Graph
+
+   
+   This is a helper function for casting the list returned by `polyskel` to
+   a networkx Graph.
+
+   This function also adds the list from `skel` to a reebgraph stored in `R` at node `rn`.
+
+   :Parameters:
+
+       **R** : nx.Graph
+           Reeb Graph
+
+       **rn** : int
+           node on the reeb graph
+
+       **skel** : list
+           list returned by polyskel
+
+   :Returns:
+
+       nx.Graph
+           the straight skel graph
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_points_array(H: networkx.Graph, nlist: list = None, posattr: str = 'points') -> numpy.ndarray
+
+   
+   Get an array of points from `H` which stores points in `posattr` from indices in `nlist`
+
+   Returns all points in H by default.
+
+   :Parameters:
+
+       **H** : nx.Graph
+           world graph
+
+       **nlist** : list, optional
+           subset of nodes on H to get points from, by default None
+
+       **posattr** : str, optional
+           attribute that the points are stored under, by default 'points'
+
+   :Returns:
+
+       np.ndarray
+           Mx2 array for M points
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_midpoint_shared(H: networkx.DiGraph, R: networkx.Graph, e1: int, e2: int) -> numpy.ndarray
+
+   
+   Get the midpoint of the line which joins two cells, e1 and e2.
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           the world graph
+
+       **R** : nx.Graph
+           the reeb graph of the world `H`
+
+       **e1** : int
+           first shared edge. Node of `R`
+
+       **e2** : int
+           second shared edge. Node of `R`
+
+   :Returns:
+
+       np.ndarray
+           the midpoint
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: dotself(x: numpy.ndarray) -> float
+
+   
+   dot a vector x with itself to produce a scalar
+
+
+   :Parameters:
+
+       **x** : np.ndarray
+           the vector
+
+   :Returns:
+
+       float
+           scalar value |x|^2
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: remap_nodes_unique(new_node: int, T: networkx.Graph) -> int
+
+   
+   Alters T in place, replacing its non-unique nodes by iterating on `new_node`.
+   we can run this function on several graphs, thus guaranteeing that their nodes
+   do not collide.
+
+
+   :Parameters:
+
+       **new_node** : int
+           starting value for new nodes
+
+       **T** : nx.Graph
+           A graph with integer nodes
+
+   :Returns:
+
+       int
+           ending value for new nodes
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: make_skelgraph(H: networkx.DiGraph, R: networkx.Graph)
+
+   
+   Make the "straight skeleton graph" over the world `H` with
+   its reeb-graph `R`.
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           The world. Must already be BDC decomposed.
+
+       **R** : nx.Graph
+           Reeb graph of the world.
+
+   :Returns:
+
+       nx.Graph
+           the "skeleton" graph. This undirected graph is made up of the straight skeleton
+           of each cell, connected by the midpoints of the dividing lines between cells.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: cul_de_sac_check(S: networkx.Graph, n)
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: rcross(H: networkx.DiGraph, u: int, v: int, w: int) -> float
+
+   
+   compute the vector cross product of edges `u`,`v` and `v`,`w` on `H`.
+   This one is more expensive than qcross but returns a numerical value.
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           Graph
+
+       **u** : int
+           idx of node
+
+       **v** : int
+           idx of node
+
+       **w** : int
+           idx of node
+
+   :Returns:
+
+       float
+           cross product
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: append_cell(H: networkx.DiGraph, v: int, cells: dict) -> list
+
+   
+   [summary]
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           graph on which to append cells
+
+       **v** : int
+           vertex from which to start
+
+       **cells** : list
+           list of cells.
+
+   :Returns:
+
+       list
+           new list of cells
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: splitmerge_points(H: networkx.DiGraph, v: int) -> None
+
+   
+   Alters H in place to produce split/merge points
+   from an event on node `v`
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           Shape graph
+
+       **v** : int
+           index of the event vertex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_intersects(H: networkx.DiGraph, v: int) -> tuple
+
+   
+   Check for intersects a vertical line passing through v on the graph H.
+   Think of it like this: We basically draw a line upwards from v until we
+   reach a line on H; then we register a collision, which contains the origin
+   vertex of the collision in 'vx', the point of the collision in 'pt', the edge
+   with which the line collided in 'edge', and the weight of that edge in 'weight'.
+
+   This function returns a maximum of two collisions, one above and one below,
+   which correspond to the closest edge with which the line starting at `v`
+   collided. If there is no such edge, it returns `None`, otherwise returns a
+   dict with information about the collision specified above.
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           graph
+
+       **v** : int
+           event idx
+
+   :Returns:
+
+       tuple
+           collisions above or/and below v on edges of H
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: intersect_vertical_line(p1: numpy.ndarray, p2: numpy.ndarray, pv: numpy.ndarray) -> numpy.ndarray
+
+   
+   Get line intersect on the line formed by [p1, p2] for the point at `pv`
+
+
+   :Parameters:
+
+       **p1** : np.ndarray
+           end point of line
+
+       **p2** : np.ndarray
+           end point of line
+
+       **pv** : np.ndarray
+           point of intersect
+
+   :Returns:
+
+       np.ndarray
+           line from `pv` to the point of intersection
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_edge(H: networkx.DiGraph, v: int, edge: tuple) -> bool
+
+   
+   Check whether an edge [edge=(e1, e2)] on H intersects with a straight vertical line
+   at `v`
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           graph
+
+       **v** : int
+           vertex idx
+
+       **edge** : tuple of (int, int)
+           edge idxs
+
+   :Returns:
+
+       bool
+           Whether the x coordinates of the point `v` are beteen the edge x-coords
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_lu(H: networkx.DiGraph, v: int) -> int
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: lower_upper(H: networkx.DiGraph, v: int)
+
+   
+   Check the neighbors of `v` to determine which is the lower neighbor
+   and which is the upper neighbor. If the predecessor is the upper neighbor,
+   also returns True
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           must contain 'weight' as a key.
+
+       **v** : int
+           The vertex to check
+
+   :Returns:
+
+       tuple of (int, int, bool)
+           lower vertex, upper vertex, above
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: qcross(H, vA, v, vB)
+
+   
+   Compute cross product on ordered nodes `vA`, `v`, `vB` of graph `H`.
+
+
+   :Parameters:
+
+       **H** : nx.DiGraph
+           The graph for which `vA`, `v`, `vB` are nodes.
+
+       **vA** : int
+           Node of H.
+
+       **v** : int
+           Node of H
+
+       **vB** : int
+           Node of H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: rotate_graph(G: networkx.DiGraph, theta: float, posattr: str = 'points') -> networkx.DiGraph
+
+   
+   Rotate a graph `G`. This makes a copy of `G` and returns it, leaving `G` untouched.
+
+
+   :Parameters:
+
+       **G** : nx.DiGraph
+           input Graph
+
+       **theta** : float
+           rotation angle, radians
+
+       **posattr** : str, optional
+           which key the points are stored under, by default 'points'
+
+   :Returns:
+
+       nx.DiGraph
+           the new rotated graph
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: make_rot_matrix(theta: float) -> numpy.ndarray
+
+   
+   Create a rotation matrix
+
+
+   :Parameters:
+
+       **theta** : float
+           Angle
+
+   :Returns:
+
+       np.ndarray
+           2x2 Rotation Matrix created from Angle.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
