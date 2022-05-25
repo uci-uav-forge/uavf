@@ -6,11 +6,8 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from math import ceil
 
-# relative imports
-try:
-    from . import surface
-except:
-    import surface
+
+from . import surface
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
