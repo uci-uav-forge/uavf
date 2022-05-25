@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 from math import ceil
 
 # relative imports
-from . import surface
+try:
+    from . import surface
+except:
+    import surface
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
