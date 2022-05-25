@@ -107,6 +107,22 @@ def place_obstacles(X, Y, obstacles):
     return H
 
 
+def _diff(x: cp.Variable, h: float, k: int = 1):
+    xbak = x[:, 2:]
+    xfor = x[:, :-2]
+    xmid = x[:, 1:-1]
+    if k == 1:
+        """first derivative"""
+        dx = (xfor - xbak) / (2 * h)
+        return dx
+    elif k == 2:
+        """second derivative"""
+        d2x = (xfor - 2 * xmid + xbak) / (h**2)
+        return d2x
+    else:
+        raise ValueError(f"k must be 1 or 2. k={k}")
+
+
 def get_optimal_grid(
     X,
     Y,
@@ -176,19 +192,21 @@ def get_optimal_grid(
     constraints.append(safe_alt_constraint)
 
     # Magnitude of First Partials dh/dx
-    dhx, dhy = cp.abs(cp.diff(S, 1, axis=0)), cp.abs(cp.diff(S, 1, axis=1))
-
+    dx = _diff(S, step[0], k=1)
+    dy = _diff(S, step[1], k=1)
+    c_dx, c_dy = cp.abs(dx) <= max_dh, cp.abs(dy) <= max_dh
+    constraints += [c_dx, c_dy]
     # First Derivative Constraints
     # dhx_c, dhy_c = dhx <= max_dh * step[0], dhy <= max_dh * step[1]
     # constraints.append(dhx_c)
     # constraints.append(dhy_c)
 
     # Magnitude of Second Partials d2h/dx2
-    d2hx, d2hy = cp.abs(cp.diff(S, 2, axis=0)), cp.abs(cp.diff(S, 2, axis=1))
-
+    d2x = _diff(S, step[0], k=2)
+    d2y = _diff(S, step[1], k=2)
+    c_d2x, c_d2y = cp.abs(d2x) <= max_d2h, cp.abs(d2y) <= max_d2h
+    constraints += [c_d2x, c_d2y]
     # Second Derivative Constraints
-    d2hx_c, d2hy_c = d2hx <= max_d2h * step[0] * 2, d2hy <= max_d2h * step[1] * 2
-    constraints.extend([d2hx_c, d2hy_c])
 
     # derivative1cost = cp.sum_squares(d2hx) / d2hx.size
     # derivative1cost += cp.sum_squares(d2hy) / d2hy.size
@@ -207,7 +225,7 @@ def get_optimal_grid(
             cost += cp.sum_squares(S[wpx_i, wpy_i] - wp[2]) * waypointcost
 
     # lowest possible
-    cost += cp.sum_squares(S)
+    cost += cp.sum(S)
     problem = cp.Problem(cp.Minimize(cost), constraints)
 
     # solve problem
