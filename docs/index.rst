@@ -13,6 +13,7 @@ UAV Forge Software Documentation
    
    Overview<overview>
    Getting Started<getting_started>
+   Generating qGroundControl Missions<generating-missions>
    ROS<ROS>
    Contributing<contributing>
    Git Repository<https://github.com/uci-uav-forge/uavf>
