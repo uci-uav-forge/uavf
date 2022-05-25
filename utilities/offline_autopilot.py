@@ -6,7 +6,8 @@ Author: Omar Hossain
 NOTE: Altitude in Mission Planner is in METERS
 """
 
-import logging, sys
+import logging, sys, os
+from pathlib import Path
 
 try:
     from uavfpy.planner import mission
@@ -40,7 +41,10 @@ class OfflinePlanner(object):
         self.curIndex = 0
 
         self.input_fname = input_fname
-        self.output_fname = output_fname
+        # make output directory
+        os.makedirs("./offlineMissions", exist_ok=True)
+        self.output_fname = (Path("./offlineMissions") / output_fname).resolve()
+        logging.info(f"Writing .mission file to {self.output_fname}")
 
         # read out mission JSON
         with open(input_fname) as f:
@@ -96,7 +100,7 @@ class OfflinePlanner(object):
         self.addWaypoint("RETURN", 0, 0, 6)
 
     def set_beginning(self):
-        with open("offlineMissions/"+self.output_fname, "a") as f:
+        with open(self.output_fname, "a") as f:
             f.write("QGC WPL 110\n")
             f.write(
                 self.generate_waypoint(
