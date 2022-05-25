@@ -6,7 +6,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from math import ceil
 
-# relative imports
+
 from . import surface
 
 
