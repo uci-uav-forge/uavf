@@ -10,7 +10,7 @@ def wp_index():
     mission_list = mission.readlines()
     # print(mission_list)
     for line in mission_list:
-        if line.find('\t19') != -1:
+        if line.find('\t20\t') != -1:
             return line[0]
     print('drop waypoint not found')
 

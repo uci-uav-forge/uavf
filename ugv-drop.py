@@ -7,16 +7,27 @@ from mavros_msgs.msg import WaypointReached
 from std_msgs.msg import Int16
 import time
 
+
 # wait for startup tune before running
-PORT = '/dev/ttyACM2'
-PIN_NUM = 'd:9:s'
+port_list = ('/dev/ttyACM0', '/dev/ttyACM2', '1', '2')
+pin = 'd:9:s'
 SPEED = 256  # doesn't run under 62 speed
 RUNTIME = 10
 WP_INDEX = 2
 
-board = Arduino(PORT)
-motor = board.get_pin(PIN_NUM)
 
+for PORT in port_list:
+    try:
+        board = Arduino(PORT)
+    except serial.serialutil.SerialException
+        pass
+'''
+for PIN in range(3, 14):
+    try:
+        motor = board.get_pin('d:{pin_num}:s'.format(pin_num = PIN))
+    except error
+        pass
+'''
 
 def drop_sub():
     #rospy.Subscriber('drop-waypoint', Int16, return_index())
@@ -36,14 +47,13 @@ def wp_sub():
 
 
 def wp_motor(drop_wp):
-    if drop_wp.wp_seq == WP_INDEX:
+    if WP_INDEX == drop_wp.wp_seq:
         current = time.time()
         start = time.time()
-        while (current - start < RUNTIME):
+        while current - start < RUNTIME:
             motor.write(SPEED)
             time.sleep(0.1)
             current = time.time()
-
 
 # def gps_sub():
 # rospy.Subscriber("/mavros/global_position/global", NavSatFix, gps_motor())
@@ -56,6 +66,7 @@ def main():
         rospy.init_node('ugv-drop', anonymous=True)
         drop_sub()
         wp_sub()
+
     except rospy.ROSInterruptException:
         pass
 
