@@ -107,7 +107,8 @@ if __name__ == "__main__":
     # odcl data dir is set to a rospy param
     data_dir = rospy.get_param("/odcl/odcldir", "~/odcldata")
     # make a folder with today's date
-    data_dir = Path(data_dir).resolve() / datetime.date.today().strftime("%Y%m%d")
+    todaysdate = datetime.date.today().strftime("%Y%m%d")
+    data_dir = Path(data_dir).resolve() / todaysdate
     # make a directory to save raw images
     raw_image_dir = data_dir / "raw"
     # make a directory to save cropped images
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     odcl_data_file = data_dir / str(run_id_str + "-data.csv")
 
     # write CSV headers to file
-    headers = "run_id,frame_no,target_no,target_id,img_path,crop_path,score,class,shape_color,letter_color,latitude,longitude,inference_time\n"
+    headers = "run_id,frame_no,target_no,target_id,img_path,crop_path,score,class,shape_color,letter_color,latitude,longitude,inference_time,captime\n"
     with open(odcl_data_file, "a") as f:
         f.write(headers)
 
@@ -138,6 +139,7 @@ if __name__ == "__main__":
         if capture.isOpened():
             # read raw image from camera
             status, image_raw = capture.read()
+            captime = datetime.datetime.now().strftime("%Y%m%d %H%M%S%f%p")
 
             # get frame number
             frameno_str = str(frameno).rjust(5)
@@ -164,7 +166,7 @@ if __name__ == "__main__":
             rospy.loginfo(f"\tFound {len(targets)} targets.")
 
             for i, target in enumerate(targets):
-                targetno = str(i).rjust(2)
+                targetno = str(i).ljust(2)
                 # unpack target information
                 lat = target["lat"]
                 lon = target["lon"]
@@ -189,7 +191,7 @@ if __name__ == "__main__":
                 targetcsvline = f"{run_id},{frameno},{targetno},{targetid},"
                 targetcsvline += f"{raw_img_path},{crop_fname},"
                 targetcsvline += f"{score},{shape},{scolor},{lcolor},{lat},{lon},"
-                targetcsvline += f"{inftime}\n"
+                targetcsvline += f"{inftime},{captime}\n"
                 with open(odcl_data_file, "a") as f:
                     f.write(targetcsvline)
 
