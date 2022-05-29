@@ -9,19 +9,21 @@ import time
 
 
 # wait for startup tune before running
-port_list = ('/dev/ttyACM0', '/dev/ttyACM2', '1', '2')
+port = '/dev/ttyACM0'
 pin = 'd:9:s'
-SPEED = 256  # doesn't run under 62 speed
+SPEED = 62  # doesn't run under 62 speed
 RUNTIME = 10
 WP_INDEX = 2
 
+board = Arduino(port)
 
+'''
 for PORT in port_list:
     try:
         board = Arduino(PORT)
     except serial.serialutil.SerialException
         pass
-'''
+
 for PIN in range(3, 14):
     try:
         motor = board.get_pin('d:{pin_num}:s'.format(pin_num = PIN))
